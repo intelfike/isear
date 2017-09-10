@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "統合検索",
-  "description": "google検索、ページ内検索を統合する目的です。",
+  "description": "Google検索、ページ内検索を統合する目的です。",
   "version": "0.0",
 
   "browser_action": {
