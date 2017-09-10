@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "サンプル",
-  "description": "chrome拡張機能作成のテスト用です",
-  "version": "1.0",
+  "name": "統合検索",
+  "description": "google検索、ページ内検索を統合する目的です。",
+  "version": "0.0",
 
   "browser_action": {
     "default_icon": "icon.png",
