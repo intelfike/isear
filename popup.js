@@ -1,5 +1,8 @@
 var search_words_obj = document.getElementById('search_words')
 var btn_list_obj = document.getElementById('btn_list')
+// 検索結果のハイライトの色の表示順
+var colors = ['#FF0', '#5FF', '#F8F', '#8F8', '#FA0']
+
 
 function keydown(e){
 	switch(e.code){
@@ -20,7 +23,7 @@ function keyup(e){
 	if(e.code == 'Enter'){
 		return
 	}
-	updateAllTimeout(300)
+	updateAllTimeout(200)
 }
 
 chrome.tabs.onUpdated.addListener(function(){
@@ -70,6 +73,7 @@ function updateAll(){
 
 	// ページにデータを送る
 	inject("search_words="+JSON.stringify(words))
+	inject("colors="+JSON.stringify(colors))
 	// ページ内検索結果を表示するためのスクリプトを注入！
 	chrome.tabs.executeScript(null,
 		{file:"inj.js"}
@@ -84,14 +88,21 @@ function updateAll(){
 
 // 引数は文字列型配列
 function updateButton(words){
-	var btnhtml = ''
+	btn_list_obj.innerHTML = ''
 	for(let n = 0; n < words.length; n++){
 		let word = words[n]
-		btnhtml += '<button>'+word+'</button>\n'
+		let btn = document.createElement('button')
+		btn.innerText = word
+		btn.id = word
+		btn.style.backgroundColor = colors[n%colors.length]
+		btn.addEventListener('click', function(){
+			inject('scrollFocusNextWord("'+word+'", "itel-highlight", "itel-selected")')
+		})
+		btn_list_obj.append(btn)
 	}
-	btn_list_obj.innerHTML = btnhtml
 }
 
+// 最初に実行される
 document.addEventListener('DOMContentLoaded', function () {
 	search_words_obj.addEventListener('keydown', keydown)
 	search_words_obj.addEventListener('keyup', keyup)

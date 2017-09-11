@@ -1,12 +1,6 @@
-// 検索結果のハイライトの色の表示順
-var colors = ['#FF0', '#5FF', '#F8F', '#8F8', '#FA0']
-var hlcolors = ['#880', '#388', '#848']
-var colornum = 0
-
-// 検索結果をハイライトするための関数
-var rep_sw = true
 
 // 再帰的にテキストノードを書き換えるため
+var rep_sw = true
 function replace_rec(obj, word, className, bgcolor){
 	word = word.toUpperCase()
 	if(obj.nodeType == 3){ // テキストノードなら
@@ -60,8 +54,8 @@ function offElementByClassName(c){
 	// 過去の検索結果を削除するため
 	// えいち・える・えす
 	var hls = document.getElementsByClassName(c)
-	for(let n = 0; n < hls.length; n++){
-		let hl = hls[0]
+	for(let n = hls.length-1; n >= 0 ; n--){
+		let hl = hls[n]
 		hl.outerHTML = hl.innerHTML
 	}
 }
@@ -73,6 +67,9 @@ function scrollFocus(obj, idName){
 		s.removeAttribute('id')
 	}
 	
+	if(obj == null){
+		return
+	}
 	obj.id = idName
 	var rect = obj.getBoundingClientRect()
 	var abstop = rect.top + window.pageYOffset
@@ -83,7 +80,7 @@ var sfcount = 0
 function scrollFocusNext(className, idName){
 	elems = document.getElementsByClassName(className)
 	sfcount++
-	sfcount %= elems.length-1
+	sfcount %= elems.length
 	scrollFocus(elems[sfcount], idName)
 }
 function scrollFocusPrev(className, idName){
@@ -94,10 +91,30 @@ function scrollFocusPrev(className, idName){
 	}
 	scrollFocus(elems[sfcount], idName)
 }
+function scrollFocusNextWord(word, className, idName){
+	word = word.toUpperCase()
+	elems = document.getElementsByClassName(className)
+	last = sfcount - 1
+	if(last == -1){
+		last = elems.length - 1
+	}
+	while(sfcount != last){
+		console.log(word, elems[sfcount].innerText.toUpperCase())
+		sfcount++
+		sfcount %= elems.length
+		if(elems[sfcount].innerText.toUpperCase() == word){
+			scrollFocus(elems[sfcount], idName)
+			break
+		}
+	}	
+}
+// function scrollFocusPrevWord(word, className, idName){
+
+// }
 
 
 // 検索結果をハイライトする処理
-function main(){
+function itel_main(){
 	offElementByClassName('itel-highlight')
 
 	var words = search_words
@@ -109,4 +126,4 @@ function main(){
 		replace_rec(document.body, words[n], 'itel-highlight', colors[n])
 	}
 }
-main()
+itel_main()
