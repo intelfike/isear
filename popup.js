@@ -20,13 +20,9 @@ function keydown(e){
 	}
 }
 function keyup(e){
-	if(e.code == 'Enter'){
-		return
+	if(e.key == 'Backspace' || e.key.length == 1){
+		updateAllTimeout(200)
 	}
-	if(!/^Key.$|[sS]pace/g.test(e.code)){
-		return
-	}
-	updateAllTimeout(200)
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo){

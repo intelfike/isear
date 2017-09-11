@@ -38,16 +38,19 @@ function replace_rec(obj, word, className, bgcolor){
 		return
 	}
 	if(obj.nodeType != 1 || 
-		obj.tagName == 'STYLE' || 
-		obj.tagName == 'SCRIPT' || 
-		new RegExp(className,'g').test(obj.className)
-	){
+		new RegExp(className,'g').test(obj.className)){
 		return
 	}
 	for(let n = 0; n < obj.childNodes.length; n++){
 		let child = obj.childNodes[n]
 		if(child.nodeType == 1){	
-			if(child.style.display == 'none' || child.style.visibility == 'hidden'){
+			console.log(child.getAttribute('aria-hidden'))
+			if(child.style.display == 'none' ||
+				child.style.visibility == 'hidden' ||
+				child.tagName == 'STYLE' ||
+				child.tagName == 'SCRIPT' ||
+				child.tagName == 'TEXTAREA'
+				){
 				continue
 			}
 		}
@@ -106,7 +109,7 @@ function focusUnderCurrentScroll(className, idName){
 }
 function scrollFocusAuto(obj, className, idName){
 	var selected = document.getElementById(idName)
-	console.log(selected)
+	// console.log(selected)
 	if(selected == null){
 		focusUnderCurrentScroll(className, idName)
 		return
@@ -143,7 +146,7 @@ function scrollFocusNextWord(word, className, idName){
 		last = elems.length - 1
 	}
 	while(sfcount != last){
-		console.log(word, elems[sfcount].innerText.toUpperCase())
+		// console.log(word, elems[sfcount].innerText.toUpperCase())
 		sfcount++
 		sfcount %= elems.length
 		if(elems[sfcount].innerText.toUpperCase() == word){
