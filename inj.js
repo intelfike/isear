@@ -44,7 +44,6 @@ function replace_rec(obj, word, className, bgcolor){
 	for(let n = 0; n < obj.childNodes.length; n++){
 		let child = obj.childNodes[n]
 		if(child.nodeType == 1){	
-			console.log(child.getAttribute('aria-hidden'))
 			if(child.style.display == 'none' ||
 				child.style.visibility == 'hidden' ||
 				child.tagName == 'STYLE' ||

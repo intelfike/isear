@@ -82,6 +82,13 @@ function updateAll(){
 		{file:"inj.js"}
 	)
 
+	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+		var url = tabs[0].url;
+		// inject('console.log('+JSON.stringify(tabs)+')')
+		var data = {}
+		data[url] = words.join(' ')
+		chrome.storage.sync.set(data)
+	});
 	chrome.storage.local.set({'value':words.join(' ')})
 	
 	chrome.tabs.insertCSS(null, {
@@ -111,12 +118,27 @@ document.addEventListener('DOMContentLoaded', function () {
 	search_words_obj.addEventListener('keyup', keyup)
 	search_words_obj.focus()
 
+	var registedURL = false
+	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+		var url = tabs[0].url;
+		chrome.storage.sync.get(url, function(value){
+			if(value[url] == undefined){
+				return
+			}
+		inject('console.log('+JSON.stringify(value)+')')
+			registedURL = true
+			search_words_obj.value = value[url]
+			updateAllTimeout()
+		})
+	});
+	if(registedURL){
+		return
+	}
 	chrome.storage.local.get('value', function(value){
 		if(value.value == undefined){
 			return
 		}
 		search_words_obj.value = value.value
-		search_words_obj.focus()
 		updateAllTimeout()
 	})
 	
