@@ -17,10 +17,10 @@ function replace_rec(obj, word, className, bgcolor){
 			return
 		}
 		
-		newGroup = document.createElement('span') // 複数のノードをまとめる
+		newGroup = document.createElement('esspan') // 複数のノードをまとめる
 		newGroup.className = parentClassName
 		
-		newObj = document.createElement('span')
+		newObj = document.createElement('esspan')
 		newObj.className = className
 		newObj.style.backgroundColor = bgcolor
 		var middle = text.substr(start, word.length)
@@ -46,6 +46,11 @@ function replace_rec(obj, word, className, bgcolor){
 	}
 	for(let n = 0; n < obj.childNodes.length; n++){
 		let child = obj.childNodes[n]
+		if(child.nodeType == 1){	
+			if(child.style.display == 'none' || child.style.visibility == 'hidden'){
+				continue
+			}
+		}
 		replace_rec(child, word, className, bgcolor)
 	}
 }
@@ -60,7 +65,19 @@ function offElementByClassName(c){
 	}
 }
 
-function scrollFocus(obj, idName){
+function getAbsTop(obj){
+	if(obj == null){
+		return null
+	}
+	var rect = obj.getBoundingClientRect()
+	var abstop = rect.top + window.pageYOffset
+	return abstop
+}
+function scrollToObj(obj){
+	var abstop = getAbsTop(obj)
+	scrollTo(0, abstop-(window.innerHeight/2))
+}
+function focusToObj(obj, idName){
 	// 過去のIDを削除する
 	var s = document.getElementById(idName)
 	if(s != null){
@@ -71,9 +88,36 @@ function scrollFocus(obj, idName){
 		return
 	}
 	obj.id = idName
-	var rect = obj.getBoundingClientRect()
-	var abstop = rect.top + window.pageYOffset
-	scrollTo(0, abstop-(window.innerHeight/2))
+}
+function scrollFocus(obj, idName){
+	scrollToObj(obj)
+	focusToObj(obj, idName)
+}
+function focusUnderCurrentScroll(className, idName){
+	elems = document.getElementsByClassName(className)
+	for(let n in elems){
+		elem = elems[n]
+		if(getAbsTop(elem) > window.pageYOffset){
+			sfcount = n
+			focusToObj(elem, idName)
+			break
+		}
+	}
+}
+function scrollFocusAuto(obj, className, idName){
+	var selected = document.getElementById(idName)
+	console.log(selected)
+	if(selected == null){
+		focusUnderCurrentScroll(className, idName)
+		return
+	}
+	var abstop = getAbsTop(obj)
+	if(abstop > window.innerHeight+window.pageYOffset ||
+		abstop < window.pageYOffset
+	){
+		scrollToObj(obj)
+	}
+	focusToObj(obj, idName)
 }
 var sfcount = 0
 // 探索するクラス名と、選択時に一時的につけるid
@@ -81,7 +125,7 @@ function scrollFocusNext(className, idName){
 	elems = document.getElementsByClassName(className)
 	sfcount++
 	sfcount %= elems.length
-	scrollFocus(elems[sfcount], idName)
+	scrollFocusAuto(elems[sfcount], className, idName)
 }
 function scrollFocusPrev(className, idName){
 	elems = document.getElementsByClassName(className)
@@ -89,7 +133,7 @@ function scrollFocusPrev(className, idName){
 	if(sfcount == -1){
 		sfcount = elems.length - 1
 	}
-	scrollFocus(elems[sfcount], idName)
+	scrollFocusAuto(elems[sfcount], className, idName)
 }
 function scrollFocusNextWord(word, className, idName){
 	word = word.toUpperCase()
@@ -103,7 +147,7 @@ function scrollFocusNextWord(word, className, idName){
 		sfcount++
 		sfcount %= elems.length
 		if(elems[sfcount].innerText.toUpperCase() == word){
-			scrollFocus(elems[sfcount], idName)
+			scrollFocusAuto(elems[sfcount], className, idName)
 			break
 		}
 	}	

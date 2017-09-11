@@ -23,11 +23,18 @@ function keyup(e){
 	if(e.code == 'Enter'){
 		return
 	}
+	if(!/^Key.$|[sS]pace/g.test(e.code)){
+		return
+	}
 	updateAllTimeout(200)
 }
 
-chrome.tabs.onUpdated.addListener(function(){
-	updateAllTimeout(500)
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo){
+	if (changeInfo.status !== 'complete'){
+		return
+	}
+
+	updateAll()
 })
 function googleSearch(words){
 	changeURL('https://www.google.com/search?q='+words.join('+'))
