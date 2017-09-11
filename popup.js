@@ -87,7 +87,7 @@ function updateAll(){
 		// inject('console.log('+JSON.stringify(tabs)+')')
 		var data = {}
 		data[url] = words.join(' ')
-		chrome.storage.sync.set(data)
+		chrome.storage.local.set(data)
 	});
 	chrome.storage.local.set({'value':words.join(' ')})
 	
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	var registedURL = false
 	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 		var url = tabs[0].url;
-		chrome.storage.sync.get(url, function(value){
+		chrome.storage.local.get(url, function(value){
 			if(value[url] == undefined){
 				return
 			}
