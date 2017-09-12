@@ -55,6 +55,9 @@ function log(mess){
 
 function getWords(){
 	var search_words = search_words_obj.value
+	return wordsSplit(search_words)
+}
+function wordsSplit(search_words){
 	search_words = search_words.trim()
 	if(search_words == ''){
 		return []
