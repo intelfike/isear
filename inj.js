@@ -68,7 +68,7 @@ function offElementByClassName(c){
 }
 
 function getAbsTop(obj){
-	if(obj == null){
+	if(obj == null || obj == undefined){
 		return null
 	}
 	var rect = obj.getBoundingClientRect()
@@ -97,7 +97,7 @@ function scrollFocus(obj, idName){
 }
 function focusUnderCurrentScroll(className, idName){
 	elems = document.getElementsByClassName(className)
-	for(let n in elems){
+	for(let n = 0; n < elems.length; n++){
 		elem = elems[n]
 		if(getAbsTop(elem) > window.pageYOffset){
 			sfcount = n

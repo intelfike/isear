@@ -48,16 +48,27 @@ function inject(code){
 function message(value){
 	inject("alert('"+value+"')")
 }
+function log(mess){
+	inject("console.log('"+JSON.stringify(mess)+"')")
+}
 
 
 function getWords(){
-	var search_words = search_words_obj.value.replace(/'/g, '')
-	search_words = search_words.trim(' 　')
+	var search_words = search_words_obj.value
+	search_words = search_words.trim()
 	if(search_words == ''){
 		return []
 	}
-	var words = search_words.split(/[\s　]+/g)
-	return words
+	var words = search_words.match(/"[^"]*"|'[^']+'|[^\s]+/g)
+	var result = []
+	for(let n = 0; n < words.length; n++){
+		let word = words[n].replace(/^['"]|['"]$/g,'')
+		if(word == ''){
+			continue
+		}
+		result.push(word)
+	}
+	return result
 }
 
 // 頻繁な更新対策
@@ -84,7 +95,6 @@ function updateAll(){
 
 	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 		var url = tabs[0].url;
-		// inject('console.log('+JSON.stringify(tabs)+')')
 		var data = {}
 		data[url] = words.join(' ')
 		chrome.storage.local.set(data)
@@ -125,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			if(value[url] == undefined){
 				return
 			}
-		inject('console.log('+JSON.stringify(value)+')')
 			registedURL = true
 			search_words_obj.value = value[url]
 			updateAllTimeout()
