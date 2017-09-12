@@ -99,7 +99,7 @@ function updateAll(){
 		data[url] = search_words_obj.value
 		chrome.storage.local.set(data)
 	});
-	chrome.storage.local.set(search_words_obj.value)
+	chrome.storage.local.set({'value':search_words_obj.value})
 	
 	chrome.tabs.insertCSS(null, {
 		code: '#itel-selected{background-color:red !important;}'
