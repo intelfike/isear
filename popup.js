@@ -96,10 +96,10 @@ function updateAll(){
 	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 		var url = tabs[0].url;
 		var data = {}
-		data[url] = words.join(' ')
+		data[url] = search_words_obj.value
 		chrome.storage.local.set(data)
 	});
-	chrome.storage.local.set({'value':words.join(' ')})
+	chrome.storage.local.set(search_words_obj.value)
 	
 	chrome.tabs.insertCSS(null, {
 		code: '#itel-selected{background-color:red !important;}'
