@@ -94,6 +94,9 @@ function updateAll(){
 	)
 
 	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+		if(tabs.length == 0){
+			return
+		}
 		var url = tabs[0].url;
 		var data = {}
 		data[url] = search_words_obj.value
