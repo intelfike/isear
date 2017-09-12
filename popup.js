@@ -9,8 +9,8 @@ function keydown(e){
 	case 'Enter':
 		if(e.ctrlKey){
 			// google検索結果に遷移
-			var words = getWords()
-			googleSearch(words)
+			// var words = getWords()
+			// googleSearch(words)
 		}else if(e.shiftKey){
 			inject('scrollFocusPrev("itel-highlight","itel-selected")')
 		}else{
