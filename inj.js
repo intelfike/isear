@@ -158,8 +158,12 @@ function scrollFocusNextWord(word, className, idName){
 
 
 // 検索結果をハイライトする処理
-function itel_main(){
+function itel_main(bool){
 	offElementByClassName('itel-highlight')
+
+	if(!enabled){
+		return
+	}
 
 	var words = search_words
 	if(words.length == 0){

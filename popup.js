@@ -1,13 +1,17 @@
+// === ハイライト有効のチェックボックス
 var enabled_obj = document.getElementById('enabled')
 enabled_obj.onchange = async ()=>{
-	
-	log(enabled_obj.checked)
+	await storageSet('enabled', enabled_obj.checked)
+	var words = getWords()
+	await executeHighlight(words)
+}
+// === 検索ワードの自動保存のチェックボックス
+var autosave_obj = document.getElementById('autosave')
+autosave_obj.onchange = ()=>{
+	storageSet('autosave', autosave_obj.checked)
 }
 
-// 検索結果のハイライトの色の表示順
-var colors = ['#FF0', '#5FF', '#F8F', '#8F8', '#FA0']
-
-
+// === 検索ワードのテキストボックス
 var search_words_obj = document.getElementById('search_words')
 search_words_obj.onkeydown = (e)=>{
 	switch(e.code){
@@ -35,13 +39,7 @@ search_words_obj.onkeyup = (e)=>{
 	}
 }
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo){
-	if (changeInfo.status !== 'complete'){
-		return
-	}
-
-	updateAll()
-})
+// === 関数
 function googleSearch(words){
 	changeURL('https://www.google.com/search?q='+words.join('+'))
 }
@@ -51,7 +49,21 @@ function getWords(){
 	return wordsSplit(search_words)
 }
 
+// 画面を全てアップデートする
+async function updateAll(){
+	var words = getWords()
+	
+	updateButton(words)
+	
+	executeHighlight(words)
 
+	var url = await getURL()
+	
+	if(autosave_obj.checked){
+		storageSet(url, search_words_obj.value)
+	}
+	storageSet('value', search_words_obj.value)
+}
 // 頻繁な更新対策
 var timeouter
 function updateAllTimeout(time){
@@ -61,36 +73,9 @@ function updateAllTimeout(time){
 	}, time)
 }
 
-function updateAll(){
-	// クリックしてワードを辿るためのボタンを表示
-	var words = getWords()
-	updateButton(words)
+// === 関数
 
-	// ページにデータを送る
-	inject("search_words="+JSON.stringify(words))
-	inject("colors="+JSON.stringify(colors))
-	// ページ内検索結果を表示するためのスクリプトを注入！
-	chrome.tabs.executeScript(null,
-		{file:"inj.js"}
-	)
-
-	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-		if(tabs.length == 0){
-			return
-		}
-		var url = tabs[0].url;
-		var data = {}
-		data[url] = search_words_obj.value
-		chrome.storage.local.set(data)
-	});
-	chrome.storage.local.set({'value':search_words_obj.value})
-	
-	chrome.tabs.insertCSS(null, {
-		code: '#itel-selected{background-color:red !important;}'
-	})
-}
-
-// 引数は文字列型配列
+// 引数は文字列型配列、それによってボタンを作成
 var btn_list_obj = document.getElementById('btn_list')
 function updateButton(words){
 	btn_list_obj.innerHTML = ''
@@ -107,39 +92,22 @@ function updateButton(words){
 }
 
 // 最初に実行される
-document.body.onload = ()=>{
+document.body.onload = async ()=>{
 	search_words_obj.focus()
-	
-	var registedURL = false
-	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-		var url = tabs[0].url;
-		chrome.storage.local.get(url, function(value){
-			if(value[url] == undefined){
-				return
-			}
-			registedURL = true
-			search_words_obj.value = value[url]
-			updateAllTimeout()
-		})
-	});
-	if(registedURL){
-		return
-	}
-	chrome.storage.local.get('value', function(value){
-		if(value.value == undefined){
-			return
-		}
-		search_words_obj.value = value.value
-		updateAllTimeout()
+
+	chrome.tabs.insertCSS(null, {
+		code: '#itel-selected{background-color:red !important;}'
 	})
-}
-// document.addEventListener('DOMContentLoaded', function () {
-
 	
-
-// 	// btn.addEventListener('click', click)
-// 	// var divs = document.querySelectorAll('button')
-// 	// for (var i = 0; i < divs.length; i++) {
-// 	// 	divs[i].addEventListener('click', click)
-// 	// }
-// })
+	// 以前の状態を思い出す
+	var words = await storageGetWords()
+	if(words != undefined){
+		search_words_obj.value = words
+	}
+	
+	var enabled = await storageGet('enabled')['enabled']
+	enabled_obj.checked = enabled
+	var autosave = await storageGet('autosave')['autosave']
+	autosave_obj.checked = autosave
+	
+}
