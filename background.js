@@ -34,7 +34,7 @@ async function highlighting(url){
 
 
 chrome.contextMenus.create({
-	'title':'isear 検索ワードとして追加',
+	'title':'isear 検索ワードに追加',
 	'contexts':['selection'],
 	'onclick':async (clicked)=>{
 		var text = clicked.selectionText
