@@ -21,14 +21,8 @@ function saveGoogleSearchWords(url){
 		q = url.match(/q=[^&]+/g)[0]
 		q = q.substr(2)
 		q = decodeURI(q)
-		words = q.split('+').join(' ')
-		var data = {}
-		data[url] = words
-		var autosave = await storageGet('autosave')['autosave']
-		if(autosave != undefined && autosave == true){
-			await storageSet(url, words)
-		}
-		await storageSet('value', words)
+		var swords = q.split('+').join(' ')
+		await storageSetWords(swords)
 		ok()
 	})
 }
@@ -42,8 +36,15 @@ async function highlighting(url){
 chrome.contextMenus.create({
 	'title':'isear 検索ワードとして追加',
 	'contexts':['selection'],
-	'onclick':(clicked)=>{
+	'onclick':async (clicked)=>{
 		var text = clicked.selectionText
-		alert(text + ':この機能はまだ未実装です(*^_^*)/')
+		if(/\s\t　/g.test(text)){
+			text = text.replace(/[\s\t　]+/g, ' ')
+			text = '"'+text+'"'
+		}
+		var swords = await storageGetWords()
+		swords = swords + ' ' + text
+		await storageSetWords(swords)
+		executeHighlight(wordsSplit(swords))
 	}
 })

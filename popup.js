@@ -56,13 +56,11 @@ async function updateAll(){
 	updateButton(words)
 	
 	executeHighlight(words)
-
-	var url = await getURL()
 	
-	if(autosave_obj.checked){
-		storageSet(url, search_words_obj.value)
+	var swords = search_words_obj.value
+	if(swords == ''){
+		storageSetWords(swords)
 	}
-	storageSet('value', search_words_obj.value)
 }
 // 頻繁な更新対策
 var timeouter
@@ -105,9 +103,9 @@ document.body.onload = async ()=>{
 		search_words_obj.value = words
 	}
 	
-	var enabled = await storageGet('enabled')['enabled']
-	enabled_obj.checked = enabled
-	var autosave = await storageGet('autosave')['autosave']
-	autosave_obj.checked = autosave
+	var enabled = await storageGet('enabled')
+	enabled_obj.checked = enabled['enabled']
+	var autosave = await storageGet('autosave')
+	autosave_obj.checked = autosave['autosave']
 	
 }
