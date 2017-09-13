@@ -3,6 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>タイトル</title>
+	<script src="lib/common.js" defer></script>
+	<script src="lib/apiwrapper.js" defer></script>
 	<script src="popup.js" defer></script>
 	<style>
 		body{
@@ -12,6 +14,16 @@
 			display: flex;
 			width: 100%;
 		}
+		#checks{
+			font-size: 16px;
+		}
+		#checks label{
+			margin-right: 16px;
+		}
+		input[type="checkbox"]{
+			margin: 0;
+			padding: 0;
+		}
 		#search_words{
 			width: 100%;
 		}
@@ -19,8 +31,18 @@
 </head>
 <body>
 	<div>
+		<div id="checks">
+			<label>
+				<input type="checkbox" id="enabled" checked>
+				ハイライト有効
+			</label>
+			<label>
+				<input type="checkbox" id="autosave">
+				検索ワード保存
+			</label>
+		</div>
 		<div id="search">
-			<input id="search_words" type="text" placeholder="ページ内検索">
+			<input type="text" id="search_words" placeholder="ページ内検索">
 		</div>
 		<div id="btn_list">
 			

@@ -108,7 +108,6 @@ function focusUnderCurrentScroll(className, idName){
 }
 function scrollFocusAuto(obj, className, idName){
 	var selected = document.getElementById(idName)
-	// console.log(selected)
 	if(selected == null){
 		focusUnderCurrentScroll(className, idName)
 		return
@@ -145,7 +144,6 @@ function scrollFocusNextWord(word, className, idName){
 		last = elems.length - 1
 	}
 	while(sfcount != last){
-		// console.log(word, elems[sfcount].innerText.toUpperCase())
 		sfcount++
 		sfcount %= elems.length
 		if(elems[sfcount].innerText.toUpperCase() == word){

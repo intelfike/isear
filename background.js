@@ -12,7 +12,7 @@ chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 })
 
 function saveGoogleSearchWords(url){
-	return new Promise(ok => {
+	return new Promise(async ok => {
 		if(url.indexOf('www.google') == -1){
 			ok()
 			return
@@ -27,65 +27,55 @@ function saveGoogleSearchWords(url){
 		words = q.split('+').join(' ')
 		var data = {}
 		data[url] = words
-		chrome.storage.local.set(data, ()=>{
-			chrome.storage.local.set({'value':words}, ()=>{
-				ok()
-			})
-		})
+		await storageSet(url, words)
+		await storageSet('value', words)
+		ok()
 	})
 }
-function highlighting(url){
+async function highlighting(url){
 	var words = null
 	var registedURL = false
-	chrome.storage.local.get(url, function(value){
-		if(value[url] == undefined){
-			return
-		}
-		registedURL = true
-		words = wordsSplit(value[url])
-		// ページにデータを送る
-		inject("search_words="+JSON.stringify(words))
-		inject("colors="+JSON.stringify(colors))
-		// ページ内検索結果を表示するためのスクリプトを注入！
-		chrome.tabs.executeScript(null,
-			{file:"inj.js"}
-		)
-	})
+	
+	
+	var value = await storageGet(url)
+	if(value[url] == undefined){
+		return
+	}
+	registedURL = true
+	words = wordsSplit(value[url])
+	// ページにデータを送る
+	inject("search_words="+JSON.stringify(words))
+	inject("colors="+JSON.stringify(colors))
+	// ページ内検索結果を表示するためのスクリプトを注入！
+	chrome.tabs.executeScript(null,
+		{file:"inj.js"}
+	)
 	if(registedURL){
 		return
 	}
-	chrome.storage.local.get('value', function(value){
-		if(value.value == undefined){
-			return
-		}
-		words = wordsSplit(value.value)
-		// ページにデータを送る
-		inject("search_words="+JSON.stringify(words))
-		inject("colors="+JSON.stringify(colors))
-		// ページ内検索結果を表示するためのスクリプトを注入！
-		chrome.tabs.executeScript(null,
-			{file:"inj.js"}
-		)
-	})
-}
-function wordsSplit(search_words){
-	search_words = search_words.trim()
-	if(search_words == ''){
-		return []
+	
+	
+	// もしURLに登録がなければ直前の値を取得
+	value = await storageGet('value')
+	if(value.value == undefined){
+		return
 	}
-	var words = search_words.match(/"[^"]*"|'[^']+'|[^\s]+/g)
-	var result = []
-	for(let n = 0; n < words.length; n++){
-		let word = words[n].replace(/^['"]|['"]$/g,'')
-		if(word == ''){
-			continue
-		}
-		result.push(word)
-	}
-	return result
-}
-function inject(code){
+	words = wordsSplit(value.value)
+	// ページにデータを送る
+	inject("search_words="+JSON.stringify(words))
+	inject("colors="+JSON.stringify(colors))
+	// ページ内検索結果を表示するためのスクリプトを注入！
 	chrome.tabs.executeScript(null,
-		{code:code}
+		{file:"inj.js"}
 	)
 }
+
+
+chrome.contextMenus.create({
+	'title':'isear 検索ワードとして追加',
+	'contexts':['selection'],
+	'onclick':(clicked)=>{
+		var text = clicked.selectionText
+		alert(text + ':この機能はまだ未実装です(*^_^*)/')
+	}
+})

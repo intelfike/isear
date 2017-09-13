@@ -1,16 +1,21 @@
-var search_words_obj = document.getElementById('search_words')
-var btn_list_obj = document.getElementById('btn_list')
+var enabled_obj = document.getElementById('enabled')
+enabled_obj.onchange = async ()=>{
+	
+	log(enabled_obj.checked)
+}
+
 // 検索結果のハイライトの色の表示順
 var colors = ['#FF0', '#5FF', '#F8F', '#8F8', '#FA0']
 
 
-function keydown(e){
+var search_words_obj = document.getElementById('search_words')
+search_words_obj.onkeydown = (e)=>{
 	switch(e.code){
 	case 'Enter':
 		if(e.ctrlKey){
 			// google検索結果に遷移
-			// var words = getWords()
-			// googleSearch(words)
+			var words = getWords()
+			googleSearch(words)
 		}else if(e.shiftKey){
 			inject('scrollFocusPrev("itel-highlight","itel-selected")')
 		}else{
@@ -19,8 +24,13 @@ function keydown(e){
 		break
 	}
 }
-function keyup(e){
-	if(e.key == 'Backspace' || e.key.length == 1){
+search_words_obj.onkeyup = (e)=>{
+	if(
+		e.key == 'Backspace' ||
+		e.key == 'Delete' ||
+		/^F\d$/.test(e.key) ||
+		e.key.length == 1
+	){
 		updateAllTimeout(200)
 	}
 }
@@ -35,44 +45,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo){
 function googleSearch(words){
 	changeURL('https://www.google.com/search?q='+words.join('+'))
 }
-function changeURL(url){
-	chrome.tabs.update(null, {
-		url:url
-	})
-}
-function inject(code){
-	chrome.tabs.executeScript(null,
-		{code:code}
-	)
-}
-function message(value){
-	inject("alert('"+value+"')")
-}
-function log(mess){
-	inject("console.log('"+JSON.stringify(mess)+"')")
-}
-
 
 function getWords(){
 	var search_words = search_words_obj.value
 	return wordsSplit(search_words)
 }
-function wordsSplit(search_words){
-	search_words = search_words.trim()
-	if(search_words == ''){
-		return []
-	}
-	var words = search_words.match(/"[^"]*"|'[^']+'|[^\s]+/g)
-	var result = []
-	for(let n = 0; n < words.length; n++){
-		let word = words[n].replace(/^['"]|['"]$/g,'')
-		if(word == ''){
-			continue
-		}
-		result.push(word)
-	}
-	return result
-}
+
 
 // 頻繁な更新対策
 var timeouter
@@ -113,27 +91,25 @@ function updateAll(){
 }
 
 // 引数は文字列型配列
+var btn_list_obj = document.getElementById('btn_list')
 function updateButton(words){
 	btn_list_obj.innerHTML = ''
 	for(let n = 0; n < words.length; n++){
 		let word = words[n]
 		let btn = document.createElement('button')
 		btn.innerText = word
-		btn.id = word
 		btn.style.backgroundColor = colors[n%colors.length]
-		btn.addEventListener('click', function(){
+		btn.onclick = ()=>{
 			inject('scrollFocusNextWord("'+word+'", "itel-highlight", "itel-selected")')
-		})
+		}
 		btn_list_obj.append(btn)
 	}
 }
 
 // 最初に実行される
-document.addEventListener('DOMContentLoaded', function () {
-	search_words_obj.addEventListener('keydown', keydown)
-	search_words_obj.addEventListener('keyup', keyup)
+document.body.onload = ()=>{
 	search_words_obj.focus()
-
+	
 	var registedURL = false
 	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 		var url = tabs[0].url;
@@ -156,11 +132,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		search_words_obj.value = value.value
 		updateAllTimeout()
 	})
+}
+// document.addEventListener('DOMContentLoaded', function () {
+
 	
 
-	// btn.addEventListener('click', click)
-	// var divs = document.querySelectorAll('button')
-	// for (var i = 0; i < divs.length; i++) {
-	// 	divs[i].addEventListener('click', click)
-	// }
-})
+// 	// btn.addEventListener('click', click)
+// 	// var divs = document.querySelectorAll('button')
+// 	// for (var i = 0; i < divs.length; i++) {
+// 	// 	divs[i].addEventListener('click', click)
+// 	// }
+// })
