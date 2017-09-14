@@ -2,7 +2,6 @@
 // 再帰的にテキストノードを書き換えるため
 var rep_sw = true
 function replace_rec(obj, word, className, bgcolor){
-	word = word.toUpperCase()
 	if(obj.nodeType == 3){ // テキストノードなら
 		// 置換処理
 		var text = obj.data
@@ -12,7 +11,7 @@ function replace_rec(obj, word, className, bgcolor){
 		var parentClassName = className + '-parent'
 
 		
-		var start = obj.data.toUpperCase().indexOf(word)
+		var start = unifyWord(obj.data).indexOf(unifyWord(word))
 		if(start == -1){
 			return
 		}
@@ -137,25 +136,52 @@ function scrollFocusPrev(className, idName){
 	scrollFocusAuto(elems[sfcount], className, idName)
 }
 function scrollFocusNextWord(word, className, idName){
-	word = word.toUpperCase()
 	elems = document.getElementsByClassName(className)
 	last = sfcount - 1
 	if(last == -1){
 		last = elems.length - 1
 	}
+	word = unifyWord(word)
 	while(sfcount != last){
 		sfcount++
 		sfcount %= elems.length
-		if(elems[sfcount].innerText.toUpperCase() == word){
+		if(unifyWord(elems[sfcount].innerText) == word){
 			scrollFocusAuto(elems[sfcount], className, idName)
 			break
 		}
 	}	
 }
-// function scrollFocusPrevWord(word, className, idName){
 
-// }
+function shiftLeftCode(code, leftCode, rightCode, range){
+	if(rightCode <= code && code <= rightCode+range){
+		code = code - rightCode + leftCode
+	}
+	return code
+}
+function shiftLeftChar(char, leftChar, rightChar, range){
+	var code = char.charCodeAt()
+	var leftCode = leftChar.charCodeAt()
+	var rightCode = rightChar.charCodeAt()
+	code = shiftLeftCode(code, leftCode, rightCode, range)
+	return String.fromCharCode(code)
+}
 
+function shiftLeftChars(str, leftChar, rightChar, range){
+	var chars = []
+	for(let n = 0; n < str.length; n++){
+		chars[n] = shiftLeftChar(str[n], leftChar, rightChar, range)
+	}
+	// console.log(str)
+	return chars.join('')
+}
+function unifyWord(word){
+	word = shiftLeftChars(word, '0', '０', 9)
+	word = shiftLeftChars(word, 'A', 'Ａ', 'Z'.charCodeAt()-'A'.charCodeAt())
+	word = shiftLeftChars(word, 'a', 'ａ', 'z'.charCodeAt()-'a'.charCodeAt())
+	word = shiftLeftChars(word, 'ぁ', 'ァ', 'ゔ'.charCodeAt()-'ぁ'.charCodeAt())
+	word = word.toUpperCase()
+	return word
+}
 
 // 検索結果をハイライトする処理
 function itel_main(bool){
