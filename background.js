@@ -38,7 +38,7 @@ chrome.contextMenus.create({
 	'contexts':['selection'],
 	'onclick':async (clicked)=>{
 		var text = clicked.selectionText
-		if(/\s\t　/g.test(text)){
+		if(/[\s\t　]/g.test(text)){
 			text = text.replace(/[\s\t　]+/g, ' ')
 			text = '"'+text+'"'
 		}

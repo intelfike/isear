@@ -5,21 +5,22 @@ enabled_obj.onchange = async ()=>{
 	var words = getWords()
 	await executeHighlight(words)
 }
-// === 検索ワードの自動保存のチェックボックス
-var autosave_obj = document.getElementById('autosave')
-autosave_obj.onchange = ()=>{
-	storageSet('autosave', autosave_obj.checked)
-}
 
 // === 検索ワードのテキストボックス
 var search_words_obj = document.getElementById('search_words')
 search_words_obj.onkeydown = (e)=>{
 	switch(e.code){
 	case 'Enter':
-		if(e.ctrlKey){
+		if(e.ctrlKey && e.shiftKey){
+			// 新しいタブでgoogle検索
+			var words = getWords()
+			var url = getGoogleSearchURL(words)
+			inject('window.open("'+url+'")')
+		}else if(e.ctrlKey){
 			// google検索結果に遷移
 			var words = getWords()
-			googleSearch(words)
+			var url = getGoogleSearchURL(words)
+			changeURL(url)
 		}else if(e.shiftKey){
 			inject('scrollFocusPrev("itel-highlight","itel-selected")')
 		}else{
@@ -40,8 +41,8 @@ search_words_obj.onkeyup = (e)=>{
 }
 
 // === 関数
-function googleSearch(words){
-	changeURL('https://www.google.com/search?q='+words.join('+'))
+function getGoogleSearchURL(words){
+	return 'https://www.google.com/search?q='+words.join('+')
 }
 
 function getWords(){
@@ -58,7 +59,7 @@ async function updateAll(){
 	executeHighlight(words)
 	
 	var swords = search_words_obj.value
-	if(swords == ''){
+	if(swords != ''){
 		storageSetWords(swords)
 	}
 }
@@ -105,7 +106,6 @@ document.body.onload = async ()=>{
 	
 	var enabled = await storageGet('enabled')
 	enabled_obj.checked = enabled['enabled']
-	var autosave = await storageGet('autosave')
-	autosave_obj.checked = autosave['autosave']
 	
+	updateAll()
 }
