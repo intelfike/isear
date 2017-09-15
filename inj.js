@@ -165,7 +165,7 @@ function shiftLeftChar(char, leftChar, rightChar, range){
 	code = shiftLeftCode(code, leftCode, rightCode, range)
 	return String.fromCharCode(code)
 }
-
+// 半角/全角、ひらがな/カタカナを柔軟に検索させるため
 function shiftLeftChars(str, leftChar, rightChar, range){
 	var chars = []
 	for(let n = 0; n < str.length; n++){
@@ -174,6 +174,7 @@ function shiftLeftChars(str, leftChar, rightChar, range){
 	// console.log(str)
 	return chars.join('')
 }
+// 大文字/小文字、半角/全角、ひらがな/カタカナを柔軟に検索させるため
 function unifyWord(word){
 	word = shiftLeftChars(word, '0', '０', 9)
 	word = shiftLeftChars(word, 'A', 'Ａ', 'Z'.charCodeAt()-'A'.charCodeAt())

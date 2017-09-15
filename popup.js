@@ -59,9 +59,7 @@ async function updateAll(){
 	executeHighlight(words)
 	
 	var swords = search_words_obj.value
-	if(swords != ''){
-		storageSetWords(swords)
-	}
+	storageSetWords(swords)
 }
 // 頻繁な更新対策
 var timeouter
