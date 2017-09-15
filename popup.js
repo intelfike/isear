@@ -91,11 +91,7 @@ function updateButton(words){
 // 最初に実行される
 document.body.onload = async ()=>{
 	search_words_obj.focus()
-
-	chrome.tabs.insertCSS(null, {
-		code: '#itel-selected{background-color:red !important;}'
-	})
-	
+		
 	// 以前の状態を思い出す
 	var words = await storageGetWords()
 	if(words != undefined){

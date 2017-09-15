@@ -21,8 +21,7 @@
 			margin-right: 16px;
 		}
 		input[type="checkbox"]{
-			margin: 0;
-			padding: 0;
+			transform: scale(1.2);
 		}
 		#search_words{
 			width: 100%;
@@ -32,12 +31,11 @@
 <body>
 	<div>
 		<div id="checks">
-			<label>
-				<input type="checkbox" id="enabled">
-				ハイライト
-			</label>
 		</div>
 		<div id="search">
+			<label>
+				<input type="checkbox" id="enabled">
+			</label>
 			<input type="text" id="search_words" placeholder="ctrl+(shift+)EnterでGoogle検索">
 		</div>
 		<div id="btn_list">

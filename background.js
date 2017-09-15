@@ -27,8 +27,10 @@ function saveGoogleSearchWords(url){
 	})
 }
 async function highlighting(url){
-	var words = await storageGetWords()
-	words = wordsSplit(words)
+	var swords = await storageGetWords()
+	// ページ遷移によってデータが失われないように
+	await storageSetWords(swords)
+	words = wordsSplit(swords)
 	await executeHighlight(words)
 }
 
