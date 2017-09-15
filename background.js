@@ -1,5 +1,10 @@
 var search_words_obj = document.getElementById('search_words')
 
+chrome.tabs.onActivated.addListener(async function(){
+	var swords = await storageGetWords()
+	await storageSetWords(swords)
+})
+
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 	if(changeInfo.status != 'complete'){
 		return
@@ -27,8 +32,8 @@ function saveGoogleSearchWords(url){
 	})
 }
 async function highlighting(url){
-	var words = await storageGetWords()
-	words = wordsSplit(words)
+	var swords = await storageGetWords()
+	words = wordsSplit(swords)
 	await executeHighlight(words)
 }
 
