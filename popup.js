@@ -1,9 +1,24 @@
 // === ハイライト有効のチェックボックス
 var enabled_obj = document.getElementById('enabled')
 enabled_obj.onchange = async ()=>{
-	await storageSet('enabled', enabled_obj.checked)
+	var enabled = enabled_obj.checked
+	await storageSet('enabled', enabled)
 	var words = getWords()
 	await executeHighlight(words)
+	
+	inputsEnable(enabled)
+}
+function inputsEnable(bool){
+	search_words_obj.disabled = !bool
+	var btns = document.getElementsByClassName('btn')
+	for(let n = 0; n < btns.length; n++){
+		btns[n].disabled = !bool
+	}
+	if(bool){
+		document.body.style.backgroundColor = '#EFF'
+	}else{
+		document.body.style.backgroundColor = '#ACC'
+	}
 }
 
 // === 検索ワードのテキストボックス
@@ -79,9 +94,15 @@ function updateButton(words){
 	for(let n = 0; n < words.length; n++){
 		let word = words[n]
 		let btn = document.createElement('button')
+		btn.className = 'btn'
 		btn.innerText = word
 		btn.style.backgroundColor = colors[n%colors.length]
 		btn.onclick = ()=>{
+			var children = btn_list_obj.children
+			for(let cn = 0; cn < children.length; cn++){
+				children[cn].style.borderRadius = "0"
+			}
+			btn.style.borderRadius = "16px"
 			inject('scrollFocusNextWord("'+word+'", "itel-highlight", "itel-selected")')
 		}
 		btn_list_obj.append(btn)
@@ -102,4 +123,5 @@ document.body.onload = async ()=>{
 	enabled_obj.checked = enabled['enabled']
 	
 	updateAll()
+	inputsEnable(enabled_obj.checked)
 }
