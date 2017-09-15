@@ -198,7 +198,7 @@ function itel_main(bool){
 	}
 	
 	for(let n = 0; n < words.length; n++){
-		replace_rec(document.body, words[n], 'itel-highlight', colors[n])
+		replace_rec(document.body, words[n], 'itel-highlight', colors[n%colors.length])
 	}
 }
 itel_main()
