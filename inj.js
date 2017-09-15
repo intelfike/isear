@@ -105,12 +105,22 @@ function focusUnderCurrentScroll(className, idName){
 		}
 	}
 }
-function scrollFocusAuto(obj, className, idName){
-	var selected = document.getElementById(idName)
-	if(selected == null){
-		focusUnderCurrentScroll(className, idName)
-		return
+function getUnderCurrentElemNum(className){
+	elems = document.getElementsByClassName(className)
+	for(let n = 0; n < elems.length; n++){
+		elem = elems[n]
+		if(getAbsTop(elem) > window.pageYOffset){
+			return n
+		}
 	}
+	return 0
+}
+function scrollFocusAuto(obj, className, idName){
+	// var selected = document.getElementById(idName)
+	// if(selected == null){
+	// 	focusUnderCurrentScroll(className, idName)
+	// 	return
+	// }
 	var abstop = getAbsTop(obj)
 	if(abstop > window.innerHeight+window.pageYOffset ||
 		abstop < window.pageYOffset
@@ -122,12 +132,16 @@ function scrollFocusAuto(obj, className, idName){
 var sfcount = 0
 // 探索するクラス名と、選択時に一時的につけるid
 function scrollFocusNext(className, idName){
+	init_sfcount(className, idName, -1)
+	
 	elems = document.getElementsByClassName(className)
 	sfcount++
 	sfcount %= elems.length
 	scrollFocusAuto(elems[sfcount], className, idName)
 }
 function scrollFocusPrev(className, idName){
+	init_sfcount(className, idName, 1)
+	
 	elems = document.getElementsByClassName(className)
 	sfcount--
 	if(sfcount == -1){
@@ -136,6 +150,8 @@ function scrollFocusPrev(className, idName){
 	scrollFocusAuto(elems[sfcount], className, idName)
 }
 function scrollFocusNextWord(word, className, idName){
+	init_sfcount(className, idName, -1)
+
 	elems = document.getElementsByClassName(className)
 	last = sfcount - 1
 	if(last == -1){
@@ -149,8 +165,37 @@ function scrollFocusNextWord(word, className, idName){
 			scrollFocusAuto(elems[sfcount], className, idName)
 			break
 		}
-	}	
+	}
+}function scrollFocusPrevWord(word, className, idName){
+	init_sfcount(className, idName, 1)
+
+	elems = document.getElementsByClassName(className)
+	last = sfcount + 1
+	if(last == elems.length){
+		last = 0
+	}
+	word = unifyWord(word)
+	while(sfcount != last){
+		sfcount--
+		if(sfcount == -1){
+			sfcount = elems.length - 1
+		}
+		if(unifyWord(elems[sfcount].innerText) == word){
+			scrollFocusAuto(elems[sfcount], className, idName)
+			break
+		}
+	}
 }
+// pm補正 
+function init_sfcount(className, idName, pm){
+	var selected = document.getElementById(idName)
+	if(selected == null){
+		sfcount = getUnderCurrentElemNum(className)
+		sfcount += pm
+	}
+}
+
+
 
 function shiftLeftCode(code, leftCode, rightCode, range){
 	if(rightCode <= code && code <= rightCode+range){

@@ -97,13 +97,20 @@ function updateButton(words){
 		btn.className = 'btn'
 		btn.innerText = word
 		btn.style.backgroundColor = colors[n%colors.length]
-		btn.onclick = ()=>{
+		btn.onclick = (e)=>{
 			var children = btn_list_obj.children
 			for(let cn = 0; cn < children.length; cn++){
 				children[cn].style.borderRadius = "0"
 			}
 			btn.style.borderRadius = "16px"
-			inject('scrollFocusNextWord("'+word+'", "itel-highlight", "itel-selected")')
+			
+			var key_event = e||window.event
+			if(key_event.shiftKey){
+				inject('scrollFocusPrevWord("'+word+'", "itel-highlight", "itel-selected")')
+			}else{
+				inject('scrollFocusNextWord("'+word+'", "itel-highlight", "itel-selected")')
+			}
+			
 		}
 		btn_list_obj.append(btn)
 	}
