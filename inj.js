@@ -22,6 +22,7 @@ function replace_rec(obj, word, className, bgcolor){
 		newObj = document.createElement('esspan')
 		newObj.className = className
 		newObj.style.backgroundColor = bgcolor
+		newObj.style.color = "black"
 		var middle = text.substr(start, word.length)
 		newObj.innerText = middle
 		newGroup.append(newObj)
