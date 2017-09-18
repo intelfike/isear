@@ -11,11 +11,7 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 		var parentClassName = className + '-parent'
 
 		if(regbool){
-			try{
-				var m = unifyWord(obj.data).match(new RegExp(unifyWord(word), 'g'))
-			}catch(e){
-				return
-			}
+			var m = regMatch(obj.data, word)
 			if(m == null){
 				return
 			}
@@ -65,6 +61,15 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 		}
 		replace_rec(child, word, className, bgcolor, regbool)
 	}
+}
+function regMatch(str, regstr){
+	var m = null
+	try{
+		m = unifyWord(str).match(new RegExp(unifyWord(regstr), 'g'))
+	}catch(e){
+		return null
+	}
+	return m
 }
 
 function offElementByClassName(c){
@@ -160,9 +165,10 @@ function scrollFocusPrev(className, idName){
 	}
 	scrollFocusAuto(elems[sfcount], className, idName)
 }
+// 次のワードを辿る
 function scrollFocusNextWord(word, className, idName, regbool){
 	init_sfcount(className, idName, -1)
-	console.log(regbool)
+	
 	elems = document.getElementsByClassName(className)
 	last = sfcount - 1
 	if(last == -1){
@@ -172,13 +178,21 @@ function scrollFocusNextWord(word, className, idName, regbool){
 	while(sfcount != last){
 		sfcount++
 		sfcount %= elems.length
-		if(unifyWord(elems[sfcount].innerText) == word){
-			scrollFocusAuto(elems[sfcount], className, idName)
+		let elem = elems[sfcount]
+		if(regbool){
+			var m = regMatch(elem.innerText, word)
+			if(m != null){
+				word = m[0]
+			}
+		}
+		if(unifyWord(elem.innerText) == word){
+			scrollFocusAuto(elem, className, idName)
 			break
 		}
 	}
 }
-function scrollFocusPrevWord(word, className, idName){
+// 前のワードをたどる(上の関数の取り消し)
+function scrollFocusPrevWord(word, className, idName, regbool){
 	init_sfcount(className, idName, 1)
 
 	elems = document.getElementsByClassName(className)
@@ -192,8 +206,16 @@ function scrollFocusPrevWord(word, className, idName){
 		if(sfcount == -1){
 			sfcount = elems.length - 1
 		}
-		if(unifyWord(elems[sfcount].innerText) == word){
-			scrollFocusAuto(elems[sfcount], className, idName)
+		let elem = elems[sfcount]
+		if(regbool){
+			var m = regMatch(elem.innerText, word)
+			if(m != null){
+				word = m[0]
+			}
+		}
+
+		if(unifyWord(elem.innerText) == word){
+			scrollFocusAuto(elem, className, idName)
 			break
 		}
 	}
