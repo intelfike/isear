@@ -69,7 +69,18 @@ function regMatch(str, regstr){
 	}catch(e){
 		return null
 	}
-	return m
+	if(m == null){
+		return null
+	}
+	// プログラムの停止(無限ループ？)を回避する
+	var result = []
+	for(let n = 0; n < m.length; n++){
+		if(m[n] == ''){
+			continue
+		}
+		result.push(m[n])
+	}
+	return result
 }
 
 function offElementByClassName(c){
