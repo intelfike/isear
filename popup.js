@@ -26,21 +26,30 @@ var search_words_obj = document.getElementById('search_words')
 search_words_obj.onkeydown = (e)=>{
 	switch(e.code){
 	case 'Enter':
-		if(e.ctrlKey && e.shiftKey){
-			// 新しいタブでgoogle検索
-			var words = getWords()
+		if(e.ctrlKey){
+			// google検索
+			var tmpwords = getWords()
+			var words = []
+			for(let n = 0; n < tmpwords.length; n++){
+				if(tmpwords[n].toUpperCase().indexOf(regPrefix) == 0){
+					continue
+				}
+				words.push(tmpwords[n])
+			}
 			var url = getGoogleSearchURL(words)
-			inject('window.open("'+url+'")')
-		}else if(e.ctrlKey){
-			// google検索結果に遷移
-			var words = getWords()
-			var url = getGoogleSearchURL(words)
-			changeURL(url)
-		}else if(e.shiftKey){
-			inject('scrollFocusPrev("itel-highlight","itel-selected")')
-		}else{
-			inject('scrollFocusNext("itel-highlight","itel-selected")')
+			if(e.shiftKey){
+				// 新しいタブでgoogle検索
+				inject('window.open("'+url+'")')
+			}else{
+				changeURL(url)
+			}
+			break
 		}
+		if(e.shiftKey){
+			inject('scrollFocusPrev("itel-highlight","itel-selected")')
+			break
+		}
+		inject('scrollFocusNext("itel-highlight","itel-selected")')
 		break
 	}
 }
