@@ -1,7 +1,7 @@
 
 // 再帰的にテキストノードを書き換えるため
 var rep_sw = true
-function replace_rec(obj, word, className, bgcolor){
+function replace_rec(obj, word, className, bgcolor, regbool){
 	if(obj.nodeType == 3){ // テキストノードなら
 		// 置換処理
 		var text = obj.data
@@ -10,7 +10,17 @@ function replace_rec(obj, word, className, bgcolor){
 		}
 		var parentClassName = className + '-parent'
 
-		
+		if(regbool){
+			try{
+				var m = unifyWord(obj.data).match(new RegExp(unifyWord(word), 'g'))
+			}catch(e){
+				return
+			}
+			if(m == null){
+				return
+			}
+			word = m[0]
+		}
 		var start = unifyWord(obj.data).indexOf(unifyWord(word))
 		if(start == -1){
 			return
@@ -53,7 +63,7 @@ function replace_rec(obj, word, className, bgcolor){
 				continue
 			}
 		}
-		replace_rec(child, word, className, bgcolor)
+		replace_rec(child, word, className, bgcolor, regbool)
 	}
 }
 
@@ -96,7 +106,7 @@ function scrollFocus(obj, idName){
 	focusToObj(obj, idName)
 }
 function focusUnderCurrentScroll(className, idName){
-	elems = document.getElementsByClassName(className)
+	elems = document.getElementsByClassName(class258Name)
 	for(let n = 0; n < elems.length; n++){
 		elem = elems[n]
 		if(getAbsTop(elem) > window.pageYOffset){
@@ -150,9 +160,9 @@ function scrollFocusPrev(className, idName){
 	}
 	scrollFocusAuto(elems[sfcount], className, idName)
 }
-function scrollFocusNextWord(word, className, idName){
+function scrollFocusNextWord(word, className, idName, regbool){
 	init_sfcount(className, idName, -1)
-
+	console.log(regbool)
 	elems = document.getElementsByClassName(className)
 	last = sfcount - 1
 	if(last == -1){
@@ -167,7 +177,8 @@ function scrollFocusNextWord(word, className, idName){
 			break
 		}
 	}
-}function scrollFocusPrevWord(word, className, idName){
+}
+function scrollFocusPrevWord(word, className, idName){
 	init_sfcount(className, idName, 1)
 
 	elems = document.getElementsByClassName(className)
@@ -197,7 +208,7 @@ function init_sfcount(className, idName, pm){
 }
 
 
-
+// 文字に融通を聞かせる為
 function shiftLeftCode(code, leftCode, rightCode, range){
 	if(rightCode <= code && code <= rightCode+range){
 		code = code - rightCode + leftCode
@@ -244,7 +255,12 @@ function itel_main(bool){
 	}
 	
 	for(let n = 0; n < words.length; n++){
-		replace_rec(document.body, words[n], 'itel-highlight', colors[n%colors.length])
+		var regbool = false
+		if(words[n].toUpperCase().indexOf(regPrefix) == 0){
+			words[n] = words[n].substr(4)
+			regbool = true
+		}
+		replace_rec(document.body, words[n], 'itel-highlight', colors[n%colors.length], regbool)
 	}
 }
 itel_main()

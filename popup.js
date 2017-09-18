@@ -93,6 +93,14 @@ function updateButton(words){
 	btn_list_obj.innerHTML = ''
 	for(let n = 0; n < words.length; n++){
 		let word = words[n]
+		// 正規表現かどうか
+		let regbool = false
+		if(word.toUpperCase().indexOf(regPrefix) == 0){
+			word = word.substr(4)
+			regbool = true
+		}
+		console.log(regbool)
+		
 		let btn = document.createElement('button')
 		btn.className = 'btn'
 		btn.innerText = word
@@ -103,12 +111,12 @@ function updateButton(words){
 				children[cn].style.borderRadius = "0"
 			}
 			btn.style.borderRadius = "16px"
-			
+		
 			var key_event = e||window.event
 			if(key_event.shiftKey){
-				inject('scrollFocusPrevWord("'+word+'", "itel-highlight", "itel-selected")')
+				inject('scrollFocusPrevWord("'+word+'", "itel-highlight", "itel-selected", '+regbool+')')
 			}else{
-				inject('scrollFocusNextWord("'+word+'", "itel-highlight", "itel-selected")')
+				inject('scrollFocusNextWord("'+word+'", "itel-highlight", "itel-selected", '+regbool+')')
 			}
 			
 		}
