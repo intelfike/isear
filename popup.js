@@ -57,12 +57,18 @@ search_words_obj.onkeyup = (e)=>{
 	if(
 		e.key == 'Backspace' ||
 		e.key == 'Delete' ||
+		e.key == 'Tab' ||
 		/^F\d$/.test(e.key) ||
 		e.key.length == 1
 	){
 		updateAllTimeout(200)
 	}
 }
+
+// アップデートイベント
+chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
+	updateAll()
+})
 
 // === 関数
 function getGoogleSearchURL(words){
