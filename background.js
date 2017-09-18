@@ -13,8 +13,14 @@ chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 	highlighting(tab.url)
 })
 
+// google検索ワードをストレージに保存する
 function saveGoogleSearchWords(url){
 	return new Promise(async ok => {
+		var data = await storageGet(url)
+		if(data[url] != undefined){
+			ok()
+			return
+		}
 		if(url.indexOf('www.google') == -1){
 			ok()
 			return
