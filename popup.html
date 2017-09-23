@@ -8,7 +8,7 @@
 	<script src="popup.js" defer></script>
 	<style>
 		body{
-			width: 300px;
+			width: 500px;
 			background-color: #EFF;
 		}
 		#search{
@@ -21,11 +21,14 @@
 		#checks label{
 			margin-right: 16px;
 		}
-		input[type="checkbox"]{
+/*		input[type="checkbox"]{
 			transform: scale(1.2);
 		}
-		#search_words{
+*/		#search_words{
 			width: 100%;
+		}
+		button#on{
+			width: 45px;
 		}
 	</style>
 </head>
@@ -34,9 +37,7 @@
 		<div id="checks">
 		</div>
 		<div id="search">
-			<label>
-				<input type="checkbox" id="enabled">
-			</label>
+			<button id="on">ON</button>
 			<input type="text" id="search_words" placeholder="ctrl+(shift+)EnterでGoogle検索">
 		</div>
 		<div id="btn_list">

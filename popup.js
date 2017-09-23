@@ -1,24 +1,37 @@
-// === ハイライト有効のチェックボックス
-var enabled_obj = document.getElementById('enabled')
-enabled_obj.onchange = async ()=>{
-	var enabled = enabled_obj.checked
-	await storageSet('enabled', enabled)
-	var words = getWords()
-	await executeHighlight(words)
-	
-	inputsEnable(enabled)
+// === on/offボタンクリック時の処理
+var on_obj = document.getElementById('on')
+on_obj.onclick = ()=>{
+	var enabled = on_obj.innerText == 'ON'
+	extensionEnable(enabled)
 }
+// 全機能停止
+function extensionEnable(bool){
+	storageSet('enabled', bool)
+	inputsEnable(bool)
+	var words = getWords()
+	executeHighlight(words, bool)
+}
+// 入力禁止、デザイン変更
 function inputsEnable(bool){
-	search_words_obj.disabled = !bool
-	var btns = document.getElementsByClassName('btn')
-	for(let n = 0; n < btns.length; n++){
-		btns[n].disabled = !bool
-	}
 	if(bool){
+		on_obj.innerText = "OFF"
+		on_obj.style.backgroundColor = "#DDD"
 		document.body.style.backgroundColor = '#EFF'
 	}else{
+		on_obj.innerText = "ON"
+		on_obj.style.backgroundColor = "yellow"
 		document.body.style.backgroundColor = '#ACC'
 	}
+	search_words_obj.disabled = !bool
+	if(!bool){
+		var btns = btn_list_obj.children
+		for(let n = btns.length-1; n >= 0; n--){
+			btns[n].remove()
+		}
+		return
+	}
+	var words = getWords()
+	updateButton(words)
 }
 
 // === 検索ワードのテキストボックス
@@ -81,7 +94,7 @@ function getWords(){
 }
 
 // 画面を全てアップデートする
-async function updateAll(){
+function updateAll(){
 	var words = getWords()
 	
 	updateButton(words)
@@ -111,11 +124,10 @@ function updateButton(words){
 		// 正規表現かどうか
 		let regbool = false
 		if(word.toUpperCase().indexOf(regPrefix) == 0){
-			word = word.substr(4)
+			word = word.substr(regPrefix.length)
 			regbool = true
 		}
-		console.log(regbool)
-		
+		// ハイライト用の移動ボタン定義
 		let btn = document.createElement('button')
 		btn.className = 'btn'
 		btn.innerText = word
@@ -141,8 +153,6 @@ function updateButton(words){
 
 // 最初に実行される
 document.body.onload = async ()=>{
-	search_words_obj.focus()
-		
 	// 以前の状態を思い出す
 	var words = await storageGetWords()
 	if(words != undefined){
@@ -150,8 +160,14 @@ document.body.onload = async ()=>{
 	}
 	
 	var enabled = await storageGet('enabled')
-	enabled_obj.checked = enabled['enabled']
-	
-	updateAll()
-	inputsEnable(enabled_obj.checked)
+	enabled = enabled['enabled']
+	if(enabled == undefined){
+		enabled = true
+	}
+	extensionEnable(enabled)
+	if(enabled){
+		updateAll()
+		search_words_obj.focus()
+		return
+	}
 }

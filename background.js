@@ -40,7 +40,7 @@ function saveGoogleSearchWords(url){
 async function highlighting(url){
 	var swords = await storageGetWords()
 	words = wordsSplit(swords)
-	await executeHighlight(words)
+	await executeHighlightAuto(words)
 }
 
 
@@ -56,6 +56,6 @@ chrome.contextMenus.create({
 		var swords = await storageGetWords()
 		swords = swords + ' ' + text
 		await storageSetWords(swords)
-		executeHighlight(wordsSplit(swords))
+		executeHighlightAuto(wordsSplit(swords))
 	}
 })

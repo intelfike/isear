@@ -290,7 +290,7 @@ function itel_main(bool){
 	for(let n = 0; n < words.length; n++){
 		var regbool = false
 		if(words[n].toUpperCase().indexOf(regPrefix) == 0){
-			words[n] = words[n].substr(4)
+			words[n] = words[n].substr(regPrefix.length)
 			regbool = true
 		}
 		replace_rec(document.body, words[n], 'itel-highlight', colors[n%colors.length], regbool)
