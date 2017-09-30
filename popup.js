@@ -80,7 +80,7 @@ search_words_obj.onkeyup = (e)=>{
 
 // アップデートイベント
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
-	updateAll()
+	updateAllTimeout(200)
 })
 
 // === 関数
@@ -105,12 +105,8 @@ function updateAll(){
 	storageSetWords(swords)
 }
 // 頻繁な更新対策
-var timeouter
 function updateAllTimeout(time){
-	clearTimeout(timeouter)
-	timeouter = setTimeout(function(){
-		updateAll()
-	}, time)
+	whereTimeout(updateAll, time)
 }
 
 // === 関数
