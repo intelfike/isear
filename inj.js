@@ -77,7 +77,7 @@ function wordMatch(str, word, regbool){
 function regMatch(str, regstr){
 	var m = null
 	try{
-		m = unifyWord(str).match(new RegExp(unifyWord(regstr), 'g'))
+		m = str.match(new RegExp(regstr, 'g'))
 	}catch(e){
 		return null
 	}
@@ -301,6 +301,7 @@ function itel_main(bool){
 			regbool = true
 		}
 		words_nums[word] = 0
+		console.log(word)
 		replace_rec(document.body, word, 'itel-highlight', colors[n%colors.length], regbool)
 	}
 	return words_nums
