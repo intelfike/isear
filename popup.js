@@ -77,8 +77,9 @@ async function updateCur(words){
 		let word = words[n]
 		var res = await executeCode('countBeforeWords("'+word+'", "itel-highlight", false)')
 		var curnum = res[0]
-		log(curnum)
-		document.getElementById(word + '-num').innerText = curnum
+		// log(curnum)
+		var button = document.getElementById(word + '-num')
+		button.innerText = curnum
 	}
 }
 
@@ -86,7 +87,7 @@ var prev_input = ""
 function changeInput(){
 	var input = search_words_obj.value
 	var bool = (input != prev_input)
-	log(input)
+	// log(input)
 	prev_input = input
 	return bool
 }
@@ -114,10 +115,17 @@ async function updateAll(){
 	
 	var results = await executeHighlight(words)
 	words_nums = results[0]
-	console.log(words_nums)
+	// console.log(words_nums)
 	for(word in words_nums){
 		var num = words_nums[word]
 		var button = document.getElementById(word)
+		log(num)
+		if(num == 0){
+			// ボタンを無効に
+			log(button.disabled)
+			button.disabled = true
+			return
+		}
 		button.innerText = word + '('
 		var word_num = document.createElement('span')
 		word_num.id = word+'-num'

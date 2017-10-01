@@ -22,9 +22,6 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 		if(start == -1){
 			return
 		}
-		if(words_nums[word] == undefined){
-			words_nums[word] = 0
-		}
 		words_nums[word]++
 		
 		newGroup = document.createElement('esspan') // 複数のノードをまとめる
@@ -131,21 +128,6 @@ function focusToObj(obj, idName){
 	}
 	obj.id = idName
 }
-function scrollFocus(obj, idName){
-	scrollToObj(obj)
-	focusToObj(obj, idName)
-}
-function focusUnderCurrentScroll(className, idName){
-	elems = document.getElementsByClassName(class258Name)
-	for(let n = 0; n < elems.length; n++){
-		elem = elems[n]
-		if(getAbsTop(elem) > window.pageYOffset){
-			sfcount = n
-			focusToObj(elem, idName)
-			break
-		}
-	}
-}
 function getUnderCurrentElemNum(className){
 	elems = document.getElementsByClassName(className)
 	for(let n = 0; n < elems.length; n++){
@@ -156,13 +138,9 @@ function getUnderCurrentElemNum(className){
 	}
 	return 0
 }
-function scrollFocusAuto(obj, className, idName){
-	// var selected = document.getElementById(idName)
-	// if(selected == null){
-	// 	focusUnderCurrentScroll(className, idName)
-	// 	return
-	// }
+function scrollFocusAuto(obj, idName){
 	var abstop = getAbsTop(obj)
+	// 画面外ならスクロールする
 	if(abstop > window.innerHeight+window.pageYOffset ||
 		abstop < window.pageYOffset
 	){
@@ -170,68 +148,81 @@ function scrollFocusAuto(obj, className, idName){
 	}
 	focusToObj(obj, idName)
 }
+function scrollFocusAutoNum(className, num, idName){
+	var elems = document.getElementsByClassName(className)
+	scrollFocusAuto(elems[num], idName)
+}
 var sfcount = 0
+// 次の位置を返す
+function sfcountNext(sfcount){
+	sfcount++
+	sfcount %= elems.length
+	return sfcount
+}
+function sfcountPrev(sfcount){
+	sfcount--
+	if(sfcount == -1){
+		sfcount = elems.length - 1
+	}
+	return sfcount
+}
+// 次のワードの位置を返す
+function sfcountNextWord(sfcount, className, word, regbool=false){
+	word = unifyWord(word)
+	var elems = document.getElementsByClassName(className)
+	var last = sfcountPrev(sfcount)
+	while(sfcount != last){
+		sfcount = sfcountNext(sfcount)
+		let elem = elems[sfcount]
+		if(wordMatch(elem.innerText, word, regbool)){
+			return sfcount
+		}
+	}
+	return -1
+}
+function sfcountPrevWord(sfcount, className, word, regbool=false){
+	word = unifyWord(word)
+	var elems = document.getElementsByClassName(className)
+	var last = sfcountNext(sfcount)
+	while(sfcount != last){
+		sfcount = sfcountPrev(sfcount)
+		let elem = elems[sfcount]
+		if(wordMatch(elem.innerText, word, regbool)){
+			return sfcount
+		}
+	}
+	return -1
+}
 // 探索するクラス名と、選択時に一時的につけるid
 function scrollFocusNext(className, idName){
 	init_sfcount(className, idName, -1)
 	
 	elems = document.getElementsByClassName(className)
-	sfcount++
-	sfcount %= elems.length
-	scrollFocusAuto(elems[sfcount], className, idName)
+	sfcount = sfcountNext(sfcount)
+	scrollFocusAuto(elems[sfcount], idName)
 }
 function scrollFocusPrev(className, idName){
 	init_sfcount(className, idName, 1)
 	
 	elems = document.getElementsByClassName(className)
-	sfcount--
-	if(sfcount == -1){
-		sfcount = elems.length - 1
-	}
-	scrollFocusAuto(elems[sfcount], className, idName)
+	sfcount = sfcountPrev(sfcount)
+	scrollFocusAuto(elems[sfcount], idName)
 }
 // 次のワードを辿る
 function scrollFocusNextWord(word, className, idName, regbool){
 	init_sfcount(className, idName, -1)
 	
-	elems = document.getElementsByClassName(className)
-	last = sfcount - 1
-	if(last == -1){
-		last = elems.length - 1
-	}
-	word = unifyWord(word)
-	while(sfcount != last){
-		sfcount++
-		sfcount %= elems.length
-		let elem = elems[sfcount]
-		if(wordMatch(elem.innerText, word, regbool)){
-			scrollFocusAuto(elem, className, idName)
-			break
-		}
-	}
+	var elems = document.getElementsByClassName(className)
+	sfcount = sfcountNextWord(sfcount, className, word, regbool)
+	scrollFocusAuto(elems[sfcount], idName)
 }
 // 前のワードをたどる(上の関数の取り消し)
 function scrollFocusPrevWord(word, className, idName, regbool){
 	init_sfcount(className, idName, 1)
 
-	elems = document.getElementsByClassName(className)
-	last = sfcount + 1
-	if(last == elems.length){
-		last = 0
-	}
-	word = unifyWord(word)
-	while(sfcount != last){
-		sfcount--
-		if(sfcount == -1){
-			sfcount = elems.length - 1
-		}
-		let elem = elems[sfcount]
-
-		if(wordMatch(elem.innerText, word, regbool)){
-			scrollFocusAuto(elem, className, idName)
-			break
-		}
-	}
+	var elems = document.getElementsByClassName(className)
+	sfcount = sfcountPrevWord(sfcount, className, word, regbool)
+	scrollFocusAuto(elems[sfcount], idName)
 }
 // pm:補正 
 function init_sfcount(className, idName, pm){
@@ -241,7 +232,7 @@ function init_sfcount(className, idName, pm){
 		sfcount += pm
 	}
 }
-// フォーカス位置より前のワード数
+// フォーカス位置より前のワード数+1をカウント
 function countBeforeWords(word, className, regbool){
 	var elems = document.getElementsByClassName(className)
 	var count = 0
@@ -275,7 +266,6 @@ function shiftLeftChars(str, leftChar, rightChar, range){
 	for(let n = 0; n < str.length; n++){
 		chars[n] = shiftLeftChar(str[n], leftChar, rightChar, range)
 	}
-	// console.log(str)
 	return chars.join('')
 }
 // 大文字/小文字、半角/全角、ひらがな/カタカナを柔軟に検索させるため
@@ -307,6 +297,7 @@ function itel_main(bool){
 			words[n] = words[n].substr(regPrefix.length)
 			regbool = true
 		}
+		words_nums[words[n]] = 0
 		replace_rec(document.body, words[n], 'itel-highlight', colors[n%colors.length], regbool)
 	}
 	return words_nums
