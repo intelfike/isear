@@ -36,20 +36,20 @@ function inputsEnable(bool){
 
 // === 検索ワードのテキストボックス
 var search_words_obj = document.getElementById('search_words')
-search_words_obj.onkeydown = (e)=>{
+search_words_obj.onkeydown = async (e)=>{
+	var words = getWords()
 	switch(e.code){
 	case 'Enter':
 		if(e.ctrlKey){
 			// google検索
-			var tmpwords = getWords()
-			var words = []
+			var search_words = []
 			for(let n = 0; n < tmpwords.length; n++){
-				if(tmpwords[n].toUpperCase().indexOf(regPrefix) == 0){
+				if(words[n].toUpperCase().indexOf(regPrefix) == 0){
 					continue
 				}
-				words.push(tmpwords[n])
+				search_words.push(tmpwords[n])
 			}
-			var url = getGoogleSearchURL(words)
+			var url = getGoogleSearchURL(search_words)
 			if(e.shiftKey){
 				// 新しいタブでgoogle検索
 				inject('window.open("'+url+'")')
@@ -58,24 +58,46 @@ search_words_obj.onkeydown = (e)=>{
 			}
 			break
 		}
+		if(changeInput()){
+			updateAll()
+		}
+		
 		if(e.shiftKey){
 			inject('scrollFocusPrev("itel-highlight","itel-selected")')
-			break
+		}else{
+			inject('scrollFocusNext("itel-highlight","itel-selected")')
 		}
-		inject('scrollFocusNext("itel-highlight","itel-selected")')
+		// ハイライトの位置を表示
+		for(let n = 0; n < words.length; n++){
+			let word = words[n]
+			var res = await executeCode('countBeforeWords("'+word+'", "itel-highlight", false)')
+			var curnum = res[0]
+			log(curnum)
+			document.getElementById(word + '-num').innerText = curnum
+		}
+		
 		break
 	}
 }
+var prev_input = ""
+function changeInput(){
+	var input = search_words_obj.value
+	var bool = (input != prev_input)
+	log(input)
+	prev_input = input
+	return bool
+}
+
 search_words_obj.onkeyup = (e)=>{
-	if(
-		e.key == 'Backspace' ||
-		e.key == 'Delete' ||
-		e.key == 'Tab' ||
-		/^F\d$/.test(e.key) ||
-		e.key.length == 1
-	){
-		updateAllTimeout(200)
-	}
+	// if(
+	// 	e.key == 'Backspace' ||
+	// 	e.key == 'Delete' ||
+	// 	e.key == 'Tab' ||
+	// 	/^F\d$/.test(e.key) ||
+	// 	e.key.length == 1
+	// ){
+	// 	updateAllTimeout(500)
+	// }
 }
 
 // アップデートイベント
@@ -94,12 +116,23 @@ function getWords(){
 }
 
 // 画面を全てアップデートする
-function updateAll(){
+async function updateAll(){
 	var words = getWords()
 	
 	updateButton(words)
 	
-	executeHighlight(words)
+	var results = await executeHighlight(words)
+	words_nums = results[0]
+	console.log(words_nums)
+	for(word in words_nums){
+		var num = words_nums[word]
+		var button = document.getElementById(word)
+		button.innerText = word + '('
+		var word_num = document.createElement('span')
+		word_num.id = word+'-num'
+		button.append(word_num)
+		button.append('/'+num+')')
+	}
 	
 	var swords = search_words_obj.value
 	storageSetWords(swords)
@@ -130,6 +163,7 @@ function updateButton(words){
 		// ハイライト用の移動ボタン定義
 		let btn = document.createElement('button')
 		btn.className = 'btn'
+		btn.id = word
 		btn.innerText = word
 		btn.style.backgroundColor = colors[n%colors.length]
 		btn.onclick = (e)=>{
@@ -157,6 +191,7 @@ document.body.onload = async ()=>{
 	var words = await storageGetWords()
 	if(words != undefined){
 		search_words_obj.value = words
+		changeInput()
 	}
 	
 	var enabled = await storageGet('enabled')

@@ -1,4 +1,5 @@
-
+// 呼び出し元に返す値(callback)
+var words_nums = {}
 // 再帰的にテキストノードを書き換えるため
 var rep_sw = true
 function replace_rec(obj, word, className, bgcolor, regbool){
@@ -21,6 +22,10 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 		if(start == -1){
 			return
 		}
+		if(words_nums[word] == undefined){
+			words_nums[word] = 0
+		}
+		words_nums[word]++
 		
 		newGroup = document.createElement('esspan') // 複数のノードをまとめる
 		newGroup.className = parentClassName
@@ -61,6 +66,15 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 		}
 		replace_rec(child, word, className, bgcolor, regbool)
 	}
+}
+function wordMatch(str, word, regbool){
+	if(regbool){
+		var m = regMatch(elem.innerText, word)
+		if(m != null){
+			word = m[0]
+		}
+	}
+	return unifyWord(str) == unifyWord(word)
 }
 function regMatch(str, regstr){
 	var m = null
@@ -190,13 +204,7 @@ function scrollFocusNextWord(word, className, idName, regbool){
 		sfcount++
 		sfcount %= elems.length
 		let elem = elems[sfcount]
-		if(regbool){
-			var m = regMatch(elem.innerText, word)
-			if(m != null){
-				word = m[0]
-			}
-		}
-		if(unifyWord(elem.innerText) == word){
+		if(wordMatch(elem.innerText, word, regbool)){
 			scrollFocusAuto(elem, className, idName)
 			break
 		}
@@ -218,26 +226,32 @@ function scrollFocusPrevWord(word, className, idName, regbool){
 			sfcount = elems.length - 1
 		}
 		let elem = elems[sfcount]
-		if(regbool){
-			var m = regMatch(elem.innerText, word)
-			if(m != null){
-				word = m[0]
-			}
-		}
 
-		if(unifyWord(elem.innerText) == word){
+		if(wordMatch(elem.innerText, word, regbool)){
 			scrollFocusAuto(elem, className, idName)
 			break
 		}
 	}
 }
-// pm補正 
+// pm:補正 
 function init_sfcount(className, idName, pm){
 	var selected = document.getElementById(idName)
 	if(selected == null){
 		sfcount = getUnderCurrentElemNum(className)
 		sfcount += pm
 	}
+}
+// フォーカス位置より前のワード数
+function countBeforeWords(word, className, regbool){
+	var elems = document.getElementsByClassName(className)
+	var count = 0
+	for (var i = sfcount; i >= 0; i--) {
+		var elem = elems[i]
+		if(wordMatch(elem.innerText, word, regbool)){
+			count++
+		}
+	}
+	return count
 }
 
 
@@ -295,5 +309,6 @@ function itel_main(bool){
 		}
 		replace_rec(document.body, words[n], 'itel-highlight', colors[n%colors.length], regbool)
 	}
+	return words_nums
 }
 itel_main()
