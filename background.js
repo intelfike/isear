@@ -8,7 +8,7 @@ chrome.tabs.onActivated.addListener(async function(){
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 	var f = async ()=>{
 		await saveGoogleSearchWords(tab.url)
-		highlighting(tab.url)		
+		highlighting(tab.url)
 	}
 	if(changeInfo.status == 'complete'){
 		f()

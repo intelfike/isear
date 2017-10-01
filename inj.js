@@ -3,6 +3,7 @@ var words_nums = {}
 // 再帰的にテキストノードを書き換えるため
 var rep_sw = true
 function replace_rec(obj, word, className, bgcolor, regbool){
+	var escword = word
 	if(obj.nodeType == 3){ // テキストノードなら
 		// 置換処理
 		var text = obj.data
@@ -22,7 +23,7 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 		if(start == -1){
 			return
 		}
-		words_nums[word]++
+		words_nums[escword]++
 		
 		newGroup = document.createElement('esspan') // 複数のノードをまとめる
 		newGroup.className = parentClassName
@@ -286,19 +287,21 @@ function itel_main(bool){
 		return
 	}
 
+	
 	var words = search_words
 	if(words.length == 0){
 		return
 	}
 	
 	for(let n = 0; n < words.length; n++){
-		var regbool = false
-		if(words[n].toUpperCase().indexOf(regPrefix) == 0){
-			words[n] = words[n].substr(regPrefix.length)
+		let word = words[n]
+		let regbool = false
+		if(word.toUpperCase().indexOf(regPrefix) == 0){
+			word = word.substr(regPrefix.length)
 			regbool = true
 		}
-		words_nums[words[n]] = 0
-		replace_rec(document.body, words[n], 'itel-highlight', colors[n%colors.length], regbool)
+		words_nums[word] = 0
+		replace_rec(document.body, word, 'itel-highlight', colors[n%colors.length], regbool)
 	}
 	return words_nums
 }

@@ -67,15 +67,22 @@ search_words_obj.onkeydown = async (e)=>{
 		}else{
 			inject('scrollFocusNext("itel-highlight","itel-selected")')
 		}
-		updateCur(words)
+		updateCurNum(words)
 		break
 	}
 }
-async function updateCur(words){
+async function updateCurNum(words){
 	// ハイライトの位置を表示
 	for(let n = 0; n < words.length; n++){
 		let word = words[n]
-		var res = await executeCode('countBeforeWords("'+word+'", "itel-highlight", false)')
+		// 正規表現かどうか
+		let regbool = false
+		if(word.toUpperCase().indexOf(regPrefix) == 0){
+			word = word.substr(regPrefix.length)
+			regbool = true
+		}
+
+		var res = await executeCode('countBeforeWords("'+word+'", "itel-highlight", '+regbool+')')
 		var curnum = res[0]
 		// log(curnum)
 		var button = document.getElementById(word + '-num')
@@ -112,17 +119,13 @@ async function updateAll(){
 	var words = getWords()
 	
 	updateButton(words)
-	
 	var results = await executeHighlight(words)
 	words_nums = results[0]
-	// console.log(words_nums)
 	for(word in words_nums){
 		var num = words_nums[word]
 		var button = document.getElementById(word)
-		log(num)
 		if(num == 0){
 			// ボタンを無効に
-			log(button.disabled)
 			button.disabled = true
 			return
 		}
@@ -175,7 +178,7 @@ function updateButton(words){
 				inject('scrollFocusNextWord("'+word+'", "itel-highlight", "itel-selected", '+regbool+')')
 			}
 			
-			updateCur(words)
+			updateCurNum(words)
 		}
 		btn_list_obj.append(btn)
 	}
