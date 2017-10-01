@@ -6,11 +6,15 @@ chrome.tabs.onActivated.addListener(async function(){
 })
 
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
-	if(changeInfo.status != 'complete'){
+	var f = async ()=>{
+		await saveGoogleSearchWords(tab.url)
+		highlighting(tab.url)		
+	}
+	if(changeInfo.status == 'complete'){
+		f()
 		return
 	}
-	await saveGoogleSearchWords(tab.url)
-	highlighting(tab.url)
+	whereTimeout(f, 200)
 })
 
 // google検索ワードをストレージに保存する
