@@ -67,18 +67,21 @@ search_words_obj.onkeydown = async (e)=>{
 		}else{
 			inject('scrollFocusNext("itel-highlight","itel-selected")')
 		}
-		// ハイライトの位置を表示
-		for(let n = 0; n < words.length; n++){
-			let word = words[n]
-			var res = await executeCode('countBeforeWords("'+word+'", "itel-highlight", false)')
-			var curnum = res[0]
-			log(curnum)
-			document.getElementById(word + '-num').innerText = curnum
-		}
-		
+		updateCur(words)
 		break
 	}
 }
+async function updateCur(words){
+	// ハイライトの位置を表示
+	for(let n = 0; n < words.length; n++){
+		let word = words[n]
+		var res = await executeCode('countBeforeWords("'+word+'", "itel-highlight", false)')
+		var curnum = res[0]
+		log(curnum)
+		document.getElementById(word + '-num').innerText = curnum
+	}
+}
+
 var prev_input = ""
 function changeInput(){
 	var input = search_words_obj.value
@@ -88,21 +91,9 @@ function changeInput(){
 	return bool
 }
 
-search_words_obj.onkeyup = (e)=>{
-	// if(
-	// 	e.key == 'Backspace' ||
-	// 	e.key == 'Delete' ||
-	// 	e.key == 'Tab' ||
-	// 	/^F\d$/.test(e.key) ||
-	// 	e.key.length == 1
-	// ){
-	// 	updateAllTimeout(500)
-	// }
-}
-
 // アップデートイベント
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
-	updateAll()
+	updateAllTimeout(200)
 })
 
 // === 関数
@@ -180,6 +171,7 @@ function updateButton(words){
 				inject('scrollFocusNextWord("'+word+'", "itel-highlight", "itel-selected", '+regbool+')')
 			}
 			
+			updateCur(words)
 		}
 		btn_list_obj.append(btn)
 	}
