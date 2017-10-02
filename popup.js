@@ -43,11 +43,12 @@ search_words_obj.onkeydown = async (e)=>{
 		if(e.ctrlKey){
 			// google検索
 			var search_words = []
-			for(let n = 0; n < tmpwords.length; n++){
+			for(let n = 0; n < words.length; n++){
+				let word = words[n]
 				if(words[n].toUpperCase().indexOf(regPrefix) == 0){
 					continue
 				}
-				search_words.push(tmpwords[n])
+				search_words.push(word)
 			}
 			var url = getGoogleSearchURL(search_words)
 			if(e.shiftKey){
@@ -82,10 +83,11 @@ async function updateCurNum(words){
 			regbool = true
 		}
 
-		var res = await executeCode('countBeforeWords("'+word+'", "itel-highlight", '+regbool+')')
-		var curnum = res[0]
-		// log(curnum)
-		var button = document.getElementById(word + '-num')
+		let res = await executeCode('countBeforeWords("'+word+'", "itel-highlight", '+regbool+')')
+		let curnum = ''+res[0]
+		let numstr = document.getElementById(word + '-num').innerText
+		curnum = leftfill(curnum, '0', numstr.length)
+		let button = document.getElementById(word + '-cur-num')
 		button.innerText = curnum
 	}
 }
@@ -130,10 +132,16 @@ async function updateAll(){
 			return
 		}
 		button.innerText = word + '('
+		var word_cur_num = document.createElement('span')
+		word_cur_num.id = word+'-cur-num'
+		word_cur_num.innerText = leftfill('','0',(''+num).length)
+		button.append(word_cur_num)
+		button.append('/')
 		var word_num = document.createElement('span')
 		word_num.id = word+'-num'
+		word_num.innerText = num
 		button.append(word_num)
-		button.append('/'+num+')')
+		button.append(')')
 	}
 	
 	var swords = search_words_obj.value
