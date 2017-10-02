@@ -7,7 +7,7 @@ chrome.tabs.onActivated.addListener(async function(){
 
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 	var f = async ()=>{
-		await saveGoogleSearchWords(tab.url)
+		await saveGoogleSearchWords(tabId, tab.url)
 		highlighting(tab.url)
 	}
 	if(changeInfo.status == 'complete'){
@@ -16,15 +16,13 @@ chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 	}
 	whereTimeout(f, 200)
 })
+chrome.tabs.onRemoved.addListener(async function(tabId, changeInfo, tab){
+	storageRemove(tabId)
+})
 
 // google検索ワードをストレージに保存する
-function saveGoogleSearchWords(url){
+function saveGoogleSearchWords(tabId, url){
 	return new Promise(async ok => {
-		var data = await storageGet(url)
-		if(data[url] != undefined){
-			ok()
-			return
-		}
 		if(url.indexOf('www.google') == -1){
 			ok()
 			return

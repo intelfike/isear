@@ -19,6 +19,9 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 			}
 			word = m[0]
 		}
+		if(word == ''){
+			return
+		}
 		var start = unifyWord(obj.data).indexOf(unifyWord(word))
 		if(start == -1){
 			return
@@ -67,9 +70,14 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 }
 function wordMatch(str, word, regbool){
 	if(regbool){
-		var m = regMatch(elem.innerText, word)
+		var m = regMatch(str, word)
 		if(m != null){
-			word = m[0]
+			for(let n = 0; n < m.length; n++){
+				if(m[n] == str){
+					return true
+				}
+			}
+			return false
 		}
 	}
 	return unifyWord(str) == unifyWord(word)
@@ -168,28 +176,26 @@ function sfcountPrev(sfcount){
 	return sfcount
 }
 // 次のワードの位置を返す
-function sfcountNextWord(sfcount, className, word, regbool=false){
-	word = unifyWord(word)
+function sfcountNextWord(count, className, word, regbool=false){
 	var elems = document.getElementsByClassName(className)
-	var last = sfcountPrev(sfcount)
-	while(sfcount != last){
-		sfcount = sfcountNext(sfcount)
-		let elem = elems[sfcount]
+	var last = sfcountPrev(count)
+	while(count != last){
+		count = sfcountNext(count)
+		let elem = elems[count]
 		if(wordMatch(elem.innerText, word, regbool)){
-			return sfcount
+			return count
 		}
 	}
 	return -1
 }
-function sfcountPrevWord(sfcount, className, word, regbool=false){
-	word = unifyWord(word)
+function sfcountPrevWord(count, className, word, regbool=false){
 	var elems = document.getElementsByClassName(className)
-	var last = sfcountNext(sfcount)
-	while(sfcount != last){
-		sfcount = sfcountPrev(sfcount)
-		let elem = elems[sfcount]
+	var last = sfcountNext(count)
+	while(count != last){
+		count = sfcountPrev(count)
+		let elem = elems[count]
 		if(wordMatch(elem.innerText, word, regbool)){
-			return sfcount
+			return count
 		}
 	}
 	return -1
@@ -301,7 +307,6 @@ function itel_main(bool){
 			regbool = true
 		}
 		words_nums[word] = 0
-		console.log(word)
 		replace_rec(document.body, word, 'itel-highlight', colors[n%colors.length], regbool)
 	}
 	return words_nums

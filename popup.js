@@ -178,8 +178,9 @@ function updateButton(words){
 				children[cn].style.borderRadius = "0"
 			}
 			btn.style.borderRadius = "16px"
-		
+			
 			var key_event = e||window.event
+			log(regbool)
 			if(key_event.shiftKey){
 				inject('scrollFocusPrevWord("'+word+'", "itel-highlight", "itel-selected", '+regbool+')')
 			}else{
