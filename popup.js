@@ -185,6 +185,14 @@ function updateButton(words){
 			
 			var key_event = e||window.event
 			log(regbool)
+			if(key_event.ctrlKey){
+				var url = getGoogleSearchURL([word])
+				if(key_event.shiftKey){
+					inject('window.open("'+url+'")')
+				}else{
+					changeURL(url)
+				}
+			}
 			if(key_event.shiftKey){
 				inject('scrollFocusPrevWord("'+word+'", "itel-highlight", "itel-selected", '+regbool+')')
 			}else{
