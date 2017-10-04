@@ -37,16 +37,16 @@ function inputsEnable(bool){
 // === 検索ワードのテキストボックス
 var search_words_obj = document.getElementById('search_words')
 search_words_obj.onkeydown = async (e)=>{
-	var words = getWords()
 	switch(e.code){
 	case 'Enter':
 		if(e.ctrlKey){
 			// google検索
+			words = search_words_obj.value.split(/[\s\t]/g)
 			var search_words = []
 			for(let n = 0; n < words.length; n++){
 				let word = words[n]
 				if(words[n].toUpperCase().indexOf(regPrefix) == 0){
-					continue
+					break
 				}
 				search_words.push(word)
 			}
@@ -68,6 +68,7 @@ search_words_obj.onkeydown = async (e)=>{
 		}else{
 			inject('scrollFocusNext("itel-highlight","itel-selected")')
 		}
+		var words = getWords()
 		updateCurNum(words)
 		break
 	}
