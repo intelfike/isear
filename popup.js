@@ -45,8 +45,11 @@ search_words_obj.onkeydown = async (e)=>{
 			var search_words = []
 			for(let n = 0; n < words.length; n++){
 				let word = words[n]
-				if(words[n].toUpperCase().indexOf(regPrefix) == 0){
+				if(words[n].toUpperCase() == regPrefix){
 					break
+				}
+				if(words[n].toUpperCase().indexOf(regPrefix) == 0){
+					continue
 				}
 				search_words.push(word)
 			}
