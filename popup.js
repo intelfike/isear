@@ -133,7 +133,7 @@ async function updateAll(){
 		if(num == 0){
 			// ボタンを無効に
 			button.disabled = true
-			return
+			break
 		}
 		button.innerText = word + '('
 		var word_cur_num = document.createElement('span')
