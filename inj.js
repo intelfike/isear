@@ -245,6 +245,7 @@ function countBeforeWords(word, className, regbool){
 	var count = 0
 	for (var i = sfcount; i >= 0; i--) {
 		var elem = elems[i]
+		console.log(elem.innerText, word, regbool)
 		if(wordMatch(elem.innerText, word, regbool)){
 			count++
 		}

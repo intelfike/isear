@@ -5,11 +5,13 @@ on_obj.onclick = ()=>{
 	extensionEnable(enabled)
 }
 // 全機能停止
-function extensionEnable(bool){
+function extensionEnable(bool, update=true){
 	storageSet('enabled', bool)
 	inputsEnable(bool)
 	var words = getWords()
-	executeHighlight(words, bool)
+	if(update){
+		executeHighlight(words, bool)
+	}
 }
 // 入力禁止、デザイン変更
 function inputsEnable(bool){
@@ -219,9 +221,8 @@ document.body.onload = async ()=>{
 	if(enabled == undefined){
 		enabled = true
 	}
-	extensionEnable(enabled)
+	extensionEnable(enabled, false)
 	if(enabled){
-		updateAll()
 		search_words_obj.focus()
 		return
 	}
