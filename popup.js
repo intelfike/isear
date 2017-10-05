@@ -89,12 +89,15 @@ async function updateCurNum(words){
 			regbool = true
 		}
 
-		let res = await executeCode('countBeforeWords("'+word+'", "itel-highlight", '+regbool+')')
+		let cur = document.getElementById(word+'-cur-num')
+		if(cur == null || cur.disabled==true){
+			continue
+		}
+		let res = await executeCode('countBeforeWords('+JSON.stringify(word)+', "itel-highlight", '+regbool+')')
 		let curnum = ''+res[0]
-		let numstr = document.getElementById(word + '-num').innerText
+		let numstr = cur.innerText
 		curnum = leftfill(curnum, '0', numstr.length)
-		let button = document.getElementById(word + '-cur-num')
-		button.innerText = curnum
+		cur.innerText = curnum
 	}
 }
 
@@ -126,30 +129,10 @@ function getWords(){
 async function updateAll(){
 	var words = getWords()
 	
-	updateButton(words)
 	var results = await executeHighlight(words)
 	words_nums = results[0]
-	for(word in words_nums){
-		var num = words_nums[word]
-		var button = document.getElementById(word)
-		if(num == 0){
-			// ボタンを無効に
-			button.disabled = true
-			continue
-		}
-		button.innerText = word + '('
-		var word_cur_num = document.createElement('span')
-		word_cur_num.id = word+'-cur-num'
-		word_cur_num.innerText = leftfill('','0',(''+num).length)
-		button.append(word_cur_num)
-		button.append('/')
-		var word_num = document.createElement('span')
-		word_num.id = word+'-num'
-		word_num.innerText = num
-		button.append(word_num)
-		button.append(')')
-	}
-	
+	updateButton(words)
+	updateNums(words_nums)
 	var swords = search_words_obj.value
 	storageSetWords(swords)
 }
@@ -159,7 +142,37 @@ function updateAllTimeout(time){
 }
 
 // === 関数
-
+function updateNums(){
+	var buttons = document.getElementsByClassName('btn')
+	for(let n = 0; n < buttons.length; n++){
+		let button = buttons[n]
+		var word = button.innerText
+		updateNum(word, button)
+	}
+}
+async function updateNum(word, btn, regbool){
+	// ボタンに数字を追加
+	var num = await executeCode('countAllWords('+JSON.stringify(word)+', "itel-highlight", '+regbool+')')
+	if(num == 0){
+		btn.disabled = true
+		return
+	}
+	btn.disabled = false
+	var span = document.createElement('span')
+	var padding = leftfill('', '0', (''+num).length)
+	span.innerText = padding
+	span.className = word+'-cur-num'
+	
+	var span2 = document.createElement('span')
+	span2.innerText = num
+	span2.className = word+'-num'
+	
+	btn.append('(')
+	btn.append(span)
+	btn.append('/')
+	btn.append(span2)
+	btn.append(')')
+}
 // 引数は文字列型配列、それによってボタンを作成
 var btn_list_obj = document.getElementById('btn_list')
 function updateButton(words){
@@ -185,8 +198,8 @@ function updateButton(words){
 			}
 			btn.style.borderRadius = "16px"
 			
+			// クリック時のハイライト選択移動
 			var key_event = e||window.event
-			log(regbool)
 			if(key_event.ctrlKey){
 				var url = getGoogleSearchURL([word])
 				if(key_event.shiftKey){
@@ -196,13 +209,16 @@ function updateButton(words){
 				}
 			}
 			if(key_event.shiftKey){
-				inject('scrollFocusPrevWord("'+word+'", "itel-highlight", "itel-selected", '+regbool+')')
+				inject('scrollFocusPrevWord('+JSON.stringify(word)+', "itel-highlight", "itel-selected", '+regbool+')')
 			}else{
-				inject('scrollFocusNextWord("'+word+'", "itel-highlight", "itel-selected", '+regbool+')')
+				inject('scrollFocusNextWord('+JSON.stringify(word)+', "itel-highlight", "itel-selected", '+regbool+')')
 			}
 			
 			updateCurNum(words)
 		}
+		
+		updateNum(word, btn)
+		
 		btn_list_obj.append(btn)
 	}
 }
@@ -210,9 +226,9 @@ function updateButton(words){
 // 最初に実行される
 document.body.onload = async ()=>{
 	// 以前の状態を思い出す
-	var words = await storageGetWords()
-	if(words != undefined){
-		search_words_obj.value = words + ' '
+	var swords = await storageGetWords()
+	if(swords != undefined){
+		search_words_obj.value = swords + ' '
 		changeInput()
 	}
 	
@@ -224,6 +240,7 @@ document.body.onload = async ()=>{
 	extensionEnable(enabled, false)
 	if(enabled){
 		search_words_obj.focus()
+		updateCurNum(wordsSplit(swords))
 		return
 	}
 }

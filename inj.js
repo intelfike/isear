@@ -245,14 +245,23 @@ function countBeforeWords(word, className, regbool){
 	var count = 0
 	for (var i = sfcount; i >= 0; i--) {
 		var elem = elems[i]
-		console.log(elem.innerText, word, regbool)
 		if(wordMatch(elem.innerText, word, regbool)){
 			count++
 		}
 	}
 	return count
 }
-
+function countAllWords(word, className, regbool){
+	var elems = document.getElementsByClassName(className)
+	var count = 0
+	for (var i = elems.length-1; i >= 0; i--) {
+		var elem = elems[i]
+		if(wordMatch(elem.innerText, word, regbool)){
+			count++
+		}
+	}
+	return count
+}
 
 // 文字に融通を聞かせる為
 function shiftLeftCode(code, leftCode, rightCode, range){
