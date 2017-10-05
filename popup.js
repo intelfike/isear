@@ -210,7 +210,7 @@ document.body.onload = async ()=>{
 	// 以前の状態を思い出す
 	var words = await storageGetWords()
 	if(words != undefined){
-		search_words_obj.value = words
+		search_words_obj.value = words + ' '
 		changeInput()
 	}
 	
