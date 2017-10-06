@@ -251,7 +251,17 @@ function countBeforeWords(word, className, regbool){
 	}
 	return count
 }
-
+function countAllWords(word, className, regbool){
+	var elems = document.getElementsByClassName(className)
+	var count = 0
+	for (var i = elems.length-1; i >= 0; i--) {
+		var elem = elems[i]
+		if(wordMatch(elem.innerText, word, regbool)){
+			count++
+		}
+	}
+	return count
+}
 
 // 文字に融通を聞かせる為
 function shiftLeftCode(code, leftCode, rightCode, range){
