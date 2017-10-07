@@ -1,13 +1,12 @@
-function inject(code, callback){
+function inject(code: string){
 	chrome.tabs.executeScript(null,
-		{code:code},
-		callback
+		{code:code}
 	)
 }
 function log(mess){
 	inject("console.log("+JSON.stringify(mess)+")")
 }
-function changeURL(url){
+function changeURL(url: string){
 	chrome.tabs.update(null, {
 		url:url
 	})
@@ -67,7 +66,7 @@ function storageGetWords(urlLoad=true){
 	return new Promise(async ok => {
 		var tabId = await getTabId()
 		var value = await storageGet(tabId)
-		var words = value[tabId]
+		var words = value[''+tabId]
 		if(words == undefined){
 			var value = await storageGet('words')
 			words = value['words']

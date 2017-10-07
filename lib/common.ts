@@ -1,4 +1,4 @@
-var regPrefix = '@RE:'
+const regPrefix = '@RE:'
 function trimReg(word){
 		let regbool = false
 		if(word.toUpperCase().indexOf(regPrefix) == 0){
@@ -59,11 +59,11 @@ var colors = ['#FF0', '#4FF', '#F8F', '#8F8', '#FA0']
 function executeHighlightAuto(words){
 	return new Promise(async ok=>{
 		var enabled = await storageGet('enabled')
-		enabled = enabled['enabled']
-		if(enabled == undefined){
-			enabled = true
+		var enb = enabled['enabled']
+		if(enb == undefined){
+			enb = true
 		}
-		await executeHighlight(words, enabled)
+		await executeHighlight(words, enb)
 		ok()
 	})
 }

@@ -1,5 +1,8 @@
+/// <reference path="lib/common.ts" />
+/// <reference path="lib/apiwrapper.ts" />
+
 // === on/offボタンクリック時の処理
-var on_obj = document.getElementById('on')
+const on_obj = <HTMLInputElement> document.getElementById('on')
 on_obj.onclick = ()=>{
 	var enabled = on_obj.innerText == 'ON'
 	extensionEnable(enabled)
@@ -37,7 +40,7 @@ function inputsEnable(bool){
 }
 
 // === 検索ワードのテキストボックス
-var search_words_obj = document.getElementById('search_words')
+var search_words_obj = <HTMLInputElement> document.getElementById('search_words')
 search_words_obj.onkeydown = async (e)=>{
 	switch(e.code){
 	case 'Enter':
@@ -89,7 +92,7 @@ async function updateCurNum(words){
 			regbool = true
 		}
 
-		let cur = document.getElementById(word+'-cur-num')
+		let cur = <HTMLInputElement> document.getElementById(word+'-cur-num')
 		if(cur == null || cur.disabled==true){
 			continue
 		}
@@ -130,9 +133,9 @@ async function updateAll(){
 	var words = getWords()
 	
 	var results = await executeHighlight(words)
-	words_nums = results[0]
+	var words_nums = results[0]
 	updateButton(words)
-	updateNums(words_nums)
+	updateNums()
 	var swords = search_words_obj.value
 	storageSetWords(swords)
 }
@@ -145,14 +148,15 @@ function updateAllTimeout(time){
 function updateNums(){
 	var buttons = document.getElementsByClassName('btn')
 	for(let n = 0; n < buttons.length; n++){
-		let button = buttons[n]
+		let button = <HTMLElement> buttons[n]
 		var word = button.innerText
 		updateNum(word, button)
 	}
 }
-async function updateNum(word, btn, regbool){
+async function updateNum(word, btn, regbool=false){
 	// ボタンに数字を追加
-	var num = await executeCode('countAllWords('+JSON.stringify(word)+', "itel-highlight", '+regbool+')')
+	var numret = await executeCode('countAllWords('+JSON.stringify(word)+', "itel-highlight", '+regbool+')')
+	var num = numret[0]
 	if(num == 0){
 		btn.disabled = true
 		return
@@ -186,7 +190,7 @@ function updateButton(words){
 			regbool = true
 		}
 		// ハイライト用の移動ボタン定義
-		let btn = document.createElement('button')
+		let btn = <HTMLElement> document.createElement('button')
 		btn.className = 'btn'
 		btn.id = word
 		btn.innerText = word
@@ -194,12 +198,13 @@ function updateButton(words){
 		btn.onclick = (e)=>{
 			var children = btn_list_obj.children
 			for(let cn = 0; cn < children.length; cn++){
-				children[cn].style.borderRadius = "0"
+				let child = <HTMLElement>children[cn]
+				child.style.borderRadius = "0"
 			}
 			btn.style.borderRadius = "16px"
 			
 			// クリック時のハイライト選択移動
-			var key_event = e||window.event
+			var key_event = <KeyboardEvent>(e||window.event)
 			if(key_event.ctrlKey){
 				var url = getGoogleSearchURL([word])
 				if(key_event.shiftKey){
@@ -219,7 +224,7 @@ function updateButton(words){
 		
 		updateNum(word, btn)
 		
-		btn_list_obj.append(btn)
+		btn_list_obj.appendChild(btn)
 	}
 }
 
