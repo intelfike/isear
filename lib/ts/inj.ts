@@ -35,15 +35,18 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 		newObj.className = className
 		newObj.style.backgroundColor = bgcolor
 		newObj.style.color = "black"
-		var middle = text.substr(start, word.length)
-		newObj.innerText = middle
-		newGroup.append(newObj)
 		
 		var prefix = text.substr(0, start)
-		newGroup.prepend(prefix)
+		newGroup.appendChild(document.createTextNode(prefix))
+		
+		var middle = text.substr(start, word.length)
+		newObj.innerText = middle
+		newGroup.appendChild(newObj)
 		
 		var suffix = text.substr(start+word.length)
-		newGroup.append(suffix)
+		newGroup.appendChild(document.createTextNode(suffix))
+		
+		console.log(newGroup)
 		
 		obj.parentNode.replaceChild(newGroup, obj)
 		newGroup.outerHTML = newGroup.innerHTML
