@@ -14,8 +14,8 @@ chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 	}
 	whereTimeout(f, 200)
 })
-chrome.tabs.onRemoved.addListener(async function(tabId, changeInfo, tab){
-	storageRemove(tabId)
+chrome.tabs.onRemoved.addListener(async function(tabId: number){
+	storageRemove(''+tabId)
 })
 
 // google検索ワードをストレージに保存する
