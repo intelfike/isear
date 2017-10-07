@@ -1,6 +1,3 @@
-/// <reference path="lib/common.ts" />
-/// <reference path="lib/apiwrapper.ts" />
-
 // === on/offボタンクリック時の処理
 const on_obj = <HTMLInputElement> document.getElementById('on')
 on_obj.onclick = ()=>{

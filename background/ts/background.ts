@@ -1,5 +1,3 @@
-var search_words_obj = document.getElementById('search_words')
-
 chrome.tabs.onActivated.addListener(async function(){
 	var swords = await storageGetWords()
 	await storageSetWords(swords)
@@ -31,7 +29,7 @@ function saveGoogleSearchWords(tabId, url){
 			ok()
 			return
 		}
-		q = url.match(/q=[^&]+/g)[0]
+		var q = url.match(/q=[^&]+/g)[0]
 		q = q.substr(2)
 		q = decodeURI(q)
 		var swords = q.split('+').join(' ')
@@ -41,7 +39,7 @@ function saveGoogleSearchWords(tabId, url){
 }
 async function highlighting(url){
 	var swords = await storageGetWords()
-	words = wordsSplit(swords)
+	var words = wordsSplit(swords)
 	await executeHighlightAuto(words)
 }
 
