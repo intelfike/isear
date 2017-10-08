@@ -151,6 +151,9 @@ function getUnderCurrentElemNum(className){
 	return 0
 }
 function scrollFocusAuto(obj, idName){
+	if(obj == undefined || obj == null){
+		return
+	}
 	var abstop = getAbsTop(obj)
 	// 画面外ならスクロールする
 	if(abstop > window.innerHeight+window.pageYOffset ||
