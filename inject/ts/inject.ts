@@ -46,8 +46,6 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 		var suffix = text.substr(start+word.length)
 		newGroup.appendChild(document.createTextNode(suffix))
 		
-		console.log(newGroup)
-		
 		obj.parentNode.replaceChild(newGroup, obj)
 		newGroup.outerHTML = newGroup.innerHTML
 		return

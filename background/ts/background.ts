@@ -31,7 +31,8 @@ function saveGoogleSearchWords(tabId, url){
 		}
 		var q = url.match(/q=[^&]+/g)[0]
 		q = q.substr(2)
-		q = decodeURI(q)
+		q = decodeURIComponent(q)
+
 		var swords = q.split('+').join(' ')
 		await storageSetWords(swords)
 		ok()
