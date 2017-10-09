@@ -78,7 +78,7 @@ search_words_obj.onkeydown = async (e)=>{
 		break
 	}
 }
-async function updateCurNum(words){
+async function updateCurNum(words: string[]){
 	// ハイライトの位置を表示
 	for(let n = 0; n < words.length; n++){
 		let word = words[n]
@@ -117,7 +117,7 @@ chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 
 // === 関数
 function getGoogleSearchURL(words){
-	var w: []string = []
+	var w: string[] = []
 	for(let n = 0; n < words.length; n++){
 		w[n] = encodeURIComponent(words[n])
 	}
