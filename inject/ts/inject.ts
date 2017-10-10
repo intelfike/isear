@@ -109,7 +109,7 @@ function offElementByClassName(c){
 	// えいち・える・えす
 	var hls = document.getElementsByClassName(c)
 	for(let n = hls.length-1; n >= 0 ; n--){
-		let hl = hls[n]
+		let hl = <HTMLElement> hls[n]
 		hl.outerHTML = hl.innerHTML
 	}
 }
