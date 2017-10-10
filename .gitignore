@@ -1,2 +1,7 @@
 *.js
-node_modules/
+
+# モジュール 自作型定義のみ管理
+node_modules/*
+!node_modules/@types/
+node_modules/@types/*
+!node_modules/@types/isear/
