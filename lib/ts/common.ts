@@ -9,16 +9,23 @@ function trimReg(word){
 }
 
 
-function wordsSplit(swords){
+function wordsSplit(swords: string): string[]{
 	swords = swords.trim()
 	if(swords == ''){
 		return []
 	}
-	var words = swords.match(/-?"[^"]*"|-?'[^']+'|[^\s\t　]+/g)
-	var result = []
-	var regbool = false
+	var unique: {[key: string]: boolean;} = {}
+	var words: string[] = swords.match(/-?"[^"]*"|-?'[^']+'|[^\s\t　]+/g)
+	var result: string[] = []
+	var regbool: boolean = false
 	for(let n = 0; n < words.length; n++){
 		let word = words[n]
+		// 文字の重複を無くす
+		if(unique[word] == true){
+			continue
+		}
+		unique[word] = true
+		
 		if(word.toUpperCase() == regPrefix){
 			regbool = true
 			continue

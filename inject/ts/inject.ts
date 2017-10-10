@@ -46,8 +46,6 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 		var suffix = text.substr(start+word.length)
 		newGroup.appendChild(document.createTextNode(suffix))
 		
-		console.log(newGroup)
-		
 		obj.parentNode.replaceChild(newGroup, obj)
 		newGroup.outerHTML = newGroup.innerHTML
 		return
@@ -111,7 +109,7 @@ function offElementByClassName(c){
 	// えいち・える・えす
 	var hls = document.getElementsByClassName(c)
 	for(let n = hls.length-1; n >= 0 ; n--){
-		let hl = hls[n]
+		let hl = <HTMLElement> hls[n]
 		hl.outerHTML = hl.innerHTML
 	}
 }
@@ -151,6 +149,9 @@ function getUnderCurrentElemNum(className){
 	return 0
 }
 function scrollFocusAuto(obj, idName){
+	if(obj == undefined || obj == null){
+		return
+	}
 	var abstop = getAbsTop(obj)
 	// 画面外ならスクロールする
 	if(abstop > window.innerHeight+window.pageYOffset ||

@@ -24,7 +24,7 @@ function getURL(){
 		})
 	})
 }
-function getTabId(){
+function getTabId(): Promise<number>{
 	return new Promise((ok, reject) => {
 		chrome.tabs.getSelected(null, function (tab) {
 			ok(tab.id)
@@ -62,19 +62,19 @@ function storageSetWords(words, urlsave=true){
 	})
 }
 // 保存された検索ワードをテキストボックスに自動入力
-function storageGetWords(urlLoad=true){
+function storageGetWords(urlLoad=true): Promise<string> {
 	return new Promise(async ok => {
 		var tabId = await getTabId()
 		var value = await storageGet(tabId)
-		var words = value[''+tabId]
-		if(words == undefined){
+		var swords: string = value[''+tabId]
+		if(swords == undefined){
 			var value = await storageGet('words')
-			words = value['words']
+			swords = value['words']
 		}
-		if(words != undefined){
-			words = words.trim()
+		if(swords != undefined){
+			swords = swords.trim()
 		}	
-		ok(words)
+		ok(swords)
 	})
 }
 

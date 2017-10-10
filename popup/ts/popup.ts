@@ -94,7 +94,11 @@ chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 
 // === 関数
 function getGoogleSearchURL(words){
-	return 'https://www.google.com/search?q='+words.join('+')
+	var w: string[] = []
+	for(let n = 0; n < words.length; n++){
+		w[n] = encodeURIComponent(words[n])
+	}
+	return 'https://www.google.com/search?q='+w.join('+')
 }
 
 function getWords(){
