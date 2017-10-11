@@ -44,3 +44,16 @@ Exceeded "Google Toolbar" in the page search.<br>
 	一番下にスクロールし、「キーボード ショートカット」をクリック<br>
 	isearの［未設定］と書かれたテキストボックスをクリック<br>
 	「Ctrl」キーを押しながら「F」キーを押す（他のキーを割り当てたい場合は任意のキーを押す）<br>
+
+# LICENSE
+## GPLv2
+コードの書き換えは自由です。ただ、書き換えたツールを公開する場合、そのコードをツールのユーザーが見れる形にしてください。<br>
+また、強制はしませんが intelfike@gmail.com まで通知していただけるとありがたいです。<br>
+<b>&copy;2017.10- intelfike(domain:intelf.link, intelfike.*)</b>
+
+## Thanks
+### @types/chrome
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+### @types/es6-promise
+Copyright (c) Microsoft Corporation. All rights reserved.

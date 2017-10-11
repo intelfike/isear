@@ -1,6 +1,6 @@
 cd `dirname $0`
 cd ..
-sudo apt install -y nodejs
+sudo apt install -y nodejs nodejs-legacy
 sudo apt install -y npm
 sudo npm install -g typescript
 npm install -D @types/chrome
