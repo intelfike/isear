@@ -53,7 +53,5 @@ Exceeded "Google Toolbar" in the page search.<br>
 
 ## Thanks
 ### @types/chrome
-Copyright (c) Microsoft Corporation. All rights reserved.
-
 ### @types/es6-promise
 Copyright (c) Microsoft Corporation. All rights reserved.
