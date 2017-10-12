@@ -1,4 +1,5 @@
 cd `dirname $0`
+cd ..
 
 echo '#copy build/'
 rm -rf deploy

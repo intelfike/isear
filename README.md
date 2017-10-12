@@ -53,6 +53,7 @@ Exceeded "Google Toolbar" in the page search.<br>
 
 ## Thanks
 これらのソースコード等はリポジトリ、公開するツールには含まれておりません。
+コンパイル、トランスパイル、エラーチェック等にのみ利用しております。
 ### TypeScript
 ### @types/chrome
 ### @types/es6-promise
