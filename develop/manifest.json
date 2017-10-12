@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+
+  "name": "isear",
+  "description": "統合検索ツール。Google検索、ページ内検索を統合する",
+  "version": "0.52",
+
+  "background": {
+      "persistent": true,
+      "scripts": ["background.js" ]
+   },
+  "browser_action": {
+    "default_icon": "icons/icon4.png",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+      "128": "icons/icon4.png",
+      "16": "icons/icon4.png",
+      "48": "icons/icon4.png"
+  },
+  "permissions": [
+    "tabs", "storage", "contextMenus",
+    "http://*/*", "https://*/*"
+  ]
+}

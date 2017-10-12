@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>タイトル</title>
+	<script src="popup.js" defer></script>
+	<style>
+		body{
+			width: 500px;
+			background-color: #EFF;
+		}
+		#search{
+			display: flex;
+			width: 100%;
+		}
+		#checks{
+			font-size: 16px;
+		}
+		#checks label{
+			margin-right: 16px;
+		}
+/*		input[type="checkbox"]{
+			transform: scale(1.2);
+		}
+*/		#search_words{
+			width: 100%;
+		}
+		button#on{
+			width: 45px;
+		}
+		button:disabled{
+			background-color: #DDD !important;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<div id="checks">
+		</div>
+		<div id="search">
+			<input type="text" id="search_words" placeholder="ctrl+(shift+)EnterでGoogle検索">
+			<button id="on">ON</button>
+		</div>
+		<div id="btn_list">
+			
+		</div>
+	</div>
+</body>
+</html>
