@@ -52,6 +52,10 @@ Exceeded "Google Toolbar" in the page search.<br>
 <b>&copy;2017.10- intelfike(domain:intelf.link, intelfike.*)</b>
 
 ## Thanks
+これらのソースコード等はリポジトリ、公開するツールには含まれておりません。
+### TypeScript
 ### @types/chrome
 ### @types/es6-promise
 Copyright (c) Microsoft Corporation. All rights reserved.
+### closure-compiler-js
+Copyright © 2017 The Closure Compiler Authors

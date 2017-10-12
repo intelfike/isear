@@ -1,4 +1,6 @@
 *.js
+build/
+deploy/
 
 # モジュール 自作型定義のみ管理
 node_modules/*

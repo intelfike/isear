@@ -1,2 +1,2 @@
 cd `dirname $0`
-tsc --out popup.js collect.ts
+tsc --out ../build/popup.js collect.ts

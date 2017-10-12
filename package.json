@@ -19,6 +19,7 @@
   "devDependencies": {
     "@types/chrome": "0.0.49",
     "@types/es6-promise": "0.0.33",
+    "gulp-uglify": "^3.0.0",
     "typescript": "^2.5.3"
   }
 }

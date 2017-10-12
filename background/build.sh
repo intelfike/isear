@@ -1,2 +1,2 @@
 cd `dirname $0`
-tsc --out background.js collect.ts
+tsc --out ../build/background.js collect.ts

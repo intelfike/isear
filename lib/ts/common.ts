@@ -81,7 +81,7 @@ function executeHighlight(words, bool=true){
 		await executeCode("search_words="+JSON.stringify(words))
 		await executeCode("colors="+JSON.stringify(colors))
 		await executeCode("regPrefix="+JSON.stringify(regPrefix))
-		var result = await executeFile('/inject/inject.js')
+		var result = await executeFile('inject.js')
 		chrome.tabs.insertCSS(null, {
 			code: '#itel-selected{background-color:red !important;}'
 		})
