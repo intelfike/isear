@@ -3,10 +3,10 @@ function inject(code: string){
 		{code:code}
 	)
 }
-function log(mess){
+function log(mess:any){
 	inject("console.log("+JSON.stringify(mess)+")")
 }
-function changeURL(url: string){
+function changeURL(url:string){
 	chrome.tabs.update(null, {
 		url:url
 	})
@@ -31,45 +31,41 @@ function getTabId(): Promise<number>{
 		})
 	})
 }
-function storageSet(key, value){
+function storageSet(key:string, value){
 	return new Promise(ok => {
 		var data = {}
 		data[''+key] = value
-		chrome.storage.local.set(data, ()=>{
-			ok()
-		})
+		chrome.storage.local.set(data, ok)
 	})
 }
-function storageGet(key){
+function storageGet(key:string):Promise<any>{
 	return new Promise(ok => {
-		chrome.storage.local.get(''+key, function(value){
-			ok(value)
+		chrome.storage.local.get(key, function(value){
+			ok(value[key])
 		})
 	})
 }
-function storageRemove(key){
+function storageRemove(key:string){
 	return new Promise(ok =>{
-		chrome.storage.local.remove(''+key, ok)
+		chrome.storage.local.remove(key, ok)
 	})
 }
 // wordsには文字列を渡してね
-function storageSetWords(words, urlsave=true){
+function storageSetWords(words:string){
 	return new Promise(async ok => {
 		var tabId = await getTabId()
-		await storageSet(tabId, words)
-		await storageSet('words', words)
+		await storageSet(saveWordsPrefix+tabId, words)
+		await storageSet(latest_words, words)
 		ok()
 	})
 }
 // 保存された検索ワードをテキストボックスに自動入力
-function storageGetWords(urlLoad=true): Promise<string> {
+function storageGetWords(urlLoad=true):Promise<string> {
 	return new Promise(async ok => {
 		var tabId = await getTabId()
-		var value = await storageGet(tabId)
-		var swords: string = value[''+tabId]
+		var swords:string = await storageGet(saveWordsPrefix+tabId)
 		if(swords == undefined){
-			var value = await storageGet('words')
-			swords = value['words']
+			swords = await storageGet(latest_words)
 		}
 		if(swords != undefined){
 			swords = swords.trim()
@@ -77,8 +73,22 @@ function storageGetWords(urlLoad=true): Promise<string> {
 		ok(swords)
 	})
 }
+function storageSetNum(words_nums:{[key:string]:number;}){
+	return new Promise(async ok => {
+		var tabId = await getTabId()
+		await storageSet(saveNumPrefix+tabId, words_nums)
+		ok()
+	})
+}
+function storageGetNum():Promise<{[key:string]:number;}>{
+	return new Promise(async ok => {
+		var tabId = await getTabId()
+		var swords:{[key:string]:number;} = await storageGet(saveNumPrefix+tabId)
+		ok(swords)
+	})
+}
 
-function executeFile(file){
+function executeFile(file:string):any{
 	return new Promise(ok => {
 		chrome.tabs.executeScript(null,
 			{file:file},
@@ -88,7 +98,7 @@ function executeFile(file){
 		)
 	})
 }
-function executeCode(code){
+function executeCode(code:string):any{
 	return new Promise(ok => {
 		chrome.tabs.executeScript(null,
 			{code:code},

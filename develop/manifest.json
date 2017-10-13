@@ -3,7 +3,7 @@
 
   "name": "isear",
   "description": "統合検索ツール。Google検索、ページ内検索を統合する",
-  "version": "0.52",
+  "version": "0.53",
 
   "background": {
       "persistent": true,

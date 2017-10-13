@@ -1,21 +1,25 @@
 chrome.tabs.onActivated.addListener(async function(){
+	await executeFile('inject.js')
 	var swords = await storageGetWords()
 	await storageSetWords(swords)
 })
 
-chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
+chrome.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	var f = async ()=>{
+		log('e')
+		await executeFile('inject.js')
 		await saveGoogleSearchWords(tabId, tab.url)
-		highlighting(tab.url)
+		await highlighting(tabId)
 	}
 	if(changeInfo.status == 'complete'){
 		f()
+		// whereTimeout(f, 200)
 		return
 	}
-	whereTimeout(f, 200)
 })
-chrome.tabs.onRemoved.addListener(async function(tabId: number){
-	storageRemove(''+tabId)
+chrome.tabs.onRemoved.addListener(async function(tabId:number){
+	storageRemove(saveWordsPrefix+tabId)
+	storageRemove(saveNumPrefix+tabId)
 })
 
 // google検索ワードをストレージに保存する
@@ -29,7 +33,7 @@ function saveGoogleSearchWords(tabId, url){
 			ok()
 			return
 		}
-		var q = url.match(/q=[^&]+/g)[0]
+		var q:string = url.match(/q=[^&]+/g)[0]
 		q = q.substr(2)
 		q = decodeURIComponent(q)
 
@@ -38,10 +42,10 @@ function saveGoogleSearchWords(tabId, url){
 		ok()
 	})
 }
-async function highlighting(url){
-	var swords = await storageGetWords()
-	var words = wordsSplit(swords)
-	await executeHighlightAuto(words)
+async function highlighting(tabId:number){
+	var swords:string = await storageGetWords()
+	var words_nums = await executeHighlightAuto(swords)
+	await storageSet(saveNumPrefix+tabId, words_nums)
 }
 
 
@@ -49,14 +53,14 @@ chrome.contextMenus.create({
 	'title':'isear 検索ワードに追加',
 	'contexts':['selection'],
 	'onclick':async (clicked)=>{
-		var text = clicked.selectionText
+		var text:string = clicked.selectionText
 		if(/[\s\t　]/g.test(text)){
 			text = text.replace(/[\s\t　]+/g, ' ')
 			text = '"'+text+'"'
 		}
-		var swords = await storageGetWords()
+		var swords:string = await storageGetWords()
 		swords = swords + ' ' + text
 		await storageSetWords(swords)
-		executeHighlightAuto(wordsSplit(swords))
+		await executeHighlightAuto(swords)
 	}
 })

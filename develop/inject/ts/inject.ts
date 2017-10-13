@@ -2,8 +2,8 @@
 var words_nums = {}
 // 再帰的にテキストノードを書き換えるため
 var rep_sw = true
-function replace_rec(obj, word, className, bgcolor, regbool){
-	var escword = word
+function replace_rec(obj:any, word:string, className:string, bgcolor:string, regbool:boolean){
+	var escword:string = word
 	if(obj.nodeType == 3){ // テキストノードなら
 		// 置換処理
 		var text = obj.data
@@ -69,9 +69,9 @@ function replace_rec(obj, word, className, bgcolor, regbool){
 		replace_rec(child, word, className, bgcolor, regbool)
 	}
 }
-function wordMatch(str, word, regbool){
+function wordMatch(str:string, word:string, regbool:boolean):boolean{
 	if(regbool){
-		var m = regMatch(str, word)
+		var m:string[] = regMatch(str, word)
 		if(m != null){
 			for(let n = 0; n < m.length; n++){
 				if(m[n] == str){
@@ -83,8 +83,8 @@ function wordMatch(str, word, regbool){
 	}
 	return unifyWord(str) == unifyWord(word)
 }
-function regMatch(str, regstr){
-	var m = null
+function regMatch(str:string, regstr:string):string[]{
+	var m:string[] = null
 	try{
 		m = str.match(new RegExp(regstr, 'g'))
 	}catch(e){
@@ -94,7 +94,7 @@ function regMatch(str, regstr){
 		return null
 	}
 	// プログラムの停止(無限ループ？)を回避する
-	var result = []
+	var result:string[] = []
 	for(let n = 0; n < m.length; n++){
 		if(m[n] == ''){
 			continue
@@ -104,17 +104,17 @@ function regMatch(str, regstr){
 	return result
 }
 
-function offElementByClassName(c){
-	// 過去の検索結果を削除するため
+function offElementByClassName(className:string){
+	// 過去の検索結果のハイライトを削除するため
 	// えいち・える・えす
-	var hls = document.getElementsByClassName(c)
+	var hls = document.getElementsByClassName(className)
 	for(let n = hls.length-1; n >= 0 ; n--){
 		let hl = <HTMLElement> hls[n]
 		hl.outerHTML = hl.innerHTML
 	}
 }
 
-function getAbsTop(obj){
+function getAbsTop(obj:Element){
 	if(obj == null || obj == undefined){
 		return null
 	}
@@ -122,8 +122,8 @@ function getAbsTop(obj){
 	var abstop = rect.top + window.pageYOffset
 	return abstop
 }
-function scrollToObj(obj){
-	var abstop = getAbsTop(obj)
+function scrollToObj(obj:Element){
+	var abstop:number = getAbsTop(obj)
 	scrollTo(0, abstop-(window.innerHeight/2))
 }
 function focusToObj(obj, idName){
@@ -138,7 +138,7 @@ function focusToObj(obj, idName){
 	}
 	obj.id = idName
 }
-function getUnderCurrentElemNum(className){
+function getUnderCurrentElemNum(className:string){
 	var elems = document.getElementsByClassName(className)
 	for(let n = 0; n < elems.length; n++){
 		let elem = elems[n]
@@ -148,7 +148,7 @@ function getUnderCurrentElemNum(className){
 	}
 	return 0
 }
-function scrollFocusAuto(obj, idName){
+function scrollFocusAuto(obj:Element, idName:string){
 	if(obj == undefined || obj == null){
 		return
 	}
@@ -161,18 +161,18 @@ function scrollFocusAuto(obj, idName){
 	}
 	focusToObj(obj, idName)
 }
-function scrollFocusAutoNum(className, num, idName){
+function scrollFocusAutoNum(className:string, num:number, idName:string){
 	var elems = document.getElementsByClassName(className)
 	scrollFocusAuto(elems[num], idName)
 }
-var sfcount = 0
+var sfcount:number = 0
 // 次の位置を返す
-function sfcountNext(sfcount, max){
+function sfcountNext(sfcount:number, max:number):number{
 	sfcount++
 	sfcount %= max
 	return sfcount
 }
-function sfcountPrev(sfcount, max){
+function sfcountPrev(sfcount:number, max:number):number{
 	sfcount--
 	if(sfcount == -1){
 		sfcount = max - 1
@@ -180,9 +180,9 @@ function sfcountPrev(sfcount, max){
 	return sfcount
 }
 // 次のワードの位置を返す
-function sfcountNextWord(count, className, word, regbool=false){
+function sfcountNextWord(count:number, className:string, word:string, regbool=false):number{
 	var elems = document.getElementsByClassName(className)
-	var last = sfcountPrev(count, elems.length)
+	var last:number = sfcountPrev(count, elems.length)
 	while(count != last){
 		count = sfcountNext(count, elems.length)
 		let elem = <HTMLElement> elems[count]
@@ -192,9 +192,9 @@ function sfcountNextWord(count, className, word, regbool=false){
 	}
 	return -1
 }
-function sfcountPrevWord(count, className, word, regbool=false){
+function sfcountPrevWord(count:number, className:string, word:string, regbool=false):number{
 	var elems = document.getElementsByClassName(className)
-	var last = sfcountNext(count, elems.length)
+	var last:number = sfcountNext(count, elems.length)
 	while(count != last){
 		count = sfcountPrev(count, elems.length)
 		let elem = <HTMLElement> elems[count]
@@ -267,42 +267,8 @@ function countAllWords(word, className, regbool){
 	return count
 }
 
-// 文字に融通を聞かせる為
-function shiftLeftCode(code, leftCode, rightCode, range){
-	if(rightCode <= code && code <= rightCode+range){
-		code = code - rightCode + leftCode
-	}
-	return code
-}
-function shiftLeftChar(char, leftChar, rightChar, range){
-	var code = char.charCodeAt()
-	var leftCode = leftChar.charCodeAt()
-	var rightCode = rightChar.charCodeAt()
-	code = shiftLeftCode(code, leftCode, rightCode, range)
-	return String.fromCharCode(code)
-}
-// 半角/全角、ひらがな/カタカナを柔軟に検索させるため
-function shiftLeftChars(str, leftChar, rightChar, range){
-	var chars = []
-	for(let n = 0; n < str.length; n++){
-		chars[n] = shiftLeftChar(str[n], leftChar, rightChar, range)
-	}
-	return chars.join('')
-}
-// 大文字/小文字、半角/全角、ひらがな/カタカナを柔軟に検索させるため
-function unifyWord(word){
-	word = shiftLeftChars(word, '0', '０', 9)
-	word = shiftLeftChars(word, 'A', 'Ａ', 'Z'.charCodeAt(0)-'A'.charCodeAt(0))
-	word = shiftLeftChars(word, 'a', 'ａ', 'z'.charCodeAt(0)-'a'.charCodeAt(0))
-	word = shiftLeftChars(word, 'ぁ', 'ァ', 'ゔ'.charCodeAt(0)-'ぁ'.charCodeAt(0))
-	word = word.toUpperCase()
-	return word
-}
-
 var enabled: boolean
-var regPrefix: string
-var colors: string[]
-var search_words: string[]
+var search_words: string
 // 検索結果をハイライトする処理
 function itel_main(bool: boolean){
 	offElementByClassName('itel-highlight')
@@ -311,22 +277,17 @@ function itel_main(bool: boolean){
 		return
 	}
 
+	var words:Words = new Words(search_words)
 	
-	var words = search_words
-	if(words.length == 0){
+	if(words.array.length == 0){
 		return
 	}
 	
-	for(let n = 0; n < words.length; n++){
-		let word = words[n]
-		let regbool = false
-		if(word.toUpperCase().indexOf(regPrefix) == 0){
-			word = word.substr(regPrefix.length)
-			regbool = true
-		}
-		words_nums[word] = 0
-		replace_rec(document.body, word, 'itel-highlight', colors[n%colors.length], regbool)
+	for(let n = 0; n < words.array.length; n++){
+		let word = words.array[n]
+		words_nums[word.word] = 0
+		replace_rec(document.body, word.word, 'itel-highlight', colors[n%colors.length], word.regexp)
 	}
 	return words_nums
 }
-itel_main(true)
+// itel_main(true)

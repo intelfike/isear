@@ -1,45 +1,25 @@
-function trimReg(word){
-	let regbool = false
-	if(word.toUpperCase().indexOf(regPrefix) == 0){
-		word = word.substr(regPrefix.length)
-		regbool = true
-	}
-	return {word:word,regbool:regbool}
-}
-
-
-function wordsSplit(swords: string): string[]{
-	var words = new Words(swords)
-	var result:string[] = words.getList('origin')
-	return result
-}
-
-// 検索結果のハイライトの色の表示順
-var colors = ['#FF0', '#4FF', '#F8F', '#8F8', '#FA0']
-// wordsはwordSplitせよ
-function executeHighlightAuto(words){
+// swordは原文を渡す
+function executeHighlightAuto(swords:string):Promise<{[key:string]:number;}>{
 	return new Promise(async ok=>{
-		var enabled = await storageGet('enabled')
-		var enb = enabled['enabled']
+		var enb:boolean = await storageGet('enabled')
 		if(enb == undefined){
 			enb = true
 		}
-		await executeHighlight(words, enb)
-		ok()
+		var result:{[key:string]:number;} = await executeHighlight(swords, enb)
+		ok(result)
 	})
 }
 // boolはfalseならハイライトをオフ
-function executeHighlight(words, bool=true){
+function executeHighlight(swords:string, bool=true):Promise<{[key:string]:number;}>{
 	return new Promise(async ok=>{
-		await executeCode("enabled="+JSON.stringify(bool))
-		await executeCode("search_words="+JSON.stringify(words))
-		await executeCode("colors="+JSON.stringify(colors))
-		await executeCode("regPrefix="+JSON.stringify(regPrefix))
-		var result = await executeFile('inject.js')
 		chrome.tabs.insertCSS(null, {
 			code: '#itel-selected{background-color:red !important;}'
 		})
-		ok(result)
+		await executeCode("enabled="+JSON.stringify(bool))
+		await executeCode("search_words="+JSON.stringify(swords))
+		// await executeFile('inject.js')
+		var result = await executeCode('itel_main()')
+		ok(<Promise<{[key:string]:number;}>> result[0])
 	})
 }
 

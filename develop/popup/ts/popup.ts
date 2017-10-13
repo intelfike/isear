@@ -1,20 +1,20 @@
 // === on/offボタンクリック時の処理
 const on_obj = <HTMLInputElement> document.getElementById('on')
 on_obj.onclick = ()=>{
-	var enabled = on_obj.innerText == 'ON'
+	var enabled:boolean = on_obj.innerText == 'ON'
 	extensionEnable(enabled)
 }
 // 全機能停止
-function extensionEnable(bool, update=true){
+function extensionEnable(bool:boolean, update:boolean=true){
 	storageSet('enabled', bool)
 	inputsEnable(bool)
-	var words = getWords()
+	var words:string = getSwords()
 	if(update){
 		executeHighlight(words, bool)
 	}
 }
 // 入力禁止、デザイン変更
-function inputsEnable(bool){
+async function inputsEnable(bool:boolean){
 	if(bool){
 		on_obj.innerText = "OFF"
 		on_obj.style.backgroundColor = "#DDD"
@@ -32,8 +32,8 @@ function inputsEnable(bool){
 		}
 		return
 	}
-	var words = getWords()
-	updateButton(words)
+	var swords:string = getSwords()
+	updateButton()
 }
 
 // === 検索ワードのテキストボックス
@@ -43,19 +43,19 @@ search_words_obj.onkeydown = async (e)=>{
 	case 'Enter':
 		if(e.ctrlKey){
 			// google検索
-			words = search_words_obj.value.split(/[\s\t]/g)
-			var search_words = []
-			for(let n = 0; n < words.length; n++){
-				let word = words[n]
-				if(words[n].toUpperCase() == regPrefix){
+			var swords:string[] = search_words_obj.value.split(/[\s\t]/g)
+			var search_swords:string[] = []
+			for(let n = 0; n < swords.length; n++){
+				let word = swords[n]
+				if(word.toUpperCase() == regPrefix){
 					break
 				}
-				if(words[n].toUpperCase().indexOf(regPrefix) == 0){
+				if(word.toUpperCase().indexOf(regPrefix) == 0){
 					continue
 				}
-				search_words.push(word)
+				search_swords.push(word)
 			}
-			var url = getGoogleSearchURL(search_words)
+			var url = getGoogleSearchURL(search_swords)
 			if(e.shiftKey){
 				// 新しいタブでgoogle検索
 				inject('window.open("'+url+'")')
@@ -73,7 +73,6 @@ search_words_obj.onkeydown = async (e)=>{
 		}else{
 			inject('scrollFocusNext("itel-highlight","itel-selected")')
 		}
-		var words = getWords()
 		break
 	}
 }
@@ -88,12 +87,12 @@ function changeInput(){
 }
 
 // アップデートイベント
-chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
-	updateAllTimeout(200)
-})
+// chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
+// 	updateAllTimeout(200)
+// })
 
 // === 関数
-function getGoogleSearchURL(words){
+function getGoogleSearchURL(words:string[]){
 	var w: string[] = []
 	for(let n = 0; n < words.length; n++){
 		w[n] = encodeURIComponent(words[n])
@@ -101,55 +100,63 @@ function getGoogleSearchURL(words){
 	return 'https://www.google.com/search?q='+w.join('+')
 }
 
-function getWords(){
-	var search_words = search_words_obj.value
-	return wordsSplit(search_words)
+function getSwords():string{
+	return search_words_obj.value
+}
+function getWords():Promise<Words>{
+	return new Promise(async ok => {
+		var swords:string = getSwords()
+		var words:Words = new Words(swords)
+		// ボタンの個数を取得
+		var words_nums:{[key:string]:number;} = await storageGetNum()
+		for(let sword in words_nums){
+			let num = words_nums[sword]
+			let word = words.map[sword]
+			if(word == undefined){
+				continue
+			}
+			word.count.num = num
+		}
+		ok(words)
+	})
 }
 
 // 画面を全てアップデートする
 async function updateAll(){
-	var words = getWords()
+	var swords:string = getSwords()
+	var words:Words = await getWords()
 	
-	var results = await executeHighlight(words)
-	updateButton(words)
-	var swords = search_words_obj.value
+	var words_nums:{[key:string]:number;} = await executeHighlight(swords)
+	
+	await storageSetNum(words_nums)
+	updateButton()
 	storageSetWords(swords)
 }
 // 頻繁な更新対策
-function updateAllTimeout(time){
+function updateAllTimeout(time:number){
 	whereTimeout(updateAll, time)
 }
 
 // 引数は文字列型配列、それによってボタンを作成
 var btn_list_obj = document.getElementById('btn_list')
-function updateButton(words){
+async function updateButton(){
+	var words:Words = await getWords()
+	
 	btn_list_obj.innerHTML = ''
-	for(let n = 0; n < words.length; n++){
-		let word = words[n]
-		// 正規表現かどうか
-		let regbool = false
-		if(word.toUpperCase().indexOf(regPrefix) == 0){
-			word = word.substr(regPrefix.length)
-			regbool = true
-		}
+	for(let n = 0; n < words.array.length; n++){
+		let word = words.array[n]
+
 		// ハイライト用の移動ボタン定義
-		let btn = <HTMLElement> document.createElement('button')
+		let btn = <HTMLInputElement> document.createElement('button')
 		btn.className = 'btn'
-		btn.id = word
-		btn.innerText = word
+		btn.id = word.origin
+		btn.innerText = word.origin
 		btn.style.backgroundColor = colors[n%colors.length]
 		btn.onclick = (e)=>{
-			var children = btn_list_obj.children
-			for(let cn = 0; cn < children.length; cn++){
-				let child = <HTMLElement>children[cn]
-				child.style.borderRadius = "0"
-			}
-			btn.style.borderRadius = "16px"
-			
 			// クリック時のハイライト選択移動
 			var key_event = <KeyboardEvent>(e||window.event)
 			if(key_event.ctrlKey){
-				var url = getGoogleSearchURL([word])
+				var url = getGoogleSearchURL([word.origin])
 				if(key_event.shiftKey){
 					inject('window.open("'+url+'")')
 				}else{
@@ -157,10 +164,13 @@ function updateButton(words){
 				}
 			}
 			if(key_event.shiftKey){
-				inject('scrollFocusPrevWord('+JSON.stringify(word)+', "itel-highlight", "itel-selected", '+regbool+')')
+				inject('scrollFocusPrevWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regexp+')')
 			}else{
-				inject('scrollFocusNextWord('+JSON.stringify(word)+', "itel-highlight", "itel-selected", '+regbool+')')
+				inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regexp+')')
 			}
+		}
+		if(word.count.num == 0){
+			btn.disabled = true
 		}
 		btn_list_obj.appendChild(btn)
 	}
@@ -169,19 +179,18 @@ function updateButton(words){
 // 最初に実行される
 document.body.onload = async ()=>{
 	// 以前の状態を思い出す
-	var swords = await storageGetWords()
+	var swords:string = await storageGetWords()
 	if(swords != undefined){
 		search_words_obj.value = swords + ' '
 		changeInput()
 	}
 	
-	var enabled = await storageGet('enabled')
-	enabled = enabled['enabled']
-	if(enabled == undefined){
-		enabled = true
+	var en:boolean = await storageGet('enabled')
+	if(en == undefined){
+		en = true
 	}
-	extensionEnable(enabled, false)
-	if(enabled){
+	extensionEnable(en, false)
+	if(en){
 		search_words_obj.focus()
 		return
 	}
