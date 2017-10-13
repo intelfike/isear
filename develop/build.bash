@@ -6,8 +6,8 @@ cp popup/popup.html ../build
 echo '@copy icons'
 cp -r icons/ ../build
 echo '@compile inject'
-sh inject/build.sh
+bash inject/build.bash
 echo '@compile popup'
-sh popup/build.sh
+bash popup/build.bash
 echo '@compile background'
-sh background/build.sh
+bash background/build.bash
