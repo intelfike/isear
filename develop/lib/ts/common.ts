@@ -1,62 +1,16 @@
-const regPrefix = '@RE:'
 function trimReg(word){
-		let regbool = false
-		if(word.toUpperCase().indexOf(regPrefix) == 0){
-			word = word.substr(regPrefix.length)
-			regbool = true
-		}
-		return {word:word,regbool:regbool}
+	let regbool = false
+	if(word.toUpperCase().indexOf(regPrefix) == 0){
+		word = word.substr(regPrefix.length)
+		regbool = true
+	}
+	return {word:word,regbool:regbool}
 }
 
 
 function wordsSplit(swords: string): string[]{
-	swords = swords.trim()
-	if(swords == ''){
-		return []
-	}
-	var unique: {[key: string]: boolean;} = {}
-	var words: string[] = swords.match(/-?"[^"]*"|-?'[^']+'|[^\s\t　]+/g)
-	var result: string[] = []
-	var regbool: boolean = false
-	for(let n = 0; n < words.length; n++){
-		let word = words[n]
-		// 文字の重複を無くす
-		if(unique[word] == true){
-			continue
-		}
-		unique[word] = true
-		
-		if(word.toUpperCase() == regPrefix){
-			regbool = true
-			continue
-		}
-		if(word == 'OR'){
-			continue
-		}
-		if(word.indexOf('-') == 0){
-			continue
-		}
-		
-		if(regbool && word.indexOf(regPrefix) != 0){
-			word = regPrefix+word
-		}
-		// コンパイル失敗した正規表現は削除
-		if(word.toUpperCase().indexOf(regPrefix) == 0){
-			try{
-				new RegExp(word, 'g')
-			}catch(e){
-				continue
-			}
-		}else{
-			// カッコは検索しない
-			word = word.replace(/[()]/g,'')
-			word = word.replace(/^['"](.*)['"]$/g,'$1')
-		}
-		if(word == ''){
-			continue
-		}
-		result.push(word)
-	}
+	var words = new Words(swords)
+	var result:string[] = words.getList('origin')
 	return result
 }
 
@@ -81,7 +35,7 @@ function executeHighlight(words, bool=true){
 		await executeCode("search_words="+JSON.stringify(words))
 		await executeCode("colors="+JSON.stringify(colors))
 		await executeCode("regPrefix="+JSON.stringify(regPrefix))
-		var result = await executeFile('/inject/inject.js')
+		var result = await executeFile('inject.js')
 		chrome.tabs.insertCSS(null, {
 			code: '#itel-selected{background-color:red !important;}'
 		})
