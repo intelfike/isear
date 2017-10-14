@@ -21,10 +21,10 @@ class Word{
 		this.regexp = false
 		
 		if(sword == 'OR'){
-			return undefined
+			return
 		}
 		if(sword.indexOf('-') == 0){
-			return undefined
+			return
 		}
 		
 		// 正規表現の接頭語がついていたら外す
@@ -37,8 +37,7 @@ class Word{
 				new RegExp(sword, 'g')
 				this.regexp = true
 			}catch(e){
-				// this.enabled = false
-				return undefined
+				return
 			}
 		}else{
 			// カッコは検索しない
@@ -46,8 +45,9 @@ class Word{
 			sword = sword.replace(/^['"](.*)['"]$/g,'$1')
 		}
 		if(sword == ''){
-			return undefined
+			return
 		}
+		this.enabled = true
 		this.origin = sword
 		this.word = sword
 		this.unified = unifyWord(sword)
@@ -80,11 +80,12 @@ class Words{
 			}
 
 			let word:Word = new Word(sword, regbool)
-			if(word == undefined){
+			if(!word.enabled){
 				continue
 			}
+			word.regexp = false
 			this.array.push(word)
-			this.map[sword] = word
+			this.map[word.origin] = word
 		}
 	}
 	

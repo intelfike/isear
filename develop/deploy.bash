@@ -1,4 +1,5 @@
 cd `dirname $0`
+bash build.bash
 cd ..
 
 echo '#copy build/'
@@ -19,3 +20,5 @@ echo '#compile background.js'
 google-closure-compiler-js background.js > background.min.js
 rm background.js
 mv background.min.js background.js
+
+zip -r deploy.zip deploy

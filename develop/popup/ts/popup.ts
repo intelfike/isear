@@ -112,6 +112,8 @@ function getWords():Promise<Words>{
 		for(let sword in words_nums){
 			let num = words_nums[sword]
 			let word = words.map[sword]
+			log(sword)
+			log(word)
 			if(word == undefined){
 				continue
 			}

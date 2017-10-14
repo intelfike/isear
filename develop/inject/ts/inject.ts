@@ -122,10 +122,6 @@ function getAbsTop(obj:Element){
 	var abstop = rect.top + window.pageYOffset
 	return abstop
 }
-function scrollToObj(obj:Element){
-	var abstop:number = getAbsTop(obj)
-	scrollTo(0, abstop-(window.innerHeight/2))
-}
 function focusToObj(obj, idName){
 	// 過去のIDを削除する
 	var s = document.getElementById(idName)
@@ -152,13 +148,7 @@ function scrollFocusAuto(obj:Element, idName:string){
 	if(obj == undefined || obj == null){
 		return
 	}
-	var abstop = getAbsTop(obj)
-	// 画面外ならスクロールする
-	if(abstop > window.innerHeight+window.pageYOffset ||
-		abstop < window.pageYOffset
-	){
-		scrollToObj(obj)
-	}
+	obj.scrollIntoViewIfNeeded()
 	focusToObj(obj, idName)
 }
 function scrollFocusAutoNum(className:string, num:number, idName:string){
