@@ -9,7 +9,6 @@ const regPrefix = '@RE:'
 
 class Word{
 	origin:  string
-	word:    string
 	unified: string
 	regexp:  boolean
 	enabled: boolean
@@ -49,7 +48,6 @@ class Word{
 		}
 		this.enabled = true
 		this.origin = sword
-		this.word = sword
 		this.unified = unifyWord(sword)
 		this.count = new Count()
 	}
