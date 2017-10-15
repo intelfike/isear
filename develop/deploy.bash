@@ -21,4 +21,5 @@ google-closure-compiler-js background.js > background.min.js
 rm background.js
 mv background.min.js background.js
 
+cd ..
 zip -r deploy.zip deploy

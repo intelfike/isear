@@ -6,7 +6,6 @@ chrome.tabs.onActivated.addListener(async function(){
 
 chrome.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	var f = async ()=>{
-		log('e')
 		await executeFile('inject.js')
 		await saveGoogleSearchWords(tabId, tab.url)
 		await highlighting(tabId)
