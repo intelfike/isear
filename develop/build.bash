@@ -1,4 +1,5 @@
 cd `dirname $0`
+mkdir ../build
 echo '@copy manifest.json'
 cp manifest.json ../build
 echo '@copy popup.html'
