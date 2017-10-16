@@ -1,6 +1,14 @@
-# Google検索連携のWebページ内検索ツールです。
+# 統合検索ツールisear (Integrated Search)
+Google検索連携のWebページ内検索ツールです。<br>
 Exceeded "Google Toolbar" in the page search.<br>
 圧倒的ページ内検索力で、以前の「Google Toolbar」を凌駕する拡張機能です。
+
+## 特徴
+- chrome標準のページ内検索と同等か、それ以上の使い心地
+- chrome標準のページ内検索のユーザが利用しても違和感のない動作
+- シンプルなUI・機能
+- 安定した動作
+- ストレスなく動作する軽快さ
 
 ## 使い方
 - isearボタンをクリックするとisearウィンドウが表示されます。
