@@ -55,7 +55,7 @@ class Words{
 	array: Word[] = []
 	map:   {[key:string]:Word;} = {}
 	
-	constructor(swords: string){
+	constructor(swords:string){
 		swords = swords.trim()
 		if(swords == ''){
 			return
@@ -138,9 +138,7 @@ function shiftLeftChars(str, leftChar, rightChar, range){
 }
 // 大文字/小文字、半角/全角、ひらがな/カタカナを柔軟に検索させるため
 function unifyWord(word){
-	word = shiftLeftChars(word, '0', '０', 9)
-	word = shiftLeftChars(word, 'A', 'Ａ', 'Z'.charCodeAt(0)-'A'.charCodeAt(0))
-	word = shiftLeftChars(word, 'a', 'ａ', 'z'.charCodeAt(0)-'a'.charCodeAt(0))
+	word = shiftLeftChars(word, '!', '！', '~'.charCodeAt(0)-'!'.charCodeAt(0))
 	word = shiftLeftChars(word, 'ぁ', 'ァ', 'ゔ'.charCodeAt(0)-'ぁ'.charCodeAt(0))
 	word = word.toUpperCase()
 	return word
