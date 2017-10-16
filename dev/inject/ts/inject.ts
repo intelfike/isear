@@ -276,7 +276,7 @@ function itel_main(bool: boolean){
 	for(let n = 0; n < words.array.length; n++){
 		let word = words.array[n]
 		words_nums[word.origin] = 0
-		replace_rec(document.body, word.origin, 'itel-highlight', colors[n%colors.length], word.regexp)
+		replace_rec(document.body, word.origin, 'itel-highlight', word.color, word.regexp!=undefined)
 	}
 	return words_nums
 }

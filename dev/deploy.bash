@@ -22,4 +22,4 @@ rm background.js
 mv background.min.js background.js
 
 cd ..
-zip -r deploy.zip deploy
+zip -r isear.zip deploy

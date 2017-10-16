@@ -5,9 +5,17 @@
 	<title>タイトル</title>
 	<script src="popup.js" defer></script>
 	<style>
+		@font-face {
+			font-family: 'Noto Mono';
+			src: url("data/NotoMono-hinted/NotoMono-Regular.ttf");
+		}
 		body{
 			width: 500px;
 			background-color: #EFF;
+			font-family: "Noto Mono";
+		}
+		button, input{
+			font-family: "Noto Mono";
 		}
 		#search{
 			display: flex;
@@ -19,10 +27,7 @@
 		#checks label{
 			margin-right: 16px;
 		}
-/*		input[type="checkbox"]{
-			transform: scale(1.2);
-		}
-*/		#search_words{
+		#search_words{
 			width: 100%;
 		}
 		button#on{

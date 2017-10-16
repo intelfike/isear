@@ -10,14 +10,14 @@ const regPrefix = '@RE:'
 class Word{
 	origin:  string
 	unified: string
-	regexp:  boolean
+	color:   string
+	regexp:  RegExp
 	enabled: boolean
 	count:   Count
 	
 	// regbool=trueで強制正規表現
 	constructor(sword:string, regbool:boolean=false){
 		this.enabled = false
-		this.regexp = false
 		
 		if(sword == 'OR'){
 			return
@@ -33,8 +33,7 @@ class Word{
 		}
 		if(regbool){
 			try{
-				new RegExp(sword, 'g')
-				this.regexp = true
+				this.regexp = new RegExp(sword, 'g')
 			}catch(e){
 				return
 			}
@@ -78,10 +77,11 @@ class Words{
 			}
 
 			let word:Word = new Word(sword, regbool)
-			if(!word.enabled){
+			if(word.origin == undefined){
 				continue
 			}
-			word.regexp = false
+			word.regexp = undefined
+			word.color = colors[n%colors.length]
 			this.array.push(word)
 			this.map[word.origin] = word
 		}

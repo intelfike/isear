@@ -151,7 +151,7 @@ async function updateButton(){
 		btn.className = 'btn'
 		btn.id = word.origin
 		btn.innerText = word.origin
-		btn.style.backgroundColor = colors[n%colors.length]
+		btn.style.backgroundColor = word.color
 		btn.onclick = (e)=>{
 			// クリック時のハイライト選択移動
 			var key_event = <KeyboardEvent>(e||window.event)
@@ -164,9 +164,9 @@ async function updateButton(){
 				}
 			}
 			if(key_event.shiftKey){
-				inject('scrollFocusPrevWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regexp+')')
+				inject('scrollFocusPrevWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+(word.regexp!=undefined)+')')
 			}else{
-				inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regexp+')')
+				inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+(word.regexp!=undefined)+')')
 			}
 		}
 		if(word.count.num == 0){
