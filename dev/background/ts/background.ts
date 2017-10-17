@@ -6,15 +6,25 @@ chrome.tabs.onActivated.addListener(async function(){
 
 chrome.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	var f = async ()=>{
+		var flag = await executeCode('typeof itel_inject_flag != "undefined"')
+		if(flag[0] == true){
+			return flag[0]
+		}
+
+		await executeCode('var itel_inject_flag = true')
 		await executeFile('inject.js')
+		chrome.tabs.insertCSS(null, {
+			code: '#itel-selected{background-color:red !important;}'
+		})
+
 		await saveGoogleSearchWords(tabId, tab.url)
 		await highlighting(tabId)
 	}
 	if(changeInfo.status == 'complete'){
 		f()
-		// whereTimeout(f, 200)
 		return
 	}
+	whereTimeout(f, 200)
 })
 chrome.tabs.onRemoved.addListener(async function(tabId:number){
 	storageRemove(saveWordsPrefix+tabId)

@@ -3,6 +3,10 @@ var latest_words = "latest_words"
 var saveWordsPrefix = 'words_'
 var saveNumPrefix = 'mum_'
 
+// injectのデータ
+var hlClass = 'itel-highlight'
+var selectId = 'itel-selected'
+
 // 検索結果のハイライトの色の表示順
 const colors = ['#FF0', '#4FF', '#F8F', '#8F8', '#FA0']
 const regPrefix = '@RE:'
@@ -39,8 +43,11 @@ class Word{
 			}
 		}else{
 			// カッコは検索しない
-			sword = sword.replace(/[()]/g,'')
-			sword = sword.replace(/^['"](.*)['"]$/g,'$1')
+			if(!/^"[^"]+"$|^'[^']+'$/g.test(sword)){
+				sword = sword.replace(/[()]/g,'')
+			}
+			sword = sword.replace(/^"(.*)"$/g,'$1')
+			sword = sword.replace(/^'(.*)'$/g,'$1')
 		}
 		if(sword == ''){
 			return
@@ -61,7 +68,7 @@ class Words{
 			return
 		}
 		var unique: {[key: string]: boolean;} = {}
-		var ws: string[] = swords.match(/-?"[^"]*"|-?'[^']+'|[^\s\t　]+/g)
+		var ws: string[] = swords.match(/-?"[^"]*"|-?'[^']+'|[^\s\t　"']+/g)
 		var regbool: boolean = false
 		for(let n = 0; n < ws.length; n++){
 			let sword:string = ws[n]
