@@ -38,24 +38,24 @@ class Word{
 		if(regbool){
 			try{
 				this.regexp = new RegExp(sword, 'g')
+				this.unified = sword
 			}catch(e){
 				return
 			}
 		}else{
-			// カッコは検索しない
 			if(!/^"[^"]+"$|^'[^']+'$/g.test(sword)){
 				sword = sword.replace(/[()]/g,'')
 			}
 			
 			sword = sword.replace(/^"(.*)"$/g,'$1')
 			sword = sword.replace(/^'(.*)'$/g,'$1')
+			this.unified = unifyWord(sword)
 		}
 		if(sword == ''){
 			return
 		}
 		this.enabled = true
 		this.origin = sword
-		this.unified = unifyWord(sword)
 		this.count = new Count()
 	}
 }
