@@ -7,7 +7,7 @@ function replace_rec(obj:any, word:string, className:string, bgcolor:string, reg
 	if(obj.nodeType == 3){ // テキストノードなら
 		// 置換処理
 		var text = obj.data
-		if(text.trim(' 　	') == ''){
+		if(text.trim() == ''){
 			return
 		}
 		var parentClassName = className + '-parent'

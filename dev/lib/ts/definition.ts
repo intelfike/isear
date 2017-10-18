@@ -8,7 +8,7 @@ var hlClass = 'itel-highlight'
 var selectId = 'itel-selected'
 
 // 検索結果のハイライトの色の表示順
-const colors = ['#FF0', '#4FF', '#F8F', '#8F8', '#FA0']
+const colors = ['#FF0', '#8F8', '#0FF', '#88F', '#F8F', '#F88', '#FA0']
 const regPrefix = '@RE:'
 
 class Word{
@@ -46,6 +46,7 @@ class Word{
 			if(!/^"[^"]+"$|^'[^']+'$/g.test(sword)){
 				sword = sword.replace(/[()]/g,'')
 			}
+			
 			sword = sword.replace(/^"(.*)"$/g,'$1')
 			sword = sword.replace(/^'(.*)'$/g,'$1')
 		}
@@ -67,9 +68,10 @@ class Words{
 		if(swords == ''){
 			return
 		}
-		var unique: {[key: string]: boolean;} = {}
-		var ws: string[] = swords.match(/-?"[^"]*"|-?'[^']+'|[^\s\t　"']+/g)
-		var regbool: boolean = false
+		var unique:{[key: string]: boolean;} = {}
+		var ws:string[] = swords.match(/-?"[^"]*"|-?'[^']+'|[^\s\t　"']+/g)
+		var regbool:boolean = false
+		var colorcnt:number = 0
 		for(let n = 0; n < ws.length; n++){
 			let sword:string = ws[n]
 			// 文字の重複を無くす
@@ -88,7 +90,9 @@ class Words{
 				continue
 			}
 			word.regexp = undefined
-			word.color = colors[n%colors.length]
+			word.color = colors[colorcnt]
+			colorcnt++
+			colorcnt %= colors.length
 			this.array.push(word)
 			this.map[word.origin] = word
 		}
