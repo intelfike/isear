@@ -2,6 +2,7 @@
 var latest_words = "latest_words"
 var saveWordsPrefix = 'words_'
 var saveNumPrefix = 'mum_'
+var words_history_limit = 5
 
 // injectのデータ
 var hlClass = 'itel-highlight'

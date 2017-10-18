@@ -51,11 +51,18 @@ function storageRemove(key:string){
 	})
 }
 // wordsには文字列を渡してね
-function storageSetWords(words:string){
+function storageSetWords(swords:string){
 	return new Promise(async ok => {
 		var tabId = await getTabId()
-		await storageSet(saveWordsPrefix+tabId, words)
-		await storageSet(latest_words, words)
+		await storageSet(saveWordsPrefix+tabId, swords)
+		await storageSet(latest_words, swords)
+		// 履歴を保存
+		var whn:number = await storageGet('words_history_num')
+		if(whn == undefined){
+			whn = 0
+		}
+		await storageSet('words_history_'+whn, swords)
+		await storageSet('words_history_num', (whn+1) % words_history_limit)
 		ok()
 	})
 }
