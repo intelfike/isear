@@ -69,6 +69,10 @@ class Words{
 			return
 		}
 		var unique:{[key: string]: boolean;} = {}
+		swords = shiftLeftChars(swords, '"', '”')
+		swords = shiftLeftChars(swords, "'", "’")
+		swords = shiftLeftChars(swords, "(", "（")
+		swords = shiftLeftChars(swords, ")", "）")
 		var ws:string[] = swords.match(/-?"[^"]*"|-?'[^']+'|[^\s\t　"']+/g)
 		var regbool:boolean = false
 		var colorcnt:number = 0
@@ -126,21 +130,21 @@ class Count{
 
 
 // 文字に融通を聞かせる為
-function shiftLeftCode(code, leftCode, rightCode, range){
+function shiftLeftCode(code:number, leftCode:number, rightCode:number, range:number):number{
 	if(rightCode <= code && code <= rightCode+range){
 		code = code - rightCode + leftCode
 	}
 	return code
 }
-function shiftLeftChar(char, leftChar, rightChar, range){
-	var code = char.charCodeAt()
-	var leftCode = leftChar.charCodeAt()
-	var rightCode = rightChar.charCodeAt()
+function shiftLeftChar(char:string, leftChar:string, rightChar:string, range:number):string{
+	var code = char.charCodeAt(0)
+	var leftCode = leftChar.charCodeAt(0)
+	var rightCode = rightChar.charCodeAt(0)
 	code = shiftLeftCode(code, leftCode, rightCode, range)
 	return String.fromCharCode(code)
 }
 // 半角/全角、ひらがな/カタカナを柔軟に検索させるため
-function shiftLeftChars(str, leftChar, rightChar, range){
+function shiftLeftChars(str:string, leftChar:string, rightChar:string, range:number = 1):string{
 	var chars = []
 	for(let n = 0; n < str.length; n++){
 		chars[n] = shiftLeftChar(str[n], leftChar, rightChar, range)
