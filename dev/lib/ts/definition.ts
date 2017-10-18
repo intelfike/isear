@@ -155,6 +155,7 @@ function shiftLeftChars(str:string, leftChar:string, rightChar:string, range:num
 function unifyWord(word){
 	word = shiftLeftChars(word, '!', '！', '~'.charCodeAt(0)-'!'.charCodeAt(0))
 	word = shiftLeftChars(word, 'ぁ', 'ァ', 'ゔ'.charCodeAt(0)-'ぁ'.charCodeAt(0))
+	word = shiftLeftChars(word, ' ', '　')
 	word = word.toUpperCase()
 	return word
 }
