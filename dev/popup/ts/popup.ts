@@ -125,10 +125,10 @@ function getWords():Promise<Words>{
 async function updateAll(){
 	var swords:string = getSwords()
 	var words:Words = await getWords()
-	
+
 	var words_nums:{[key:string]:number;} = await executeHighlight(swords)
-	
 	await storageSetNum(words_nums)
+
 	updateButton()
 	storageSetWords(swords)
 }

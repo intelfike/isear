@@ -70,6 +70,7 @@ chrome.contextMenus.create({
 		var swords:string = await storageGetWords()
 		swords = swords + ' ' + text
 		await storageSetWords(swords)
-		await executeHighlightAuto(swords)
+		var words_nums = await executeHighlightAuto(swords)
+		await storageSetNum(words_nums)
 	}
 })

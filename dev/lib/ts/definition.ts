@@ -8,7 +8,7 @@ var hlClass = 'itel-highlight'
 var selectId = 'itel-selected'
 
 // 検索結果のハイライトの色の表示順
-const colors = ['#FF0', '#8F8', '#0FF', '#88F', '#F8F', '#F88', '#FA0']
+const colors = ['#FF0', '#8F8', '#0FF', '#AAF', '#F8F', '#F88', '#FA0']
 const regPrefix = '@RE:'
 
 class Word{
