@@ -16,6 +16,7 @@ class Word{
 	unified: string
 	color:   string
 	regexp:  RegExp
+	regbool: boolean
 	enabled: boolean
 	count:   Count
 	
@@ -38,6 +39,7 @@ class Word{
 		if(regbool){
 			try{
 				this.regexp = new RegExp(sword, 'g')
+				this.regbool = true
 				this.unified = sword
 			}catch(e){
 				return
@@ -69,6 +71,7 @@ class Words{
 			return
 		}
 		var unique:{[key: string]: boolean;} = {}
+		var regunique:{[key: string]: boolean;} = {}
 		swords = shiftLeftChars(swords, '"', '”')
 		swords = shiftLeftChars(swords, "'", "’")
 		swords = shiftLeftChars(swords, "(", "（")
@@ -87,14 +90,19 @@ class Words{
 			if(word.origin == undefined){
 				continue
 			}
+			word.regexp = undefined
+			word.regbool = false
 
 			// 文字の重複を無くす
-			if(unique[word.unified] == true){
+			let uq = unique
+			if(word.regbool){
+				uq = regunique
+			}
+			if(uq[word.unified] == true){
 				continue
 			}
-			unique[word.unified] = true
+			uq[word.unified] = true
 			
-			word.regexp = undefined
 			word.color = colors[colorcnt]
 			colorcnt++
 			colorcnt %= colors.length
