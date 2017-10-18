@@ -78,12 +78,6 @@ class Words{
 		var colorcnt:number = 0
 		for(let n = 0; n < ws.length; n++){
 			let sword:string = ws[n]
-			// 文字の重複を無くす
-			if(unique[sword] == true){
-				continue
-			}
-			unique[sword] = true
-			
 			if(sword.toUpperCase() == regPrefix){
 				regbool = true
 				continue
@@ -93,6 +87,13 @@ class Words{
 			if(word.origin == undefined){
 				continue
 			}
+
+			// 文字の重複を無くす
+			if(unique[word.unified] == true){
+				continue
+			}
+			unique[word.unified] = true
+			
 			word.regexp = undefined
 			word.color = colors[colorcnt]
 			colorcnt++
