@@ -64,9 +64,9 @@ function replace_rec(id:number, obj:any, word:string, className:string, bgcolor:
 		var objtop = newObj.getBoundingClientRect().top + window.pageYOffset
 		var d = document.createElement('iteldiv')
 		var rate:number = (1/window.devicePixelRatio)
-		d.className = 'itel-top'+(id-1)
+		d.className = 'isear-top'+(id-1)
 		d.style.display = 'block'
-		d.style.backgroundColor = '#F00'
+		d.style.backgroundColor = '#000'
 		d.style.borderTop = rate+'px solid ' + barcolor
 		// d.style.borderBottom = rate+'px solid #888'
 		d.style.position = 'fixed'
@@ -295,15 +295,16 @@ function itel_main(){
 	// 全消し
 	offElementByClassName('itel-highlight')
 	
-	var barrm = document.getElementsByClassName('itel-bar')
+	var barrm = document.getElementsByClassName('isear-bar')
 	for(let n = barrm.length-1; n >= 0; n--){
 		barrm[n].remove()
+
+		var toprm = document.getElementsByClassName('isear-top'+n)
+		for(let m = toprm.length-1; m >= 0; m--){
+			toprm[m].remove()
+		}
 	}	
 	
-	var toprm = document.getElementsByClassName('itel-top')
-	for(let n = toprm.length-1; n >= 0; n--){
-		toprm[n].remove()
-	}
 
 	if(!enabled){
 		return
@@ -323,8 +324,8 @@ function itel_main(){
 		// ハイライト位置くん
 		var bar = document.createElement('iseardiv')
 		var rate:number = (1/window.devicePixelRatio)
-		// bar.id = 'itel-bar'
-		bar.className = 'itel-bar'
+		// bar.id = 'isear-bar'
+		bar.className = 'isear-bar'
 		bar.style.backgroundColor = word.bgColor
 		bar.style.borderLeft = rate+'px solid black'
 		bar.style.position = 'fixed'
@@ -340,15 +341,15 @@ function itel_main(){
 	return words_nums
 }
 function barClick(bool:boolean){
-	var bars = document.getElementsByClassName('itel-bar')
-	for(let m = 1; m < bars.length; m++){
-		var bar = <HTMLElement>bars[m]
+	var bars = document.getElementsByClassName('isear-bar')
+	for(let n = 1; n < bars.length; n++){
+		var bar = <HTMLElement>bars[n]
 		if(bool){
 			bar.style.display = 'block'
 		}else{
 			bar.style.display = 'none'
 		}
-		var tops = document.getElementsByClassName('itel-top'+m)
+		var tops = document.getElementsByClassName('isear-top'+n)
 		for(let m = 0; m < tops.length; m++){
 			var top = <HTMLElement>tops[m]
 			if(bool){
