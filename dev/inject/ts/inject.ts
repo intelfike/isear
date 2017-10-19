@@ -62,10 +62,11 @@ function replace_rec(obj:any, word:string, className:string, bgcolor:string, reg
 		var d = document.createElement('iteldiv')
 		d.className = 'itel-top'
 		d.style.backgroundColor = bgcolor
-		d.style.borderTop = '1px solid #888'
-		d.style.borderBottom = '1px solid #888'
+		d.style.borderTop = '1px solid #AAA'
+		d.style.borderBottom = '1px solid #AAA'
 		d.style.position = 'fixed'
-		d.style.top = (objtop/document.body.scrollHeight*(window.innerHeight-32))+16+'px'
+		var scrollPad = 16 * (1/window.devicePixelRatio)
+		d.style.top = (objtop/document.body.scrollHeight*(window.innerHeight-scrollPad*2))+scrollPad+'px'
 		d.style.right = '0'
 		d.style.height = '3px';
 		d.style.display = 'block';
