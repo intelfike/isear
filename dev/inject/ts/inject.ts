@@ -257,15 +257,41 @@ function countAllWords(word, className, regbool){
 	return count
 }
 
-var enabled: boolean
-var search_words: string
+var enabled:boolean
+var search_words:string
+var ctx
 // 検索結果をハイライトする処理
 function itel_main(bool: boolean){
 	offElementByClassName('itel-highlight')
+	// 全消し
+	var bertmp = document.getElementById('itel-bar')
+	if(bertmp != undefined){
+		bertmp.remove()
+	}
 
 	if(!enabled){
 		return
 	}
+
+	// ハイライト位置くん
+	var bar = document.createElement('canvas')
+	bar.id = 'itel-bar'
+	bar.style.backgroundColor = '#EFEFEF'
+	bar.style.position = 'fixed'
+	bar.style.width = '3px'
+	bar.style.height = '100%'
+	bar.style.top = '0'
+	bar.style.right = '0'
+	bar.style.zIndex = '99999999'
+	document.body.appendChild(bar)
+	ctx = bar.getContext('2d')
+	ctx.strokeStyle = '#666'
+	ctx.lineWidth = 10
+	ctx.beginPath();
+	ctx.moveTo(0, 10);
+	ctx.lineTo(3, 10);
+	ctx.closePath();
+	ctx.stroke();
 
 	var words:Words = new Words(search_words)
 	
