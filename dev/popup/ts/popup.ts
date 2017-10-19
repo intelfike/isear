@@ -183,31 +183,6 @@ document.body.onload = async ()=>{
 	if(swords != undefined){
 		search_words_obj.value = swords + ' '
 		changeInput()
-
-		// 検索履歴を表示
-		var whn:number = await storageGet('words_history_num')
-		if(whn == undefined){
-			whn = 0
-		}
-		let last:number = whn - 1
-		var whobj = document.getElementById('words_history')
-		while(true){
-			var swords:string = await storageGet('words_history_'+whn)
-			if(swords == undefined){
-				break
-			}
-			let item = document.createElement('option')
-			item.value = swords
-			item.onfocus = ()=>{
-				item.scrollIntoViewIfNeeded()
-			}
-			whobj.appendChild(item)
-			whn++
-			whn %= words_history_limit
-			if(whn == last){
-				break
-			}
-		}
 	}
 	
 	var en:boolean = await storageGet('enabled')
