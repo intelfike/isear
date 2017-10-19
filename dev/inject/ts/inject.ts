@@ -64,7 +64,7 @@ function replace_rec(id:number, obj:any, word:string, className:string, bgcolor:
 		var objtop = newObj.getBoundingClientRect().top + window.pageYOffset
 		var d = document.createElement('iteldiv')
 		var rate:number = (1/window.devicePixelRatio)
-		d.className = 'itel-top'
+		d.className = 'itel-top'+(id-1)
 		d.style.display = 'block'
 		d.style.backgroundColor = '#F00'
 		d.style.borderTop = rate+'px solid ' + barcolor
@@ -76,6 +76,7 @@ function replace_rec(id:number, obj:any, word:string, className:string, bgcolor:
 		d.style.height = 3 * rate + 'px'
 		d.style.width = barWidth * rate + 'px'
 		d.style.zIndex = '999999999'
+		d.onclick = ()=>{barClick(id == 1)}
 		document.body.appendChild(d)
 
 		return
@@ -332,9 +333,31 @@ function itel_main(){
 		bar.style.top = '0'
 		bar.style.right = n * (barWidth+1) * rate + 'px'
 		bar.style.zIndex = '99999999'
+		var bar_visible = true
+		bar.onclick = () => {barClick(n == 0)}
 		document.body.appendChild(bar)
 	}
 	return words_nums
+}
+function barClick(bool:boolean){
+	var bars = document.getElementsByClassName('itel-bar')
+	for(let m = 1; m < bars.length; m++){
+		var bar = <HTMLElement>bars[m]
+		if(bool){
+			bar.style.display = 'block'
+		}else{
+			bar.style.display = 'none'
+		}
+		var tops = document.getElementsByClassName('itel-top'+m)
+		for(let m = 0; m < tops.length; m++){
+			var top = <HTMLElement>tops[m]
+			if(bool){
+				top.style.display = 'block'
+			}else{
+				top.style.display = 'none'
+			}
+		}
+	}
 }
 window.onresize = ()=>{itel_main()}
 // itel_main(true)
