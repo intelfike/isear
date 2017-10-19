@@ -1,3 +1,5 @@
+var barWidth = '8px'
+
 // 呼び出し元に返す値(callback)
 var words_nums = {}
 // 再帰的にテキストノードを書き換えるため
@@ -35,7 +37,7 @@ function replace_rec(obj:any, word:string, className:string, bgcolor:string, reg
 		newObj.id = 'isear-'+icnt
 		newObj.className = className
 		newObj.style.backgroundColor = bgcolor
-		newObj.style.color = "black"
+		newObj.style.color = 'black'
 		
 		var prefix = text.substr(0, start)
 		newGroup.appendChild(document.createTextNode(prefix))
@@ -60,8 +62,9 @@ function replace_rec(obj:any, word:string, className:string, bgcolor:string, reg
 		var d = document.createElement('iteldiv')
 		d.className = 'itel-top'
 		d.style.backgroundColor = bgcolor
+		d.style.borderTop = '1px solid black'
 		d.style.position = 'fixed'
-		d.style.top = (objtop/document.body.offsetHeight*window.innerHeight)+'px'
+		d.style.top = (objtop/document.body.scrollHeight*window.innerHeight)+'px'
 		d.style.right = '0'
 		d.style.height = '2px';
 		d.style.width = barWidth;
