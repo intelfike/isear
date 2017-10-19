@@ -62,11 +62,13 @@ function replace_rec(obj:any, word:string, className:string, bgcolor:string, reg
 		var d = document.createElement('iteldiv')
 		d.className = 'itel-top'
 		d.style.backgroundColor = bgcolor
-		d.style.borderTop = '1px solid black'
+		d.style.borderTop = '1px solid #888'
+		d.style.borderBottom = '1px solid #888'
 		d.style.position = 'fixed'
-		d.style.top = (objtop/document.body.scrollHeight*window.innerHeight)+'px'
+		d.style.top = (objtop/document.body.scrollHeight*(window.innerHeight-32))+16+'px'
 		d.style.right = '0'
-		d.style.height = '2px';
+		d.style.height = '3px';
+		d.style.display = 'block';
 		d.style.width = barWidth;
 		d.style.zIndex = '999999999';
 		document.body.appendChild(d)
@@ -283,7 +285,7 @@ function countAllWords(word, className, regbool){
 var enabled:boolean
 var search_words:string
 // 検索結果をハイライトする処理
-function itel_main(bool: boolean){
+function itel_main(){
 	// 全消し
 	offElementByClassName('itel-highlight')
 	
@@ -304,7 +306,7 @@ function itel_main(bool: boolean){
 	// ハイライト位置くん
 	var bar = document.createElement('iseardiv')
 	bar.id = 'itel-bar'
-	bar.style.backgroundColor = 'black'
+	bar.style.backgroundColor = '#EFEFEF'
 	bar.style.position = 'fixed'
 	bar.style.width = barWidth
 	bar.style.height = '100%'
@@ -326,4 +328,5 @@ function itel_main(bool: boolean){
 	}
 	return words_nums
 }
+window.onresize = ()=>{itel_main()}
 // itel_main(true)
