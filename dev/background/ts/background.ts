@@ -6,7 +6,7 @@ chrome.tabs.onActivated.addListener(async function(){
 
 chrome.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	var f = async ()=>{
-		var flag = await executeCode('typeof itel_inject_flag != "undefined"')
+		var flag = await executeCode('if(typeof itel_inject_flag != "undefined"){true}else{false}')
 		if(flag[0] == true){
 			return flag[0]
 		}

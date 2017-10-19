@@ -1,7 +1,7 @@
 // 呼び出し元に返す値(callback)
 var words_nums = {}
 // 再帰的にテキストノードを書き換えるため
-var rep_sw = true
+var icnt = 0
 function replace_rec(obj:any, word:string, className:string, bgcolor:string, regbool:boolean){
 	var escword:string = word
 	if(obj.nodeType == 3){ // テキストノードなら
@@ -32,6 +32,7 @@ function replace_rec(obj:any, word:string, className:string, bgcolor:string, reg
 		newGroup.className = parentClassName
 		
 		var newObj = document.createElement('esspan')
+		newObj.id = 'isear-'+icnt
 		newObj.className = className
 		newObj.style.backgroundColor = bgcolor
 		newObj.style.color = "black"
@@ -48,6 +49,25 @@ function replace_rec(obj:any, word:string, className:string, bgcolor:string, reg
 		
 		obj.parentNode.replaceChild(newGroup, obj)
 		newGroup.outerHTML = newGroup.innerHTML
+		
+		// ハイライト位置くん
+		newObj = document.getElementById('isear-'+icnt)
+		if(newObj == null){
+			return
+		}
+		icnt++
+		var objtop = newObj.getBoundingClientRect().top + window.pageYOffset
+		var d = document.createElement('iteldiv')
+		d.className = 'itel-top'
+		d.style.backgroundColor = bgcolor
+		d.style.position = 'fixed'
+		d.style.top = (objtop/document.body.offsetHeight*window.innerHeight)+'px'
+		d.style.right = '0'
+		d.style.height = '2px';
+		d.style.width = barWidth;
+		d.style.zIndex = '999999999';
+		document.body.appendChild(d)
+
 		return
 	}
 	if(obj.nodeType != 1 || 
@@ -259,14 +279,19 @@ function countAllWords(word, className, regbool){
 
 var enabled:boolean
 var search_words:string
-var ctx
 // 検索結果をハイライトする処理
 function itel_main(bool: boolean){
-	offElementByClassName('itel-highlight')
 	// 全消し
-	var bertmp = document.getElementById('itel-bar')
-	if(bertmp != undefined){
-		bertmp.remove()
+	offElementByClassName('itel-highlight')
+	
+	var barrm = document.getElementById('itel-bar')
+	if(barrm != undefined){
+		barrm.remove()
+	}
+	
+	var toprm = document.getElementsByClassName('itel-top')
+	for(let n = toprm.length-1; n >= 0; n--){
+		toprm[n].remove()
 	}
 
 	if(!enabled){
@@ -274,24 +299,16 @@ function itel_main(bool: boolean){
 	}
 
 	// ハイライト位置くん
-	var bar = document.createElement('canvas')
+	var bar = document.createElement('iseardiv')
 	bar.id = 'itel-bar'
-	bar.style.backgroundColor = '#EFEFEF'
+	bar.style.backgroundColor = 'black'
 	bar.style.position = 'fixed'
-	bar.style.width = '3px'
+	bar.style.width = barWidth
 	bar.style.height = '100%'
 	bar.style.top = '0'
 	bar.style.right = '0'
 	bar.style.zIndex = '99999999'
 	document.body.appendChild(bar)
-	ctx = bar.getContext('2d')
-	ctx.strokeStyle = '#666'
-	ctx.lineWidth = 10
-	ctx.beginPath();
-	ctx.moveTo(0, 10);
-	ctx.lineTo(3, 10);
-	ctx.closePath();
-	ctx.stroke();
 
 	var words:Words = new Words(search_words)
 	
