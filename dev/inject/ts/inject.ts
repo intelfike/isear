@@ -1,10 +1,13 @@
-var barWidth = '8px'
+const barWidth:number = 4
 
 // 呼び出し元に返す値(callback)
 var words_nums = {}
 // 再帰的にテキストノードを書き換えるため
 var icnt = 0
-function replace_rec(obj:any, word:string, className:string, bgcolor:string, regbool:boolean){
+function replace_auto(word:Word, className){
+	replace_rec(word.id, document.body, word.origin, className, word.bgColor, word.regbool, word.barColor)
+}
+function replace_rec(id:number, obj:any, word:string, className:string, bgcolor:string, regbool:boolean, barcolor:string){
 	var escword:string = word
 	if(obj.nodeType == 3){ // テキストノードなら
 		// 置換処理
@@ -60,18 +63,20 @@ function replace_rec(obj:any, word:string, className:string, bgcolor:string, reg
 		icnt++
 		var objtop = newObj.getBoundingClientRect().top + window.pageYOffset
 		var d = document.createElement('iteldiv')
-		d.className = 'itel-top'
-		d.style.backgroundColor = bgcolor
-		d.style.borderTop = '1px solid #AAA'
-		d.style.borderBottom = '1px solid #AAA'
+		var rate:number = (1/window.devicePixelRatio)
+		d.className = 'isear-top'+(id-1)
+		d.style.display = 'block'
+		d.style.backgroundColor = '#000'
+		d.style.borderTop = rate+'px solid ' + barcolor
+		// d.style.borderBottom = rate+'px solid #888'
 		d.style.position = 'fixed'
-		var scrollPad = 16 * (1/window.devicePixelRatio)
-		d.style.top = (objtop/document.body.scrollHeight*(window.innerHeight-scrollPad*2))+scrollPad+'px'
-		d.style.right = '0'
-		d.style.height = '3px';
-		d.style.display = 'block';
-		d.style.width = barWidth;
-		d.style.zIndex = '999999999';
+		var arrowHeight = 16 * rate
+		d.style.top = (objtop/document.body.scrollHeight*(window.innerHeight-arrowHeight*2))+arrowHeight+'px'
+		d.style.right = (id-1) * (barWidth+1) * rate + 'px'
+		d.style.height = 3 * rate + 'px'
+		d.style.width = barWidth * rate + 'px'
+		d.style.zIndex = '999999999'
+		d.onclick = ()=>{barClick(id == 1)}
 		document.body.appendChild(d)
 
 		return
@@ -92,7 +97,7 @@ function replace_rec(obj:any, word:string, className:string, bgcolor:string, reg
 				continue
 			}
 		}
-		replace_rec(child, word, className, bgcolor, regbool)
+		replace_rec(id, child, word, className, bgcolor, regbool, barcolor)
 	}
 }
 function wordMatch(str:string, word:string, regbool:boolean):boolean{
@@ -290,31 +295,21 @@ function itel_main(){
 	// 全消し
 	offElementByClassName('itel-highlight')
 	
-	var barrm = document.getElementById('itel-bar')
-	if(barrm != undefined){
-		barrm.remove()
-	}
+	var barrm = document.getElementsByClassName('isear-bar')
+	for(let n = barrm.length-1; n >= 0; n--){
+		barrm[n].remove()
+
+		var toprm = document.getElementsByClassName('isear-top'+n)
+		for(let m = toprm.length-1; m >= 0; m--){
+			toprm[m].remove()
+		}
+	}	
 	
-	var toprm = document.getElementsByClassName('itel-top')
-	for(let n = toprm.length-1; n >= 0; n--){
-		toprm[n].remove()
-	}
 
 	if(!enabled){
 		return
 	}
 
-	// ハイライト位置くん
-	var bar = document.createElement('iseardiv')
-	bar.id = 'itel-bar'
-	bar.style.backgroundColor = '#EFEFEF'
-	bar.style.position = 'fixed'
-	bar.style.width = barWidth
-	bar.style.height = '100%'
-	bar.style.top = '0'
-	bar.style.right = '0'
-	bar.style.zIndex = '99999999'
-	document.body.appendChild(bar)
 
 	var words:Words = new Words(search_words)
 	
@@ -325,9 +320,45 @@ function itel_main(){
 	for(let n = 0; n < words.array.length; n++){
 		let word = words.array[n]
 		words_nums[word.origin] = 0
-		replace_rec(document.body, word.origin, 'itel-highlight', word.color, word.regexp!=undefined)
+		replace_auto(word, hlClass)
+		// ハイライト位置くん
+		var bar = document.createElement('iseardiv')
+		var rate:number = (1/window.devicePixelRatio)
+		// bar.id = 'isear-bar'
+		bar.className = 'isear-bar'
+		bar.style.backgroundColor = word.bgColor
+		bar.style.borderLeft = rate+'px solid black'
+		bar.style.position = 'fixed'
+		bar.style.width = barWidth * rate + 'px'
+		bar.style.height = '100%'
+		bar.style.top = '0'
+		bar.style.right = n * (barWidth+1) * rate + 'px'
+		bar.style.zIndex = '99999999'
+		var bar_visible = true
+		bar.onclick = () => {barClick(n == 0)}
+		document.body.appendChild(bar)
 	}
 	return words_nums
+}
+function barClick(bool:boolean){
+	var bars = document.getElementsByClassName('isear-bar')
+	for(let n = 1; n < bars.length; n++){
+		var bar = <HTMLElement>bars[n]
+		if(bool){
+			bar.style.display = 'block'
+		}else{
+			bar.style.display = 'none'
+		}
+		var tops = document.getElementsByClassName('isear-top'+n)
+		for(let m = 0; m < tops.length; m++){
+			var top = <HTMLElement>tops[m]
+			if(bool){
+				top.style.display = 'block'
+			}else{
+				top.style.display = 'none'
+			}
+		}
+	}
 }
 window.onresize = ()=>{itel_main()}
 // itel_main(true)

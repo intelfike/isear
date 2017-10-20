@@ -151,7 +151,7 @@ async function updateButton(){
 		btn.className = 'btn'
 		btn.id = word.origin
 		btn.innerText = word.origin
-		btn.style.backgroundColor = word.color
+		btn.style.backgroundColor = word.bgColor
 		btn.onclick = (e)=>{
 			// クリック時のハイライト選択移動
 			var key_event = <KeyboardEvent>(e||window.event)

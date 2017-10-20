@@ -1,24 +1,27 @@
 // ストレージに保存する時のキー
-var latest_words = "latest_words"
-var saveWordsPrefix = 'words_'
-var saveNumPrefix = 'mum_'
+const latest_words = "latest_words"
+const saveWordsPrefix = 'words_'
+const saveNumPrefix = 'mum_'
 
 // injectのデータ
-var hlClass = 'itel-highlight'
-var selectId = 'itel-selected'
+const hlClass = 'itel-highlight'
+const selectId = 'itel-selected'
 
 // 検索結果のハイライトの色の表示順
-const colors = ['#FF0', '#8F8', '#0FF', '#AAF', '#F8F', '#F88', '#FA0']
+const bgColors = ['#FF0', '#8F8', '#0FF', '#AAF', '#F8F', '#F88', '#FA0']
+const barColors = ['#CC0', '#4F4', '#0CC', '#88F', '#F4F', '#F44', '#F80']
 const regPrefix = '@RE:'
 
 class Word{
-	origin:  string
-	unified: string
-	color:   string
-	regexp:  RegExp
-	regbool: boolean
-	enabled: boolean
-	count:   Count
+	id:       number
+	origin:   string
+	unified:  string
+	bgColor:  string
+	barColor: string
+	regexp:   RegExp
+	regbool:  boolean
+	enabled:  boolean
+	count:    Count
 	
 	// regbool=trueで強制正規表現
 	constructor(sword:string, regbool:boolean=false){
@@ -78,7 +81,7 @@ class Words{
 		swords = shiftLeftChars(swords, ")", "）")
 		var ws:string[] = swords.match(/-?"[^"]*"|-?'[^']+'|[^\s\t　"']+/g)
 		var regbool:boolean = false
-		var colorcnt:number = 0
+		var cnt:number = 0
 		for(let n = 0; n < ws.length; n++){
 			let sword:string = ws[n]
 			if(sword.toUpperCase() == regPrefix){
@@ -103,9 +106,10 @@ class Words{
 			}
 			uq[word.unified] = true
 			
-			word.color = colors[colorcnt]
-			colorcnt++
-			colorcnt %= colors.length
+			word.bgColor = bgColors[cnt%bgColors.length]
+			word.barColor = barColors[cnt%barColors.length]
+			cnt++
+			word.id = cnt
 			this.array.push(word)
 			this.map[word.origin] = word
 		}
