@@ -8,8 +8,24 @@ const hlClass = 'itel-highlight'
 const selectId = 'itel-selected'
 
 // 検索結果のハイライトの色の表示順
-const bgColors = ['#FF0', '#8F8', '#0FF', '#AAF', '#F8F', '#F88', '#FA0']
-const barColors = ['#CC0', '#4F4', '#0CC', '#88F', '#F4F', '#F44', '#F80']
+const bgColors = [
+	'#FF0',
+	'#8F8',
+	'#0FF',
+	'#AAF',
+	'#F8F',
+	'#F88',
+	'#FA0',
+]
+const barColors = [
+	'#FF0',
+	'#0F0',
+	'#0FF',
+	'#00F',
+	'#F0F',
+	'#F00',
+	'#F80',
+]
 const regPrefix = '@RE:'
 
 class Word{

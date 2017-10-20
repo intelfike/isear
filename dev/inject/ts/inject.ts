@@ -1,4 +1,4 @@
-const barWidth:number = 4
+const barWidth:number = 8
 
 // 呼び出し元に返す値(callback)
 var words_nums = {}
@@ -326,7 +326,11 @@ function itel_main(){
 		var rate:number = (1/window.devicePixelRatio)
 		// bar.id = 'isear-bar'
 		bar.className = 'isear-bar'
-		bar.style.backgroundColor = word.bgColor
+		bar.style.backgroundColor = word.barColor
+		if(words_nums[word.origin] == 0){
+			bar.style.backgroundColor = 'grey'
+		}
+		bar.style.opacity = '0.5'
 		bar.style.borderLeft = rate+'px solid black'
 		bar.style.position = 'fixed'
 		bar.style.width = barWidth * rate + 'px'
