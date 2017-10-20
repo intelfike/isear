@@ -5,7 +5,8 @@ const saveNumPrefix = 'mum_'
 
 // injectのデータ
 const hlClass = 'itel-highlight'
-const selectId = 'itel-selected'
+const selected = 'itel-selected'
+const top_selected = 'isear-top-selected'
 
 // 検索結果のハイライトの色の表示順
 const bgColors = [
@@ -38,6 +39,7 @@ class Word{
 	regbool:  boolean
 	enabled:  boolean
 	count:    Count
+	elems:    HTMLElement[]
 	
 	// regbool=trueで強制正規表現
 	constructor(sword:string, regbool:boolean=false){
@@ -78,6 +80,7 @@ class Word{
 		this.enabled = true
 		this.origin = sword
 		this.count = new Count()
+		this.elems = []
 	}
 }
 class Words{

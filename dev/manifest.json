@@ -3,7 +3,7 @@
 
   "name": "統合検索isear",
   "description": "複数ワードに対応したGoogle検索連携のページ内検索ツール",
-  "version": "1.15",
+  "version": "1.16",
 
   "background": {
       "persistent": true,

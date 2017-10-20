@@ -14,7 +14,8 @@ chrome.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 		await executeCode('var itel_inject_flag = true')
 		await executeFile('inject.js')
 		chrome.tabs.insertCSS(null, {
-			code: '#itel-selected{background-color:red !important; color:white !important;}'
+			code: '#itel-selected, #isear-top-selected{background-color:red !important; color:white !important;}\n' +
+			'#isear-top-selected{border-top:1px solid white !important; border-bottom:1px solid white !important; z-index:9999999998 !important;}'
 		})
 
 		await saveGoogleSearchWords(tabId, tab.url)

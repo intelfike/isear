@@ -164,9 +164,9 @@ async function updateButton(){
 				}
 			}
 			if(key_event.shiftKey){
-				inject('scrollFocusPrevWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+(word.regexp!=undefined)+')')
+				inject('scrollFocusPrevWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
 			}else{
-				inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+(word.regexp!=undefined)+')')
+				inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
 			}
 		}
 		if(word.count.num == 0){
