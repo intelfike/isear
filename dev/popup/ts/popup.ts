@@ -182,6 +182,8 @@ document.body.onload = async ()=>{
 	var swords:string = await storageGetWords()
 	if(swords != undefined){
 		search_words_obj.value = swords + ' '
+		search_words_obj.selectionStart = 0
+		search_words_obj.selectionEnd = swords.length + 1
 		changeInput()
 	}
 	
