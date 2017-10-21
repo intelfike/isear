@@ -7,18 +7,18 @@ function createBar(word:Word){
 	if(words_nums[word.origin] == 0){
 		bar.style.backgroundColor = 'grey'
 	}
-	bar.style.opacity = '0.9'
-	bar.style.borderLeft = rate+'px solid black'
+	// bar.style.opacity = '0.9'
+	// bar.style.borderLeft = rate+'px solid black'
 	bar.style.position = 'fixed'
 	bar.style.width = barWidth * rate + 'px'
 	bar.style.height = '100%'
 	bar.style.top = '0'
-	var right:number = (word.id-1) * (barWidth+1) * rate
+	var right:number = (word.id-1) * (barWidth) * rate
 	bar.style.right = right + 'px'
 	bar.style.zIndex = '99999999'
 	var bar_visible = true
 	bar.onclick = (e) => {barClick(e, word)}
-	bar.onmouseover = () => {createMbox(word.origin, word.bgColor, right + barWidth + 2)}
+	bar.onmouseover = () => {createMbox(word.origin, word.bgColor, right + barWidth)}
 	bar.onmouseout = () => {removeMbox()}
 	document.body.appendChild(bar)
 }
@@ -42,19 +42,20 @@ function barClick(e:MouseEvent, word:Word){
 	}
 }
 function createMbox(mes:string, color:string, right:number){
+	var rate:number = (1/window.devicePixelRatio)
 	var mbox = document.createElement('isearmbox')
 	mbox.className = 'isear-mbox'
 	mbox.innerHTML = mes
-	mbox.style.fontSize = '16px'
+	mbox.style.fontSize = (16*rate)+'px'
 	mbox.style.display = 'block'
 	mbox.style.backgroundColor = color
 	mbox.style.color = 'black'
 	mbox.style.position = 'fixed'
 	mbox.style.top = '0'
 	mbox.style.right = right + 'px'
-	mbox.style.padding = '0 8px'
-	mbox.style.borderLeft = '1px solid black'
-	mbox.style.borderBottom = '1px solid black'
+	mbox.style.padding = '0 '+(8*rate)+'px'
+	mbox.style.borderLeft = rate+'px solid black'
+	mbox.style.borderBottom = rate+'px solid black'
 	mbox.style.zIndex = '9999999999'
 	document.body.appendChild(mbox)
 }
@@ -77,12 +78,13 @@ function createTops(word:Word){
 		d.className += ' isear-top-group-'+(word.id-1)
 		d.style.display = 'block'
 		d.style.backgroundColor = '#000'
+		d.style.boxSizing = 'content-box'
 		d.style.borderTop = rate+'px solid ' + word.barColor
 		d.style.borderBottom = rate+'px solid ' + word.barColor
 		d.style.position = 'fixed'
 		var arrowHeight = 16 * rate
 		d.style.top = (objtop/document.body.scrollHeight*(window.innerHeight-arrowHeight*2))+arrowHeight+'px'
-		d.style.right = (word.id-1) * (barWidth+1) * rate + 'px'
+		d.style.right = (word.id-1) * (barWidth) * rate + 'px'
 		d.style.height = 3 * rate + 'px'
 		d.style.width = barWidth * rate + 'px'
 		d.style.zIndex = '999999999'
