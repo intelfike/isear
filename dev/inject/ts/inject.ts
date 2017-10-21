@@ -297,7 +297,6 @@ function itel_main(){
 	offElementByClassName('itel-highlight')
 	
 	removeBar()
-	
 	removeMbox()
 
 	if(!enabled){

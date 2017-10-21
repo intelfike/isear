@@ -112,8 +112,8 @@ class Words{
 			if(word.origin == undefined){
 				continue
 			}
-			word.regexp = undefined
-			word.regbool = false
+			// word.regexp = undefined
+			// word.regbool = false
 
 			// 文字の重複を無くす
 			let uq = unique

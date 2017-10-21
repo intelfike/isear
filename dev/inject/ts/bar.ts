@@ -8,12 +8,13 @@ function createBar(word:Word){
 		bar.style.backgroundColor = 'grey'
 	}
 	// bar.style.opacity = '0.9'
-	// bar.style.borderLeft = rate+'px solid black'
+	bar.style.boxSizing = 'content-box'
+	bar.style.borderLeft = rate+'px solid black'
 	bar.style.position = 'fixed'
 	bar.style.width = barWidth * rate + 'px'
 	bar.style.height = '100%'
 	bar.style.top = '0'
-	var right:number = (word.id-1) * (barWidth) * rate
+	var right:number = (word.id-1) * (barWidth+1) * rate
 	bar.style.right = right + 'px'
 	bar.style.zIndex = '99999999'
 	var bar_visible = true
@@ -84,7 +85,7 @@ function createTops(word:Word){
 		d.style.position = 'fixed'
 		var arrowHeight = 16 * rate
 		d.style.top = (objtop/document.body.scrollHeight*(window.innerHeight-arrowHeight*2))+arrowHeight+'px'
-		d.style.right = (word.id-1) * (barWidth) * rate + 'px'
+		d.style.right = (word.id-1) * (barWidth+1) * rate + 'px'
 		d.style.height = 3 * rate + 'px'
 		d.style.width = barWidth * rate + 'px'
 		d.style.zIndex = '999999999'
