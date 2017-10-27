@@ -1,4 +1,4 @@
-const barWidth:number = 8
+const barWidth:number = 16
 
 // 呼び出し元に返す値(callback)
 var words_nums = {}
@@ -290,7 +290,6 @@ function countAllWords(word, className, regbool){
 
 var enabled:boolean
 var search_words:string
-var words:Words
 // 検索結果をハイライトする処理
 function itel_main(){
 	// 全消し
@@ -303,7 +302,7 @@ function itel_main(){
 		return
 	}
 	
-	words = new Words(search_words)
+	var words:Words = new Words(search_words)
 	if(words.array.length == 0){
 		return
 	}
@@ -315,20 +314,25 @@ function itel_main(){
 		// ハイライト位置くん
 		createBar(word)
 		createTops(word)
+		if(word.id != 1){
+			barVisible(word.id-1, false)
+		}
 	}
+
+	window.onresize = ()=>{
+		whereTimeout(()=>{
+			removeBar()
+			if(words.array.length == 0){
+				return
+			}
+			
+			for(let n = 0; n < words.array.length; n++){
+				let word = words.array[n]
+				createBar(word)
+				createTops(word)
+			}
+		}, 100)
+	}
+	
 	return words_nums
-}
-window.onresize = ()=>{
-	whereTimeout(()=>{
-		removeBar()
-		if(words.array.length == 0){
-			return
-		}
-		
-		for(let n = 0; n < words.array.length; n++){
-			let word = words.array[n]
-			createBar(word)
-			createTops(word)
-		}
-	}, 100)
 }

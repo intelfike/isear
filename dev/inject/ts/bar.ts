@@ -1,7 +1,7 @@
 function createBar(word:Word){
 	var bar = document.createElement('iseardiv')
 	var rate:number = (1/window.devicePixelRatio)
-	// bar.id = 'isear-bar'
+	bar.id = 'isear-bar-' + (word.id-1)
 	bar.className = 'isear-bar'
 	bar.style.backgroundColor = word.barColor
 	if(words_nums[word.origin] == 0){
@@ -17,22 +17,32 @@ function createBar(word:Word){
 	var right:number = (word.id-1) * (barWidth+1) * rate
 	bar.style.right = right + 'px'
 	bar.style.zIndex = '99999999'
-	var bar_visible = true
+	
 	bar.onclick = (e) => {barClick(e, word)}
-	bar.onmouseover = () => {createMbox(word.origin, word.bgColor, right + barWidth)}
-	bar.onmouseout = () => {removeMbox()}
-	document.body.appendChild(bar)
-}
-function removeBar(){
-	var barrm = document.getElementsByClassName('isear-bar')
-	for(let n = barrm.length-1; n >= 0; n--){
-		barrm[n].remove()
-
-		var toprm = document.getElementsByClassName('isear-top-group-'+n)
-		for(let m = toprm.length-1; m >= 0; m--){
-			toprm[m].remove()
+	bar.onmouseover = () => {
+		createMbox(word.origin, word.bgColor, right + barWidth)
+		var bars = document.getElementsByClassName('isear-bar')
+		if(bars.length == 0){
+			return
 		}
-	}	
+		for (let i = bars.length - 1; i >= 0; i--) {
+			barVisible(i, true)
+		}
+	}
+	bar.onmouseout = () => {
+		removeMbox()
+		var bars = document.getElementsByClassName('isear-bar')
+		if(bars.length == 0){
+			return
+		}
+		if(word.id == bars.length){
+			for (let i = bars.length - 1; i >= 1; i--) {
+				barVisible(i, false)
+			}
+			return
+		}
+	}
+	document.body.appendChild(bar)
 }
 function barClick(e:MouseEvent, word:Word){
 	var key_event = <KeyboardEvent>(e||window.event)
@@ -40,6 +50,39 @@ function barClick(e:MouseEvent, word:Word){
 		scrollFocusPrevWord(word.origin, hlClass, "itel-selected", word.regbool)
 	}else{
 		scrollFocusNextWord(word.origin, hlClass, "itel-selected", word.regbool)
+	}
+}
+function removeBar(){
+	var bars = document.getElementsByClassName('isear-bar')
+	for(let n = bars.length-1; n >= 0; n--){
+		bars[n].remove()
+
+		var tops = document.getElementsByClassName('isear-top-group-'+n)
+		for(let m = tops.length-1; m >= 0; m--){
+			tops[m].remove()
+		}
+	}
+}
+function barVisible(n:number, bool:boolean){
+	var bar = document.getElementById('isear-bar-'+n)
+	console.log(bar)
+	if(bar == null){
+		return
+	}
+	if(bool){
+		bar.style.visibility = 'visible'
+	}else{
+		bar.style.visibility = 'hidden'
+	}
+
+	var tops = document.getElementsByClassName('isear-top-group-'+n)
+	for(let m = tops.length-1; m >= 0; m--){
+		let top = <HTMLElement>tops[m]
+		if(bool){
+			top.style.visibility = 'visible'
+		}else{
+			top.style.visibility = 'hidden'
+		}
 	}
 }
 function createMbox(mes:string, color:string, right:number){
