@@ -20,7 +20,7 @@ function createBar(word:Word){
 	
 	bar.onclick = (e) => {barClick(e, word)}
 	bar.onmouseover = () => {
-		createMbox(word.origin, word.bgColor, right + barWidth)
+		createMbox(word.origin, word.bgColor, right + (barWidth*rate))
 		var bars = document.getElementsByClassName('isear-bar')
 		if(bars.length == 0){
 			return
@@ -35,7 +35,7 @@ function createBar(word:Word){
 		if(bars.length == 0){
 			return
 		}
-		if(word.id == bars.length){
+		if(word.id != 1){
 			for (let i = bars.length - 1; i >= 1; i--) {
 				barVisible(i, false)
 			}
@@ -65,7 +65,6 @@ function removeBar(){
 }
 function barVisible(n:number, bool:boolean){
 	var bar = document.getElementById('isear-bar-'+n)
-	console.log(bar)
 	if(bar == null){
 		return
 	}

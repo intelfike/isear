@@ -298,6 +298,10 @@ function itel_main(){
 	removeBar()
 	removeMbox()
 
+	// 横幅を戻す
+	var rate:number = (1/window.devicePixelRatio)
+	document.body.style.width = (window.innerWidth) + 'px'
+
 	if(!enabled){
 		return
 	}
@@ -319,7 +323,12 @@ function itel_main(){
 		}
 	}
 
+	var rate:number = (1/window.devicePixelRatio)
+	document.body.style.width = (window.innerWidth - (barWidth+1) * rate) + 'px'
+
 	window.onresize = ()=>{
+		var rate:number = (1/window.devicePixelRatio)
+		document.body.style.width = (window.innerWidth - (barWidth+1) * rate) + 'px'
 		whereTimeout(()=>{
 			removeBar()
 			if(words.array.length == 0){
@@ -333,6 +342,5 @@ function itel_main(){
 			}
 		}, 100)
 	}
-	
 	return words_nums
 }
