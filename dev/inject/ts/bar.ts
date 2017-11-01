@@ -1,3 +1,4 @@
+var showBars:boolean = true
 function createBarToggler(words:Words){
 	var rate:number = (1/window.devicePixelRatio)
 	var tog = document.createElement('iseartoggler')
@@ -5,11 +6,12 @@ function createBarToggler(words:Words){
 	tog.id = 'isear-toggler'
 	// 要素全体の設定
 	tog.style.backgroundColor = 'black'
-	tog.style.opacity = '0.5'
+	tog.style.opacity = '0.9'
 	tog.style.zIndex = '99999999'
 	// テキストの設定
-	tog.style.color = 'white'
 	tog.innerText = '>'
+	tog.style.color = 'white'
+	tog.style.fontWeight = 'bold'
 	tog.style.fontSize = (16 * rate)+'px'
 	tog.style.lineHeight = (16 * rate)+'px'
 	tog.style.textAlign = 'center'
@@ -23,22 +25,32 @@ function createBarToggler(words:Words){
 	tog.style.right = right + 'px'
 	// 動作の設定
 	tog.onclick = () => {
-		var bars = document.getElementsByClassName('isear-bar')
-		if(bars.length == 0){
-			return
-		}
-		for (let i = bars.length - 1; i >= 0; i--) {
-			barVisible(i, tog.innerText == '<')
-		}
-		if(tog.innerText == '>'){
-			tog.innerText = '<'
-			tog.style.right = '0'
-		}else{
-			tog.innerText = '>'
-			tog.style.right = right + 'px'
-		}
+		showBars = tog.innerText == '<'
+		console.log(showBars)
+		toggleBars(words)
 	}
 	document.body.appendChild(tog)
+}
+function toggleBars(words:Words){
+	var rate:number = (1/window.devicePixelRatio)
+	var tog = document.getElementById('isear-toggler')
+	if(tog == null){
+		return
+	}
+	var bars = document.getElementsByClassName('isear-bar')
+	for (let i = bars.length - 1; i >= 0; i--) {
+		barVisible(i, showBars)
+	}
+	if(showBars){
+		tog.innerText = '>'
+		var right:number = (words.array.length) * (barWidth+1) * rate
+		tog.style.right = right + 'px'
+		rightSpace((barWidth+1)*words.array.length)
+	}else{
+		tog.innerText = '<'
+		tog.style.right = '0'
+		rightSpace(0)
+	}
 }
 
 function removeBarToggler(){

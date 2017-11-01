@@ -288,6 +288,15 @@ function countAllWords(word, className, regbool){
 	return count
 }
 
+function rightSpace(i:number):void{
+	if(i == 0){
+		document.body.style.width = ''
+		return
+	}
+	var rate:number = (1/window.devicePixelRatio)
+	document.body.style.width = (window.innerWidth-(i*rate)) + 'px'
+}
+
 var enabled:boolean
 var search_words:string
 // 検索結果をハイライトする処理
@@ -299,6 +308,10 @@ function itel_main(){
 	removeMbox()
 	removeBarToggler()
 
+	rightSpace(0)
+	// window.onresize = ()=>{
+	// 	rightSpace(0)
+	// }
 	if(!enabled){
 		return
 	}
@@ -319,8 +332,14 @@ function itel_main(){
 		createTops(word)
 	}
 
+	rightSpace((barWidth+1)*words.array.length)
 	window.onresize = ()=>{
+		if(!enabled){
+			return
+		}
 		whereTimeout(()=>{
+			rightSpace((barWidth+1)*words.array.length)
+
 			removeBar()
 			removeMbox()
 			removeBarToggler()
@@ -334,6 +353,7 @@ function itel_main(){
 				createBar(word)
 				createTops(word)
 			}
+			toggleBars(words)
 		}, 100)
 	}
 	return words_nums

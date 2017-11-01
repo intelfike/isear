@@ -181,7 +181,9 @@ document.body.onload = async ()=>{
 	// 以前の状態を思い出す
 	var swords:string = await storageGetWords()
 	if(swords != undefined){
-		search_words_obj.value = swords + ' '
+		if(swords.length >= 1){
+			search_words_obj.value = swords + ' '
+		}
 		changeInput()
 	}
 	
