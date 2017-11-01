@@ -1,6 +1,57 @@
-function createBar(word:Word){
-	var bar = document.createElement('iseardiv')
+function createBarToggler(words:Words){
 	var rate:number = (1/window.devicePixelRatio)
+	var tog = document.createElement('iseartoggler')
+	// 定義の設定
+	tog.id = 'isear-toggler'
+	// 要素全体の設定
+	tog.style.backgroundColor = 'black'
+	tog.style.opacity = '0.5'
+	tog.style.zIndex = '99999999'
+	// テキストの設定
+	tog.style.color = 'white'
+	tog.innerText = '>'
+	tog.style.fontSize = (16 * rate)+'px'
+	tog.style.lineHeight = (16 * rate)+'px'
+	tog.style.textAlign = 'center'
+	tog.style.userSelect = 'none'
+	// 配置の設定
+	tog.style.position = 'fixed'
+	tog.style.width = (barWidth * rate) + 'px'
+	tog.style.height = (16 * rate) + 'px'
+	tog.style.top = '0'
+	var right:number = (words.array.length) * (barWidth+1) * rate
+	tog.style.right = right + 'px'
+	// 動作の設定
+	tog.onclick = () => {
+		var bars = document.getElementsByClassName('isear-bar')
+		if(bars.length == 0){
+			return
+		}
+		for (let i = bars.length - 1; i >= 0; i--) {
+			barVisible(i, tog.innerText == '<')
+		}
+		if(tog.innerText == '>'){
+			tog.innerText = '<'
+			tog.style.right = '0'
+		}else{
+			tog.innerText = '>'
+			tog.style.right = right + 'px'
+		}
+	}
+	document.body.appendChild(tog)
+}
+
+function removeBarToggler(){
+	var tog = document.getElementById('isear-toggler')
+	if(tog == null){
+		return
+	}
+	tog.remove()
+}
+
+function createBar(word:Word){
+	var rate:number = (1/window.devicePixelRatio)
+	var bar = document.createElement('iseardiv')
 	bar.id = 'isear-bar-' + (word.id-1)
 	bar.className = 'isear-bar'
 	bar.style.backgroundColor = word.barColor
@@ -21,26 +72,9 @@ function createBar(word:Word){
 	bar.onclick = (e) => {barClick(e, word)}
 	bar.onmouseover = () => {
 		createMbox(word.origin, word.bgColor, right + (barWidth*rate))
-		var bars = document.getElementsByClassName('isear-bar')
-		if(bars.length == 0){
-			return
-		}
-		for (let i = bars.length - 1; i >= 0; i--) {
-			barVisible(i, true)
-		}
 	}
 	bar.onmouseout = () => {
 		removeMbox()
-		var bars = document.getElementsByClassName('isear-bar')
-		if(bars.length == 0){
-			return
-		}
-		if(word.id != 1){
-			for (let i = bars.length - 1; i >= 1; i--) {
-				barVisible(i, false)
-			}
-			return
-		}
 	}
 	document.body.appendChild(bar)
 }

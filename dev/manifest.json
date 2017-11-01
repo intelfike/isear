@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "統合検索isear",
-  "description": "複数ワードに対応したGoogle検索連携のページ内検索ツール",
-  "version": "1.22",
+  "name": "isear",
+  "description": "複数ワードに対応したページ内検索ツール",
+  "version": "1.23",
 
   "background": {
       "persistent": true,

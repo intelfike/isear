@@ -297,10 +297,7 @@ function itel_main(){
 	
 	removeBar()
 	removeMbox()
-
-	// 横幅を戻す
-	var rate:number = (1/window.devicePixelRatio)
-	document.body.style.width = (window.innerWidth) + 'px'
+	removeBarToggler()
 
 	if(!enabled){
 		return
@@ -310,6 +307,8 @@ function itel_main(){
 	if(words.array.length == 0){
 		return
 	}
+
+	createBarToggler(words)
 	
 	for(let n = 0; n < words.array.length; n++){
 		let word = words.array[n]
@@ -318,23 +317,18 @@ function itel_main(){
 		// ハイライト位置くん
 		createBar(word)
 		createTops(word)
-		if(word.id != 1){
-			barVisible(word.id-1, false)
-		}
 	}
 
-	var rate:number = (1/window.devicePixelRatio)
-	document.body.style.width = (window.innerWidth - (barWidth+1) * rate) + 'px'
-
 	window.onresize = ()=>{
-		var rate:number = (1/window.devicePixelRatio)
-		document.body.style.width = (window.innerWidth - (barWidth+1) * rate) + 'px'
 		whereTimeout(()=>{
 			removeBar()
+			removeMbox()
+			removeBarToggler()
+
 			if(words.array.length == 0){
 				return
 			}
-			
+			createBarToggler(words)
 			for(let n = 0; n < words.array.length; n++){
 				let word = words.array[n]
 				createBar(word)
