@@ -17,7 +17,7 @@ var bgColors = [
 	'#00FFFF',
 	'#CCDDFF',
 	'#FF88FF',
-	'#FFFF88',
+	'#FF8888',
 	'#FFAA00',
 ]
 var barColors = bgColors
