@@ -13,6 +13,7 @@
     "default_icon": "data/icons/icon4.png",
     "default_popup": "popup.html"
   },
+  "options_page": "option.html", 
   "icons": {
       "128": "data/icons/icon4.png",
       "16": "data/icons/icon4.png",

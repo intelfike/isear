@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>isearの設定</title>
+	<script src="option.js" defer></script>
+	<style>
+		@font-face {
+			font-family: 'Noto Mono';
+			src: url("data/NotoMono-hinted/NotoMono-Regular.ttf");
+		}
+		body{
+			font-family: "Noto Mono";
+			font-size: 16px;
+			margin: 0;
+			background: linear-gradient(-90deg, #ACF, #DEF);
+		}
+		article{
+			background-color: white;
+			padding: 8px;
+		}
+		h1, h2, h3, h4, h5, h6{
+			padding: 8px;
+			margin: 0;
+		}
+		h2, h3, h4, h5, h6{
+			margin-top: 16px;
+			padding-bottom: 0;
+		}
+		hr{
+			margin: 0;
+		}
+
+		button, input{
+			font-family: "Noto Mono";
+		}
+		button{
+			height: 24px;
+		}
+		button:disabled{
+			background-color: #DDD !important;
+		}
+		ul li{
+			list-style-type: none;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<h1>isearの設定</h1>
+	</header>
+	<article>
+		<h2>拡張機能の設定</h2>
+		<hr>
+		<p>拡張機能の挙動を設定します。</p>
+		<ul>
+			<li>
+				<label>
+					<input type="checkbox" id="google_words" checked>Googleの検索ワードを自動取得する
+				</label>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" id="regbool" checked>@RE:での正規表現検索をする
+				</label>
+			</li>
+		</ul>
+
+		<h2>ページ内の設定</h2>
+		<hr>
+		<p>閲覧しているWebページ内の挙動を設定します。</p>
+		<ul>
+			<li>
+				<label>
+					<input type="checkbox" id="show_bar" checked>ハイライト位置くんを表示
+				</label>
+			</li>
+		</ul>
+		<h2>色の設定</h2>
+		<hr>
+		<p>ハイライトで利用される色を設定します。ドラッグ&ドロップで入れ替えられます。</p>
+		<div id="colors"></div>
+		<h2>定型文</h2>
+		<hr>
+		<p>常に検索ワードの先頭にくっつきます。</p>
+		<input type="text" id="prefix">
+	</article>
+</body>
+</html>

@@ -4,6 +4,15 @@ on_obj.onclick = ()=>{
 	var enabled:boolean = on_obj.innerText == 'ON'
 	extensionEnable(enabled)
 }
+
+// ⭮ボタンクリック時の処理
+const retry = <HTMLInputElement> document.getElementById('retry')
+retry.onclick = async ()=>{
+	retry.disabled = true
+	await updateAll()
+	retry.disabled = false
+}
+
 // 全機能停止
 function extensionEnable(bool:boolean, update:boolean=true){
 	storageSet('enabled', bool)
@@ -24,7 +33,8 @@ async function inputsEnable(bool:boolean){
 		on_obj.style.backgroundColor = "yellow"
 		document.body.style.backgroundColor = '#ACC'
 	}
-	search_words_obj.disabled = !bool
+	// search_words_obj.disabled = !bool
+	retry.disabled = !bool
 	if(!bool){
 		var btns = btn_list_obj.children
 		for(let n = btns.length-1; n >= 0; n--){
@@ -122,15 +132,18 @@ function getWords():Promise<Words>{
 }
 
 // 画面を全てアップデートする
-async function updateAll(){
-	var swords:string = getSwords()
-	var words:Words = await getWords()
+function updateAll(){
+	return new Promise(async ok => {
+		var swords:string = getSwords()
+		var words:Words = await getWords()
 
-	var words_nums:{[key:string]:number;} = await executeHighlight(swords)
-	await storageSetNum(words_nums)
+		var words_nums:{[key:string]:number;} = await executeHighlight(swords)
+		await storageSetNum(words_nums)
 
-	updateButton()
-	storageSetWords(swords)
+		updateButton()
+		storageSetWords(swords)
+		ok()
+	})
 }
 // 頻繁な更新対策
 function updateAllTimeout(time:number){

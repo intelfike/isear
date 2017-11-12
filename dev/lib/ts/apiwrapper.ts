@@ -1,3 +1,4 @@
+
 // swordは原文を渡す
 function executeHighlightAuto(swords:string):Promise<{[key:string]:number;}>{
 	return new Promise(async ok=>{
@@ -12,9 +13,13 @@ function executeHighlightAuto(swords:string):Promise<{[key:string]:number;}>{
 // boolはfalseならハイライトをオフ
 function executeHighlight(swords:string, bool=true):Promise<{[key:string]:number;}>{
 	return new Promise(async ok=>{
-		await executeCode('enabled='+JSON.stringify(bool))
-		await executeCode("search_words="+JSON.stringify(swords))
-		var result = await executeCode('itel_main()')
+		var bgColors = await storageGet('bgColors', bgColors)
+		await executeCode('bgColors = ' + JSON.stringify(bgColors))
+
+		var sb = await storageGet('show_bar', true)
+		var regbool = await storageGet('regbool', true)
+
+		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+bool+', '+sb+', '+regbool+')')
 		ok(<Promise<{[key:string]:number;}>> result[0])
 	})
 }
@@ -52,16 +57,19 @@ function getTabId(): Promise<number>{
 		})
 	})
 }
-function storageSet(key:string, value){
+function storageSet(key:string, value:any){
 	return new Promise(ok => {
 		var data = {}
 		data[''+key] = value
 		chrome.storage.local.set(data, ok)
 	})
 }
-function storageGet(key:string):Promise<any>{
+function storageGet(key:string, def:any=undefined):Promise<any>{
 	return new Promise(ok => {
 		chrome.storage.local.get(key, function(value){
+			if(value[key] == undefined){
+				value[key] = def
+			}
 			ok(value[key])
 		})
 	})
@@ -90,7 +98,14 @@ function storageGetWords(urlLoad=true):Promise<string> {
 		}
 		if(swords != undefined){
 			swords = swords.trim()
-		}	
+		}
+
+		// 接頭文字をつける
+		var pf = await storageGet('prefix', '')
+		if(swords.indexOf(pf) != 0){
+			swords = pf + ' ' + swords
+		}
+
 		ok(swords)
 	})
 }
