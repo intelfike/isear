@@ -29,7 +29,7 @@ document.body.onload = async () => {
 	var gw = await storageGet('google_words', true)
 	google_words.checked = gw
 
-	var rb = await storageGet('regbool', true)
+	var rb = await storageGet('regbool', false)
 	regbool.checked = rb
 
 	var sb = await storageGet('show_bar', true)
