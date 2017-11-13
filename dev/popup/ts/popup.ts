@@ -98,7 +98,10 @@ function changeInput(){
 
 // アップデートイベント
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
-	whereTimeout(updateButton, 200)
+	var enabled = await storageGet('enabled', true)
+	if(enabled){
+		whereTimeout(updateButton, 200)
+	}
 })
 
 // === 関数
@@ -200,10 +203,7 @@ document.body.onload = async ()=>{
 		changeInput()
 	}
 	
-	var en:boolean = await storageGet('enabled')
-	if(en == undefined){
-		en = true
-	}
+	var en:boolean = await storageGet('enabled', true)
 	extensionEnable(en, false)
 	if(en){
 		search_words_obj.focus()
