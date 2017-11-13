@@ -297,12 +297,8 @@ function rightSpace(i:number):void{
 	document.body.style.width = (window.innerWidth-(i*rate)) + 'px'
 }
 
-var enabled:boolean
-
-var search_words:string
-
 // 検索結果をハイライトする処理
-function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, regbool:boolean){
+function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, show_bar:boolean, regbool:boolean){
 	// 全消し
 	offElementByClassName('itel-highlight')
 	
@@ -341,15 +337,18 @@ function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, re
 
 	if(enabled_bar){
 		createBarToggler(words)
+		showBars = show_bar
+		if(!showBars){
+			toggleBars(words)
+		}
 	}
+	console.log(showBars)
 
-	rightSpace((barWidth+1)*words.array.length)
 	window.onresize = ()=>{
 		if(!enabled){
 			return
 		}
 		whereTimeout(()=>{
-			rightSpace((barWidth+1)*words.array.length)
 			if(!enabled_bar){
 				return
 			}

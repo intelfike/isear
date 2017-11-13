@@ -41,9 +41,9 @@ async function inputsEnable(bool:boolean){
 			btns[n].remove()
 		}
 		return
+	}else{
+		updateAll()
 	}
-	var swords:string = getSwords()
-	updateButton()
 }
 
 // === 検索ワードのテキストボックス

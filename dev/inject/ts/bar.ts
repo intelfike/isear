@@ -26,7 +26,6 @@ function createBarToggler(words:Words){
 	// 動作の設定
 	tog.onclick = () => {
 		showBars = tog.innerText == '<'
-		console.log(showBars)
 		toggleBars(words)
 	}
 	document.body.appendChild(tog)

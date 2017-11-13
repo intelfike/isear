@@ -16,10 +16,11 @@ function executeHighlight(swords:string, bool=true):Promise<{[key:string]:number
 		bgColors = await storageGet('bgColors', bgColors)
 		await executeCode('bgColors = ' + JSON.stringify(bgColors))
 
-		var sb = await storageGet('show_bar', true)
+		var enbar = await storageGet('enabled_bar', true)
+		var shbar = await storageGet('show_bar', true)
 		var regbool = await storageGet('regbool', false)
 
-		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+bool+', '+sb+', '+regbool+')')
+		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+bool+', '+enbar+', '+shbar+', '+regbool+')')
 		ok(<Promise<{[key:string]:number;}>> result[0])
 	})
 }

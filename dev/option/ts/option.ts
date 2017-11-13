@@ -11,6 +11,12 @@ regbool.onchange = () => {
 	storageSet('regbool', enable)
 }
 
+const enabled_bar = <HTMLInputElement> document.getElementById('enabled_bar')
+enabled_bar.onchange = () => {
+	var enable = enabled_bar.checked
+	storageSet('enabled_bar', enable)
+}
+
 const show_bar = <HTMLInputElement> document.getElementById('show_bar')
 show_bar.onchange = () => {
 	var enable = show_bar.checked
@@ -31,6 +37,9 @@ document.body.onload = async () => {
 
 	var rb = await storageGet('regbool', false)
 	regbool.checked = rb
+
+	var sb = await storageGet('enabled_bar', true)
+	enabled_bar.checked = sb
 
 	var sb = await storageGet('show_bar', true)
 	show_bar.checked = sb
