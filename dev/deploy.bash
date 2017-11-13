@@ -16,6 +16,10 @@ echo '#compile popup.js'
 google-closure-compiler-js popup.js > popup.min.js
 rm popup.js
 mv popup.min.js popup.js
+echo '#compile option.js'
+google-closure-compiler-js option.js > option.min.js
+rm option.js
+mv option.min.js option.js
 echo '#compile background.js'
 google-closure-compiler-js background.js > background.min.js
 rm background.js

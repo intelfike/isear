@@ -8,26 +8,19 @@ const hlClass = 'itel-highlight'
 const selected = 'itel-selected'
 const top_selected = 'isear-top-selected'
 
-// 検索結果のハイライトの色の表示順
-const bgColors = [
-	'#FF0',
-	'#8F8',
-	'#0FF',
-	'#CDF',
-	'#F8F',
-	'#F88',
-	'#FA0',
-]
-const barColors = [
-	'#FF0',
-	'#0F0',
-	'#0FF',
-	'#CCF',
-	'#F0F',
-	'#F00',
-	'#F80',
-]
 const regPrefix = '@RE:'
+
+// 検索結果のハイライトの色の表示順
+var bgColors = [
+	'#FFFF00',
+	'#88FF88',
+	'#00FFFF',
+	'#CCDDFF',
+	'#FF88FF',
+	'#FF8888',
+	'#FFAA00',
+]
+var barColors = bgColors
 
 class Word{
 	id:       number
@@ -112,8 +105,6 @@ class Words{
 			if(word.origin == undefined){
 				continue
 			}
-			// word.regexp = undefined
-			// word.regbool = false
 
 			// 文字の重複を無くす
 			let uq = unique

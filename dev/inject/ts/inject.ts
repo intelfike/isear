@@ -298,9 +298,11 @@ function rightSpace(i:number):void{
 }
 
 var enabled:boolean
+
 var search_words:string
+
 // 検索結果をハイライトする処理
-function itel_main(){
+function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, regbool:boolean){
 	// 全消し
 	offElementByClassName('itel-highlight')
 	
@@ -309,9 +311,7 @@ function itel_main(){
 	removeBarToggler()
 
 	rightSpace(0)
-	// window.onresize = ()=>{
-	// 	rightSpace(0)
-	// }
+
 	if(!enabled){
 		return
 	}
@@ -322,15 +322,25 @@ function itel_main(){
 		return
 	}
 
-	createBarToggler(words)
-	
 	for(let n = 0; n < words.array.length; n++){
 		let word = words.array[n]
+		if(!regbool){
+			word.regbool = false
+			word.regexp = undefined
+		}
+		word.bgColor = bgColors[n%bgColors.length]
+		word.barColor = word.bgColor
 		words_nums[word.origin] = 0
 		replace_auto(word, hlClass)
 		// ハイライト位置くん
-		createBar(word)
-		createTops(word)
+		if(enabled_bar){
+			createBar(word)
+			createTops(word)
+		}
+	}
+
+	if(enabled_bar){
+		createBarToggler(words)
 	}
 
 	rightSpace((barWidth+1)*words.array.length)
@@ -340,6 +350,9 @@ function itel_main(){
 		}
 		whereTimeout(()=>{
 			rightSpace((barWidth+1)*words.array.length)
+			if(!enabled_bar){
+				return
+			}
 
 			removeBar()
 			removeMbox()
