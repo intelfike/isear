@@ -318,6 +318,7 @@ function itel_main(){
 	
 	var words:Words = new Words(search_words)
 	if(words.array.length == 0){
+		enabled = false
 		return
 	}
 
