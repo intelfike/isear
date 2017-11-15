@@ -35,7 +35,7 @@ chrome.tabs.onRemoved.addListener(async function(tabId:number){
 // google検索ワードをストレージに保存する
 function saveGoogleSearchWords(tabId, url){
 	return new Promise(async ok => {
-		var gw = await storageGet('google_words', true)
+		var gw = await storageGet('google_words', true, true)
 		if(!gw){
 			ok()
 			return
