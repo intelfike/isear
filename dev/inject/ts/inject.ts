@@ -342,8 +342,7 @@ function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, sh
 			toggleBars(words)
 		}
 	}
-	console.log(showBars)
-
+	
 	window.onresize = ()=>{
 		if(!enabled){
 			return

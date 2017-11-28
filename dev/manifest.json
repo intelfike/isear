@@ -3,10 +3,10 @@
 
   "name": "isear",
   "description": "複数ワードに対応したページ内検索ツール",
-  "version": "1.26",
+  "version": "1.27",
 
   "background": {
-      "persistent": true,
+      "persistent": false,
       "scripts": ["background.js"]
    },
   "browser_action": {
