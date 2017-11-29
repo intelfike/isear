@@ -23,12 +23,6 @@ show_bar.onchange = () => {
 	storageSet('show_bar', enable, true)
 }
 
-const bgColors_sync = <HTMLInputElement> document.getElementById('bgColors_sync')
-bgColors_sync.onchange = () => {
-	var enable = bgColors_sync.checked
-	storageSet('bgColors_sync', enable, true)
-}
-
 const prefix = <HTMLInputElement> document.getElementById('prefix')
 prefix.onchange = () => {
 	var pf = prefix.value
@@ -50,15 +44,12 @@ document.body.onload = async () => {
 	var sb = await storageGet('show_bar', true, true)
 	show_bar.checked = sb
 
-	var bcs = await storageGet('bgColors_sync', true, true)
-	bgColors_sync.checked = bcs
-
 	var pf = await storageGet('prefix', '', true)
 	prefix.value = pf
 
 	// 色の設定
 	const cols = document.getElementById('colors')
-	bgColors = await storageGet('bgColors', bgColors, bcs)
+	bgColors = await storageGet('bgColors', bgColors, true)
 	// 色の初期化
 	var start
 	for (let i = 0; i < bgColors.length; i++) {
@@ -72,11 +63,7 @@ document.body.onload = async () => {
 		// カラーピッカーのイベント設定
 		col.onchange = ()=>{
 			bgColors[i] = col.value
-			storageSet('bgColors', bgColors)
-			if(bcs){
-				// 色情報を共有する場合
-				storageSet('bgColors', bgColors, true)
-			}
+			storageSet('bgColors', bgColors, true)
 		}
 
 		// ドラッグ＆ドロップで移動

@@ -298,7 +298,7 @@ function rightSpace(i:number):void{
 }
 
 // 検索結果をハイライトする処理
-function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, show_bar:boolean, regbool:boolean){
+function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, regbool:boolean){
 	// 全消し
 	offElementByClassName('itel-highlight')
 	
@@ -337,12 +337,10 @@ function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, sh
 
 	if(enabled_bar){
 		createBarToggler(words)
-		showBars = show_bar
 		if(!showBars){
 			toggleBars(words)
 		}
 	}
-	
 	window.onresize = ()=>{
 		if(!enabled){
 			return

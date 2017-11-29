@@ -1,4 +1,5 @@
-var showBars:boolean = true
+var showBars:boolean
+setInterval(()=>{console.log(showBars)}, 1000)
 function createBarToggler(words:Words){
 	var rate:number = (1/window.devicePixelRatio)
 	var tog = document.createElement('iseartoggler')

@@ -7,8 +7,10 @@ chrome.tabs.onActivated.addListener(async function(){
 chrome.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	var f = async ()=>{
 		var flag = await executeCode('if(typeof itel_inject_flag != "undefined"){true}else{false}')
-		if(flag[0] == true){
-			return flag[0]
+		if(flag != undefined) {
+			if(flag[0] == true){
+				return
+			}
 		}
 
 		await executeCode('var itel_inject_flag = true')
@@ -63,12 +65,18 @@ async function highlighting(tabId:number){
 	await storageSet(saveNumPrefix+tabId, words_nums)
 }
 
+chrome.runtime.onInstalled.addListener(()=>{
+	chrome.contextMenus.create({
+		title: 'isear 検索ワードに追加',
+		type: "normal",
+		id: 'select',
+		contexts: ['selection']
+	 })
+});
 
-chrome.contextMenus.create({
-	'title':'isear 検索ワードに追加',
-	'contexts':['selection'],
-	'onclick':async (clicked)=>{
-		var text:string = clicked.selectionText
+chrome.contextMenus.onClicked.addListener(async function(itemData) {
+	if (itemData.menuItemId == "select"){
+		var text:string = itemData.selectionText
 		if(/[\s\t　]/g.test(text)){
 			text = text.replace(/[\s\t　]+/g, ' ')
 			text = '"'+text+'"'
@@ -79,4 +87,4 @@ chrome.contextMenus.create({
 		var words_nums = await executeHighlightAuto(swords)
 		await storageSetNum(words_nums)
 	}
-})
+});
