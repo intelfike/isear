@@ -1,5 +1,5 @@
 var showBars:boolean
-function createBarToggler(words:Words){
+function createBarToggler(length:number){
 	var rate:number = (1/window.devicePixelRatio)
 	var tog = document.createElement('iseartoggler')
 	// 定義の設定
@@ -21,16 +21,16 @@ function createBarToggler(words:Words){
 	tog.style.width = (barWidth * rate) + 'px'
 	tog.style.height = (16 * rate) + 'px'
 	tog.style.top = '0'
-	var right:number = (words.array.length) * (barWidth+1) * rate
+	var right:number = (length) * (barWidth+1) * rate
 	tog.style.right = right + 'px'
 	// 動作の設定
 	tog.onclick = () => {
 		showBars = tog.innerText == '<'
-		toggleBars(words)
+		toggleBars(length)
 	}
 	document.body.appendChild(tog)
 }
-function toggleBars(words:Words){
+function toggleBars(length:number){
 	var rate:number = (1/window.devicePixelRatio)
 	var tog = document.getElementById('isear-toggler')
 	if(tog == null){
@@ -42,9 +42,9 @@ function toggleBars(words:Words){
 	}
 	if(showBars){
 		tog.innerText = '>'
-		var right:number = (words.array.length) * (barWidth+1) * rate
+		var right:number = (length) * (barWidth+1) * rate
 		tog.style.right = right + 'px'
-		rightSpace((barWidth+1)*words.array.length)
+		rightSpace((barWidth+1)*length)
 	}else{
 		tog.innerText = '<'
 		tog.style.right = '0'

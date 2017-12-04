@@ -336,9 +336,9 @@ function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, re
 	}
 
 	if(enabled_bar){
-		createBarToggler(words)
+		createBarToggler(words.array.length)
 		if(!showBars){
-			toggleBars(words)
+			toggleBars(words.array.length)
 		}
 	}
 	window.onresize = ()=>{
@@ -357,13 +357,13 @@ function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, re
 			if(words.array.length == 0){
 				return
 			}
-			createBarToggler(words)
+			createBarToggler(words.array.length)
 			for(let n = 0; n < words.array.length; n++){
 				let word = words.array[n]
 				createBar(word)
 				createTops(word)
 			}
-			toggleBars(words)
+			toggleBars(words.array.length)
 		}, 100)
 	}
 	return words_nums

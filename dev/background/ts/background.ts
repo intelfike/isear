@@ -74,8 +74,18 @@ chrome.runtime.onInstalled.addListener(()=>{
 	 })
 });
 
+chrome.runtime.onInstalled.addListener(()=>{
+	chrome.contextMenus.create({
+		title: 'isear ハイライトバーの表示を切り替える',
+		type: "normal",
+		id: 'toggle_bars',
+		contexts: ['page']
+	 })
+});
+
 chrome.contextMenus.onClicked.addListener(async function(itemData) {
-	if (itemData.menuItemId == "select"){
+	switch(itemData.menuItemId){
+	case 'select':
 		var text:string = itemData.selectionText
 		if(/[\s\t　]/g.test(text)){
 			text = text.replace(/[\s\t　]+/g, ' ')
@@ -86,5 +96,15 @@ chrome.contextMenus.onClicked.addListener(async function(itemData) {
 		await storageSetWords(swords)
 		var words_nums = await executeHighlightAuto(swords)
 		await storageSetNum(words_nums)
+		break
+	case 'toggle_bars':
+		var sb = await executeCode('showBars')
+		sb = !sb[0]
+		await executeCode('showBars = ' + sb)
+		var swords:string = await storageGetWords()
+		var words:Words = new Words(swords)
+		await executeCode('toggleBars('+words.array.length+')')
+		await storageSet('show_bar', sb, true)
+		break
 	}
 });
