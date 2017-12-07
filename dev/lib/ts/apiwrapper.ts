@@ -27,7 +27,7 @@ function executeHighlight(swords:string, bool=true):Promise<{[key:string]:number
 }
 
 function inject(code: string){
-	chrome.tabs.executeScript(null,
+	browser.tabs.executeScript(null,
 		{code:code}
 	)
 }
@@ -35,14 +35,14 @@ function log(mess:any){
 	inject("console.log("+JSON.stringify(mess)+")")
 }
 function changeURL(url:string){
-	chrome.tabs.update(null, {
+	browser.tabs.update(null, {
 		url:url
 	})
 }
 
 function getURL(){
 	return new Promise((ok, reject) => {
-		chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+		browser.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 			if(tabs.length == 0){
 				ok('')
 				return
@@ -54,7 +54,7 @@ function getURL(){
 }
 function getTabId(): Promise<number>{
 	return new Promise((ok, reject) => {
-		chrome.tabs.getSelected(null, function (tab) {
+		browser.tabs.getSelected(null, function (tab) {
 			ok(tab.id)
 		})
 	})
@@ -64,18 +64,18 @@ function storageSet(key:string, value:any, sync:boolean=false){
 		var data = {}
 		data[''+key] = value
 
-		var st = chrome.storage.local
+		var st = browser.storage.local
 		if(sync){
-			st = chrome.storage.sync
+			st = browser.storage.sync
 		}
 		st.set(data, ok)
 	})
 }
 function storageGet(key:string, def:any=undefined, sync:boolean=false):Promise<any>{
 	return new Promise(ok => {
-		var st = chrome.storage.local
+		var st = browser.storage.local
 		if(sync){
-			st = chrome.storage.sync
+			st = browser.storage.sync
 		}
 		st.get(key, function(value){
 			if(key in value){
@@ -87,7 +87,7 @@ function storageGet(key:string, def:any=undefined, sync:boolean=false):Promise<a
 }
 function storageRemove(key:string){
 	return new Promise(ok =>{
-		chrome.storage.local.remove(key, ok)
+		browser.storage.local.remove(key, ok)
 	})
 }
 // wordsには文字列を渡してね
@@ -137,7 +137,7 @@ function storageGetNum():Promise<{[key:string]:number;}>{
 
 function executeFile(file:string):any{
 	return new Promise(ok => {
-		chrome.tabs.executeScript(null,
+		browser.tabs.executeScript(null,
 			{file:file},
 			(result)=>{
 				ok(result)
@@ -147,7 +147,7 @@ function executeFile(file:string):any{
 }
 function executeCode(code:string):any{
 	return new Promise(ok => {
-		chrome.tabs.executeScript(null,
+		browser.tabs.executeScript(null,
 			{code:code},
 			(result)=>{
 				ok(result)
