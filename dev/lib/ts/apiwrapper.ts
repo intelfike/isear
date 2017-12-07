@@ -54,8 +54,8 @@ function getURL(){
 }
 function getTabId(): Promise<number>{
 	return new Promise((ok, reject) => {
-		browser.tabs.getSelected(null, function (tab) {
-			ok(tab.id)
+		browser.tabs.query({currentWindow: true, active: true}, (tab)=>{
+			ok(tab[0].id)
 		})
 	})
 }
@@ -78,7 +78,8 @@ function storageGet(key:string, def:any=undefined, sync:boolean=false):Promise<a
 			st = browser.storage.sync
 		}
 		st.get(key, function(value){
-			if(key in value){
+			console.log(key, value, key in value)
+			if(!(key in value)){
 				value[key] = def
 			}
 			ok(value[key])
