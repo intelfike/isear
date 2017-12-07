@@ -78,7 +78,7 @@ function storageGet(key:string, def:any=undefined, sync:boolean=false):Promise<a
 			st = chrome.storage.sync
 		}
 		st.get(key, function(value){
-			if(value[key] == undefined){
+			if(key in value){
 				value[key] = def
 			}
 			ok(value[key])
