@@ -79,8 +79,9 @@ function storageGet(key:string, def:any=undefined, sync:boolean=false):Promise<a
 		}
 		st.get(key, function(value){
 			console.log(key, value, key in value)
-			if(!(key in value)){
-				value[key] = def
+			if(value == undefined || !(key in value)){
+				ok(def)
+				return
 			}
 			ok(value[key])
 		})
