@@ -72,9 +72,6 @@ chrome.runtime.onInstalled.addListener(()=>{
 		id: 'select',
 		contexts: ['selection']
 	 })
-});
-
-chrome.runtime.onInstalled.addListener(()=>{
 	chrome.contextMenus.create({
 		title: 'isear ハイライトバーの表示を切り替える',
 		type: "normal",
