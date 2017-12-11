@@ -1,10 +1,10 @@
-chrome.tabs.onActivated.addListener(async function(){
+browser.tabs.onActivated.addListener(async function(){
 	await executeFile('inject.js')
 	var swords = await storageGetWords()
 	await storageSetWords(swords)
 })
 
-chrome.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
+browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	var f = async ()=>{
 		var flag = await executeCode('if(typeof itel_inject_flag != "undefined"){true}else{false}')
 		if(flag != undefined) {
@@ -15,7 +15,7 @@ chrome.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 
 		await executeCode('var itel_inject_flag = true')
 		await executeFile('inject.js')
-		chrome.tabs.insertCSS(null, {
+		browser.tabs.insertCSS(null, {
 			code: '#itel-selected, #isear-top-selected{background-color:red !important; color:white !important;}\n' +
 			'#isear-top-selected{border-color:white !important; z-index:9999999998 !important;}'
 		})
@@ -29,7 +29,7 @@ chrome.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	}
 	whereTimeout(f, 200)
 })
-chrome.tabs.onRemoved.addListener(async function(tabId:number){
+browser.tabs.onRemoved.addListener(async function(tabId:number){
 	storageRemove(saveWordsPrefix+tabId)
 	storageRemove(saveNumPrefix+tabId)
 })
@@ -65,14 +65,14 @@ async function highlighting(tabId:number){
 	await storageSet(saveNumPrefix+tabId, words_nums)
 }
 
-chrome.runtime.onInstalled.addListener(()=>{
-	chrome.contextMenus.create({
+browser.runtime.onInstalled.addListener(()=>{
+	browser.contextMenus.create({
 		title: 'isear 検索ワードに追加',
 		type: "normal",
 		id: 'select',
 		contexts: ['selection']
 	 })
-	chrome.contextMenus.create({
+	browser.contextMenus.create({
 		title: 'isear ハイライトバーの表示を切り替える',
 		type: "normal",
 		id: 'toggle_bars',
@@ -80,7 +80,7 @@ chrome.runtime.onInstalled.addListener(()=>{
 	 })
 });
 
-chrome.contextMenus.onClicked.addListener(async function(itemData) {
+browser.contextMenus.onClicked.addListener(async function(itemData) {
 	switch(itemData.menuItemId){
 	case 'select':
 		var text:string = itemData.selectionText

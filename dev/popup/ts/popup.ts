@@ -97,7 +97,7 @@ function changeInput(){
 }
 
 // アップデートイベント
-chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
+browser.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 	var enabled = await storageGet('enabled', true)
 	if(enabled){
 		whereTimeout(updateButton, 200)

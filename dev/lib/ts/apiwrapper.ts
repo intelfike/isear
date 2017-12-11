@@ -68,7 +68,9 @@ function storageSet(key:string, value:any, sync:boolean=false){
 		if(sync){
 			st = browser.storage.sync
 		}
-		st.set(data, ok)
+		try{
+			st.set(data, ok)
+		}catch(e){}
 	})
 }
 function storageGet(key:string, def:any=undefined, sync:boolean=false):Promise<any>{
@@ -77,13 +79,15 @@ function storageGet(key:string, def:any=undefined, sync:boolean=false):Promise<a
 		if(sync){
 			st = browser.storage.sync
 		}
-		st.get(key, function(value){
-			console.log(key, value, key in value)
-			if(!(key in value)){
-				value[key] = def
-			}
-			ok(value[key])
-		})
+		try{
+			st.get(key, function(value){
+				if(value == undefined || !(key in value)){
+					ok(def)
+					return
+				}
+				ok(value[key])
+			})
+		}catch(e){}
 	})
 }
 function storageRemove(key:string){
