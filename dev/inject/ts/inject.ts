@@ -179,7 +179,7 @@ function scrollFocusAuto(obj:Element){
 	if(obj == undefined || obj == null){
 		return
 	}
-	obj.scrollIntoViewIfNeeded()
+	obj.scrollIntoView()
 	focusToObj(obj)
 }
 function scrollFocusAutoNum(className:string, num:number){
