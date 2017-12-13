@@ -175,11 +175,19 @@ function getUnderCurrentElemNum(className:string){
 	}
 	return 0
 }
+function scrollToObj(obj){
+	var abstop = getAbsTop(obj)
+	scrollTo(0, abstop-(window.innerHeight/2))
+}
 function scrollFocusAuto(obj:Element){
 	if(obj == undefined || obj == null){
 		return
 	}
-	obj.scrollIntoView()
+	var abstop = getAbsTop(obj)
+	// 画面外ならスクロールする
+	if(abstop > window.innerHeight+window.pageYOffset || abstop < window.pageYOffset){
+		scrollToObj(obj)
+	}
 	focusToObj(obj)
 }
 function scrollFocusAutoNum(className:string, num:number){
