@@ -30,29 +30,26 @@ function replace_auto(word:Word, className:string){
 		}
 		words_nums[word.origin]++
 		
-		var newGroup = document.createElement('esspan') // 複数のノードをまとめる
-		var parentClassName = className + '-parent'
-		newGroup.className = parentClassName
-		
+		var prefix = text.substr(0, start)
+		var middle = text.substr(start, tmpword.length)
+		var suffix = text.substr(start+tmpword.length)
+
+		var prefix_tn = document.createTextNode(prefix)
+		var middle_tn = document.createTextNode(middle)
+		var suffix_tn = document.createTextNode(suffix)
+
 		var newObj = document.createElement('esspan')
 		newObj.id = 'isear-'+icnt
 		newObj.className = className + ' ' + icnt
 		newObj.style.backgroundColor = word.bgColor
 		newObj.style.color = 'black'
-		
-		var prefix = text.substr(0, start)
-		newGroup.appendChild(document.createTextNode(prefix))
-		
-		var middle = text.substr(start, tmpword.length)
-		newObj.innerText = middle
-		newGroup.appendChild(newObj)
-		
-		var suffix = text.substr(start+tmpword.length)
-		newGroup.appendChild(document.createTextNode(suffix))
-		
-		obj.parentNode.replaceChild(newGroup, obj)
-		newGroup.outerHTML = newGroup.innerHTML
-		
+		newObj.appendChild(middle_tn)
+
+		var parent = obj.parentNode
+		parent.replaceChild(suffix_tn, obj)
+		parent.insertBefore(prefix_tn, suffix_tn)
+		parent.insertBefore(newObj, suffix_tn)
+
 		// ハイライト位置くん
 		newObj = document.getElementById('isear-'+icnt)
 		if(newObj == null){
@@ -124,13 +121,14 @@ function regMatch(str:string, regstr:string):string[]{
 	return result
 }
 
-function offElementByClassName(className:string){
+function offElementsByClassName(className:string){
 	// 過去の検索結果のハイライトを削除するため
 	// えいち・える・えす
 	var hls = document.getElementsByClassName(className)
 	for(let n = hls.length-1; n >= 0 ; n--){
 		let hl = <HTMLElement> hls[n]
-		hl.outerHTML = hl.innerHTML
+		var tn = document.createTextNode(hl.innerText)
+		hl.parentNode.replaceChild(tn, hl)
 	}
 }
 
@@ -313,7 +311,7 @@ function rightSpace(i:number):void{
 // 検索結果をハイライトする処理
 function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, regbool:boolean){
 	// 全消し
-	offElementByClassName('itel-highlight')
+	offElementsByClassName('itel-highlight')
 	
 	removeBar()
 	removeMbox()

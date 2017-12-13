@@ -158,7 +158,7 @@ var btn_list_obj = document.getElementById('btn_list')
 async function updateButton(){
 	var words:Words = await getWords()
 	
-	btn_list_obj.innerHTML = ''
+	btn_list_obj.innerText = ''
 	for(let n = 0; n < words.array.length; n++){
 		let word = words.array[n]
 

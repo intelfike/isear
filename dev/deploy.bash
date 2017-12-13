@@ -27,10 +27,13 @@ google-closure-compiler-js background.js > background.min.js
 rm background.js
 mv background.min.js background.js
 
+echo '#zip deploy'
 cd ..
-zip -r isear.zip deploy
+zip -rq isear.zip deploy
 
 echo '=== firefox ==='
+echo '#copy deploy'
 cp -r deploy firefox
-cd firefox
-zip -r isear.zip deploy
+echo '#zip deploy'
+cd firefox/deploy
+zip -rq ../isear.xpi *

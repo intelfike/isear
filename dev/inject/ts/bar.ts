@@ -133,7 +133,7 @@ function createMbox(mes:string, color:string, right:number){
 	var rate:number = (1/window.devicePixelRatio)
 	var mbox = document.createElement('isearmbox')
 	mbox.className = 'isear-mbox'
-	mbox.innerHTML = mes
+	mbox.innerText = mes
 	mbox.style.fontSize = (16*rate)+'px'
 	mbox.style.display = 'block'
 	mbox.style.backgroundColor = color
