@@ -13,14 +13,16 @@ function executeHighlightAuto(swords:string):Promise<{[key:string]:number;}>{
 // boolはfalseならハイライトをオフ
 function executeHighlight(swords:string, bool=true):Promise<{[key:string]:number;}>{
 	return new Promise(async ok=>{
+		// ページに値を渡す処理
 		bgColors = await storageGet('bgColors', bgColors, true)
 		await executeCode('bgColors = ' + JSON.stringify(bgColors))
+		await executeCode('browser_type = ' + JSON.stringify(browser_type))
 
+		// 引数を作成してハイライトを実行する
 		var enbar = await storageGet('enabled_bar', true, true)
 		var shbar = await storageGet('show_bar', true, true)
 		await executeCode('showBars = ' + JSON.stringify(shbar))
 		var regbool = await storageGet('regbool', false, true)
-
 		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+bool+', '+enbar+', '+regbool+')')
 		ok(<Promise<{[key:string]:number;}>> result[0])
 	})

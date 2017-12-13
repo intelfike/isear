@@ -183,13 +183,14 @@ function scrollFocusAuto(obj:Element){
 	if(obj == undefined || obj == null){
 		return
 	}
+	console.log(browser_type)
 	if(browser_type == 'chrome'){
 		obj.scrollIntoViewIfNeeded()
 	}else if(browser_type == 'firefox'){
-		obj.scrollIntoView()
 		var abstop = getAbsTop(obj)
 		// 画面外ならスクロールする
 		if(abstop > window.innerHeight+window.pageYOffset || abstop < window.pageYOffset){
+			obj.scrollIntoView()
 			scrollToObj(obj)
 		}
 	}
