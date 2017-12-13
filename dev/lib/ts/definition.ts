@@ -31,7 +31,6 @@ if(browser == undefined){
 if(browser == undefined){
 	browser_type = 'other'
 	console.log("非対応のブラウザです。")
-	return
 }
 
 class Word{
