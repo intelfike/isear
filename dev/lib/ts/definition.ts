@@ -22,6 +22,18 @@ var bgColors = [
 ]
 var barColors = bgColors
 
+var browser // TypeScriptエラー対策
+var browser_type = 'firefox'
+if(browser == undefined){
+	browser_type = 'chrome'
+	browser = chrome
+}
+if(browser == undefined){
+	browser_type = 'other'
+	console.log("非対応のブラウザです。")
+	return
+}
+
 class Word{
 	id:       number
 	origin:   string
