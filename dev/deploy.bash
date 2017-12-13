@@ -2,6 +2,8 @@ cd `dirname $0`
 bash build.bash
 cd ..
 
+echo '=== chrome ==='
+
 echo '#copy build/'
 rm -rf deploy
 cp -r build deploy
@@ -26,4 +28,9 @@ rm background.js
 mv background.min.js background.js
 
 cd ..
+zip -r isear.zip deploy
+
+echo '=== firefox ==='
+cp -r deploy firefox
+cd firefox
 zip -r isear.zip deploy

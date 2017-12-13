@@ -183,7 +183,6 @@ function scrollFocusAuto(obj:Element){
 	if(obj == undefined || obj == null){
 		return
 	}
-	console.log(browser_type)
 	if(browser_type == 'chrome'){
 		obj.scrollIntoViewIfNeeded()
 	}else if(browser_type == 'firefox'){
