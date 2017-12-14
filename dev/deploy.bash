@@ -35,7 +35,10 @@ zip -rq isear.zip deploy
 echo '=== firefox ==='
 echo '#copy deploy'
 cp -r deploy firefox
-echo '#zip deploy'
-cd firefox/deploy
+echo '#copy manifest.json'
+cd firefox
+cp build/manifest.json deploy/manifest.json
+echo '#create isear.xpi'
+cd build
 rm -f ../isear.xpi
 zip -rq ../isear.xpi *
