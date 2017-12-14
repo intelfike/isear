@@ -27,11 +27,11 @@ async function inputsEnable(bool:boolean){
 	if(bool){
 		on_obj.innerText = "OFF"
 		on_obj.style.backgroundColor = "#DDD"
-		document.body.style.backgroundColor = '#EFF'
+		document.body.className = 'onbg'
 	}else{
 		on_obj.innerText = "ON"
 		on_obj.style.backgroundColor = "yellow"
-		document.body.style.backgroundColor = '#ACC'
+		document.body.className = 'offbg'
 	}
 	// search_words_obj.disabled = !bool
 	retry.disabled = !bool
@@ -77,7 +77,7 @@ search_words_obj.onkeydown = async (e)=>{
 		if(changeInput()){
 			updateAll()
 		}
-		
+
 		if(e.shiftKey){
 			inject('scrollFocusPrev("itel-highlight","itel-selected")')
 		}else{
@@ -157,7 +157,7 @@ function updateAllTimeout(time:number){
 var btn_list_obj = document.getElementById('btn_list')
 async function updateButton(){
 	var words:Words = await getWords()
-	
+
 	btn_list_obj.innerText = ''
 	for(let n = 0; n < words.array.length; n++){
 		let word = words.array[n]
@@ -202,7 +202,7 @@ document.body.onload = async ()=>{
 		}
 		changeInput()
 	}
-	
+
 	var en:boolean = await storageGet('enabled', true)
 	extensionEnable(en, false)
 	if(en){

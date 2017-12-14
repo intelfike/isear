@@ -62,34 +62,43 @@ function getTabId(): Promise<number>{
 	})
 }
 function storageSet(key:string, value:any, sync:boolean=false){
-	return new Promise(ok => {
+	return new Promise(async ok => {
 		var data = {}
 		data[''+key] = value
 
 		var st = browser.storage.local
-		if(sync){
+		var sync_enabled = await storageGet('sync', false)
+		if(sync && sync_enabled){
 			st = browser.storage.sync
 		}
 		try{
-			st.set(data, ok)
-		}catch(e){}
+			await st.set(data, ok)
+		}catch(e){
+			await browser.storage.local.set(data, ok)
+		}
 	})
 }
 function storageGet(key:string, def:any=undefined, sync:boolean=false):Promise<any>{
-	return new Promise(ok => {
+	return new Promise(async ok => {
 		var st = browser.storage.local
 		if(sync){
-			st = browser.storage.sync
+			var sync_enabled = await storageGet('sync', false) // 再帰呼び出し
+			if(sync_enabled){
+				st = browser.storage.sync
+			}
+		}
+		var callback = function(value){
+			if(value == undefined || !(key in value)){
+				ok(def)
+				return
+			}
+			ok(value[key])
 		}
 		try{
-			st.get(key, function(value){
-				if(value == undefined || !(key in value)){
-					ok(def)
-					return
-				}
-				ok(value[key])
-			})
-		}catch(e){}
+			await st.get(key, callback)
+		}catch(e){
+			await browser.storage.local.get(key, callback)
+		}
 	})
 }
 function storageRemove(key:string){

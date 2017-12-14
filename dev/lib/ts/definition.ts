@@ -30,8 +30,8 @@ if(browser == undefined){
 }
 if(browser == undefined){
 	browser_type = 'other'
-	console.log("非対応のブラウザです。")
 }
+
 
 class Word{
 	id:       number
@@ -44,18 +44,18 @@ class Word{
 	enabled:  boolean
 	count:    Count
 	elems:    HTMLElement[]
-	
+
 	// regbool=trueで強制正規表現
 	constructor(sword:string, regbool:boolean=false){
 		this.enabled = false
-		
+
 		if(sword == 'OR'){
 			return
 		}
 		if(sword.indexOf('-') == 0){
 			return
 		}
-		
+
 		// 正規表現の接頭語がついていたら外す
 		if(sword.toUpperCase().indexOf(regPrefix) == 0){
 			sword = sword.substr(regPrefix.length)
@@ -73,7 +73,7 @@ class Word{
 			if(!/^"[^"]+"$|^'[^']+'$/g.test(sword)){
 				sword = sword.replace(/[()]/g,'')
 			}
-			
+
 			sword = sword.replace(/^"(.*)"$/g,'$1')
 			sword = sword.replace(/^'(.*)'$/g,'$1')
 			this.unified = unifyWord(sword)
@@ -90,7 +90,7 @@ class Word{
 class Words{
 	array: Word[] = []
 	map:   {[key:string]:Word;} = {}
-	
+
 	constructor(swords:string){
 		swords = swords.trim()
 		if(swords == ''){
@@ -126,7 +126,7 @@ class Words{
 				continue
 			}
 			uq[word.unified] = true
-			
+
 			word.bgColor = bgColors[cnt%bgColors.length]
 			word.barColor = barColors[cnt%barColors.length]
 			cnt++
@@ -135,7 +135,7 @@ class Words{
 			this.map[word.origin] = word
 		}
 	}
-	
+
 	getList(key:string):any{
 		var result:any[] = []
 		for(let n = 0; n < this.array.length; n++){
@@ -154,7 +154,7 @@ class Count{
 	enabled: boolean
 	num:     number
 	cur:     number
-	
+
 	constructor(){
 		this.enabled = false
 		this.num = 0

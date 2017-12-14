@@ -1,7 +1,13 @@
+const enabled_sync = <HTMLInputElement> document.getElementById('enabled_sync')
+enabled_sync.onchange = async () => {
+	var enable = enabled_sync.checked
+	await storageSet('sync', enable)
+	location.reload()
+}
+
 const google_words = <HTMLInputElement> document.getElementById('google_words')
 google_words.onchange = () => {
 	var enable = google_words.checked
-	console.log(enable)
 	storageSet('google_words', enable, true)
 }
 
@@ -32,6 +38,9 @@ prefix.onkeydown = prefix.onchange
 
 
 document.body.onload = async () => {
+	var sync = await storageGet('sync', false)
+	enabled_sync.checked = sync
+
 	var gw = await storageGet('google_words', true, true)
 	google_words.checked = gw
 
