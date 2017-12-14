@@ -29,6 +29,7 @@ mv background.min.js background.js
 
 echo '#zip deploy'
 cd ..
+rm -f isear.zip
 zip -rq isear.zip deploy
 
 echo '=== firefox ==='
@@ -36,4 +37,5 @@ echo '#copy deploy'
 cp -r deploy firefox
 echo '#zip deploy'
 cd firefox/deploy
+rm -f ../isear.xpi
 zip -rq ../isear.xpi *

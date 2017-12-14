@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+
+  "name": "isear",
+  "description": "複数ワードに対応したページ内検索ツール",
+  "version": "1.32",
+
+  "background": {
+      "scripts": ["background.js"]
+   },
+  "options_ui": {
+    "page": "option.html"
+  },
+  "browser_action": {
+    "default_icon": "data/icons/icon4.png",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+      "128": "data/icons/icon4.png",
+      "16": "data/icons/icon4.png",
+      "48": "data/icons/icon4.png"
+  },
+  "permissions": [
+    "tabs", "storage", "contextMenus",
+    "http://*/*", "https://*/*"
+  ]
+}
