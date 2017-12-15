@@ -194,6 +194,26 @@ async function updateButton(){
 
 // 最初に実行される
 document.body.onload = async ()=>{
+	document.body.onkeydown = async (e)=>{
+		if(!e.ctrlKey){
+			return
+		}
+		switch(e.key){
+		case 'e':
+			search_words_obj.focus()
+			break
+		case 'r':
+			retry.onclick(null)
+			break
+		case 'h':
+			on_obj.onclick(null)
+			break
+		default:
+			return
+		}
+		e.preventDefault()
+	}
+
 	// 以前の状態を思い出す
 	var swords:string = await storageGetWords()
 	if(swords != undefined){

@@ -3,10 +3,20 @@
 
   "name": "isear",
   "description": "複数ワードに対応したページ内検索ツール",
-  "version": "1.34",
+  "version": "1.36",
+
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F"
+      },
+      "description": "検索を開始する"
+    }
+  },
 
   "background": {
-      "scripts": ["background.js"]
+      "scripts": ["background.js"],
+      "persistent": false
    },
    "options_page": "option.html",
   "browser_action": {

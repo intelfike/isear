@@ -72,8 +72,14 @@ browser.runtime.onInstalled.addListener(()=>{
 		id: 'select',
 		contexts: ['selection']
 	 })
+	 browser.contextMenus.create({
+		 title: 'ハイライトのON/OFFを切り替える',
+		 type: "normal",
+		 id: 'toggle_highlight',
+		 contexts: ['page']
+	 })
 	browser.contextMenus.create({
-		title: 'isear ハイライトバーの表示を切り替える',
+		title: 'ハイライトバー(右側)のON/OFFを切り替える',
 		type: "normal",
 		id: 'toggle_bars',
 		contexts: ['page']
@@ -103,5 +109,12 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		await executeCode('toggleBars('+words.array.length+')')
 		await storageSet('show_bar', sb, true)
 		break
+	case 'toggle_highlight':
+		var bool:boolean = await storageGet('enabled', true)
+		bool = !bool
+		await storageSet('enabled', bool)
+		var swords:string = await storageGetWords()
+		await executeHighlight(swords, bool)
+
 	}
 });
