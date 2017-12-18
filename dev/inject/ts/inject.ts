@@ -29,7 +29,7 @@ function replace_auto(word:Word, className:string){
 			return
 		}
 		words_nums[word.origin]++
-		
+
 		var prefix = text.substr(0, start)
 		var middle = text.substr(start, tmpword.length)
 		var suffix = text.substr(start+tmpword.length)
@@ -67,13 +67,13 @@ function textNode_req(obj:any, className:string, callback:(obj:Text)=>void){
 		callback(obj)
 		return
 	}
-	if(obj.nodeType != 1 || 
+	if(obj.nodeType != 1 ||
 		new RegExp(className,'g').test(obj.className)){
 		return
 	}
 	for(let n = 0; n < obj.childNodes.length; n++){
 		let child = obj.childNodes[n]
-		if(child.nodeType == 1){	
+		if(child.nodeType == 1){
 			if(child.style.display == 'none' ||
 				child.style.visibility == 'hidden' ||
 				child.tagName == 'STYLE' ||
@@ -129,6 +129,7 @@ function offElementsByClassName(className:string){
 		let hl = <HTMLElement> hls[n]
 		var tn = document.createTextNode(hl.innerText)
 		hl.parentNode.replaceChild(tn, hl)
+		tn.parentNode.normalize()
 	}
 }
 
@@ -145,12 +146,12 @@ function focusToObj(obj){
 	var s = document.getElementById(selected)
 	if(s != null){
 		s.removeAttribute('id')
-	}	
+	}
 	var s = document.getElementById(top_selected)
 	if(s != null){
 		s.removeAttribute('id')
-	}	
-	
+	}
+
 	if(obj == null || obj == undefined){
 		return
 	}
@@ -239,14 +240,14 @@ function sfcountPrevWord(count:number, className:string, word:string, regbool=fa
 // 探索するクラス名と、選択時に一時的につけるid
 function scrollFocusNext(className, idName){
 	init_sfcount(className, idName, -1)
-	
+
 	var elems = document.getElementsByClassName(className)
 	sfcount = sfcountNext(sfcount, elems.length)
 	scrollFocusAuto(elems[sfcount])
 }
 function scrollFocusPrev(className, idName){
 	init_sfcount(className, idName, 1)
-	
+
 	var elems = document.getElementsByClassName(className)
 	sfcount = sfcountPrev(sfcount, elems.length)
 	scrollFocusAuto(elems[sfcount])
@@ -254,7 +255,7 @@ function scrollFocusPrev(className, idName){
 // 次のワードを辿る
 function scrollFocusNextWord(word, className, idName, regbool){
 	init_sfcount(className, idName, -1)
-	
+
 	var elems = document.getElementsByClassName(className)
 	sfcount = sfcountNextWord(sfcount, className, word, regbool)
 	scrollFocusAuto(elems[sfcount])
@@ -267,7 +268,7 @@ function scrollFocusPrevWord(word, className, idName, regbool){
 	sfcount = sfcountPrevWord(sfcount, className, word, regbool)
 	scrollFocusAuto(elems[sfcount])
 }
-// pm:補正 
+// pm:補正
 function init_sfcount(className, idName, pm){
 	var selected = document.getElementById(idName)
 	if(selected == null){
@@ -312,7 +313,7 @@ function rightSpace(i:number):void{
 function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, regbool:boolean){
 	// 全消し
 	offElementsByClassName('itel-highlight')
-	
+
 	removeBar()
 	removeMbox()
 	removeBarToggler()
@@ -322,7 +323,7 @@ function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, re
 	if(!enabled){
 		return
 	}
-	
+
 	var words:Words = new Words(search_words)
 	if(words.array.length == 0){
 		enabled = false
