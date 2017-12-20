@@ -9,7 +9,14 @@ function createBarToggler(length:number){
 	tog.style.opacity = '0.9'
 	tog.style.zIndex = '99999999'
 	// テキストの設定
-	tog.innerText = '>'
+	var text = '>'
+	var right:number = (length) * (barWidth+1) * rate
+	if(!showBars){
+		text = '<'
+		right = 0
+	}
+	tog.innerText = text
+
 	tog.style.color = 'white'
 	tog.style.fontWeight = 'bold'
 	tog.style.fontSize = (16 * rate)+'px'
@@ -21,7 +28,6 @@ function createBarToggler(length:number){
 	tog.style.width = (barWidth * rate) + 'px'
 	tog.style.height = (16 * rate) + 'px'
 	tog.style.top = '0'
-	var right:number = (length) * (barWidth+1) * rate
 	tog.style.right = right + 'px'
 	// 動作の設定
 	tog.onclick = () => {
@@ -66,9 +72,7 @@ function createBar(word:Word){
 	bar.id = 'isear-bar-' + (word.id-1)
 	bar.className = 'isear-bar'
 	bar.style.backgroundColor = word.barColor
-	if(words_nums[word.origin] == 0){
-		bar.style.backgroundColor = 'grey'
-	}
+
 	// bar.style.opacity = '0.9'
 	bar.style.boxSizing = 'content-box'
 	bar.style.borderLeft = rate+'px solid black'
@@ -79,6 +83,11 @@ function createBar(word:Word){
 	var right:number = (word.id-1) * (barWidth+1) * rate
 	bar.style.right = right + 'px'
 	bar.style.zIndex = '99999999'
+	var visibility = 'visible'
+	if(!showBars){
+		visibility = 'hidden'
+	}
+	bar.style.visibility = visibility
 	
 	bar.onclick = (e) => {barClick(e, word)}
 	bar.onmouseover = () => {
@@ -149,7 +158,7 @@ function createMbox(mes:string, color:string, right:number){
 }
 function removeMbox(){
 	var mboxs = document.getElementsByClassName('isear-mbox')
-	for (var n = mboxs	.length - 1; n >= 0; n--) {
+	for (var n = mboxs.length - 1; n >= 0; n--) {
 		mboxs[n].remove()
 	}
 }
@@ -177,6 +186,17 @@ function createTops(word:Word){
 		d.style.width = barWidth * rate + 'px'
 		d.style.zIndex = '999999999'
 		d.style.pointerEvents = 'none'
+		var visibility = 'visible'
+		if(!showBars){
+			visibility = 'hidden'
+		}
+		d.style.visibility = visibility
 		document.body.appendChild(d)
+	}
+}
+function removeTops(){
+	var isear = document.getElementsByClassName('isear-top')
+	for (var n = isear.length - 1; n >= 0; n--) {
+		isear[n].remove()
 	}
 }

@@ -100,7 +100,7 @@ function changeInput(){
 browser.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
 	var enabled = await storageGet('enabled', true)
 	if(enabled){
-		whereTimeout(updateButton, 200)
+		whereTimeout("アップデート", updateButton, 200)
 	}
 })
 
@@ -150,7 +150,7 @@ function updateAll(){
 }
 // 頻繁な更新対策
 function updateAllTimeout(time:number){
-	whereTimeout(updateAll, time)
+	whereTimeout("アップデート", updateAll, time)
 }
 
 // 引数は文字列型配列、それによってボタンを作成

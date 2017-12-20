@@ -6,14 +6,6 @@ browser.tabs.onActivated.addListener(async function(){
 
 browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	var f = async ()=>{
-		var flag = await executeCode('if(typeof itel_inject_flag != "undefined"){true}else{false}')
-		if(flag != undefined) {
-			if(flag[0] == true){
-				return
-			}
-		}
-
-		await executeCode('var itel_inject_flag = true')
 		await executeFile('inject.js')
 		browser.tabs.insertCSS(null, {
 			code: '#itel-selected, #isear-top-selected{background-color:red !important; color:white !important;}\n' +
@@ -27,7 +19,7 @@ browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab)
 		f()
 		return
 	}
-	whereTimeout(f, 200)
+	whereTimeout("ページ更新", f, 200)
 })
 browser.tabs.onRemoved.addListener(async function(tabId:number){
 	storageRemove(saveWordsPrefix+tabId)

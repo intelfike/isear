@@ -11,6 +11,12 @@ google_words.onchange = () => {
 	storageSet('google_words', enable, true)
 }
 
+const auto_update = <HTMLInputElement> document.getElementById('auto_update')
+auto_update.onchange = () => {
+	var enable = auto_update.checked
+	storageSet('auto_update', enable, true)
+}
+
 const regbool = <HTMLInputElement> document.getElementById('regbool')
 regbool.onchange = () => {
 	var enable = regbool.checked
@@ -43,6 +49,9 @@ document.body.onload = async () => {
 
 	var gw = await storageGet('google_words', true, true)
 	google_words.checked = gw
+
+	var au = await storageGet('auto_update', false, true)
+	auto_update.checked = au
 
 	var rb = await storageGet('regbool', false, true)
 	regbool.checked = rb

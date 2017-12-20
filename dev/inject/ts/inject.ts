@@ -1,10 +1,35 @@
 const barWidth:number = 16
+var auto_update = false
+var enabled_bar = true
+var regbool = false
+
+
+function highlight_all(dest:any, words:Words){
+	removeBar()
+	removeTops()
+	for(let n = 0; n < words.array.length; n++){
+		let word = words.array[n]
+		if(!regbool){
+			word.regbool = false
+			word.regexp = undefined
+		}
+		word.bgColor = bgColors[n%bgColors.length]
+		word.barColor = word.bgColor
+		words_nums[word.origin] = 0
+		replace_auto(dest, word, hlClass)
+		// ハイライト位置くん
+		if(enabled_bar){
+			createBar(word)
+			createTops(word)
+		}
+	}
+}
 
 // 呼び出し元に返す値(callback)
 var words_nums = {}
 // 再帰的にテキストノードを書き換えるため
 var icnt = 0
-function replace_auto(word:Word, className:string){
+function replace_auto(dest:any, word:Word, className:string){
 	//word.id, document.body, word.origin, className, word.bgColor, word.regbool, word.barColor
 	textNode_req(document.body, className, (obj:Text)=>{
 		var tmpword = word.origin
@@ -256,16 +281,16 @@ function scrollFocusPrev(className, idName){
 function scrollFocusNextWord(word, className, idName, regbool){
 	init_sfcount(className, idName, -1)
 
-	var elems = document.getElementsByClassName(className)
 	sfcount = sfcountNextWord(sfcount, className, word, regbool)
+	var elems = document.getElementsByClassName(className)
 	scrollFocusAuto(elems[sfcount])
 }
 // 前のワードをたどる(上の関数の取り消し)
 function scrollFocusPrevWord(word, className, idName, regbool){
 	init_sfcount(className, idName, 1)
 
-	var elems = document.getElementsByClassName(className)
 	sfcount = sfcountPrevWord(sfcount, className, word, regbool)
+	var elems = document.getElementsByClassName(className)
 	scrollFocusAuto(elems[sfcount])
 }
 // pm:補正
@@ -310,7 +335,8 @@ function rightSpace(i:number):void{
 }
 
 // 検索結果をハイライトする処理
-function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, regbool:boolean){
+var itel_inject_flag = false
+function itel_main(search_words:string, enabled:boolean){
 	// 全消し
 	offElementsByClassName('itel-highlight')
 
@@ -330,22 +356,7 @@ function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, re
 		return
 	}
 
-	for(let n = 0; n < words.array.length; n++){
-		let word = words.array[n]
-		if(!regbool){
-			word.regbool = false
-			word.regexp = undefined
-		}
-		word.bgColor = bgColors[n%bgColors.length]
-		word.barColor = word.bgColor
-		words_nums[word.origin] = 0
-		replace_auto(word, hlClass)
-		// ハイライト位置くん
-		if(enabled_bar){
-			createBar(word)
-			createTops(word)
-		}
-	}
+	highlight_all(document.body, words)
 
 	if(enabled_bar){
 		createBarToggler(words.array.length)
@@ -357,12 +368,13 @@ function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, re
 		if(!enabled){
 			return
 		}
-		whereTimeout(()=>{
+		whereTimeout('ハイライトバーを更新', ()=>{
 			if(!enabled_bar){
 				return
 			}
 
 			removeBar()
+			removeTops()
 			removeMbox()
 			removeBarToggler()
 
@@ -370,13 +382,45 @@ function itel_main(search_words:string, enabled:boolean, enabled_bar:boolean, re
 				return
 			}
 			createBarToggler(words.array.length)
+
 			for(let n = 0; n < words.array.length; n++){
 				let word = words.array[n]
 				createBar(word)
 				createTops(word)
 			}
-			toggleBars(words.array.length)
 		}, 100)
 	}
+
+	if(auto_update){
+		var def_option = {
+			childList: true,
+			characterData: true,
+			subtree: true,
+		}
+		var observer = new MutationObserver(function (MutationRecords, MutationObserver) {
+			MutationObserver.disconnect()
+			// ====================
+			var mutation = MutationRecords[0]
+
+			if (mutation.type=="childList" && mutation.addedNodes.length != 0) {
+				mutation.addedNodes.forEach(function(node) {
+					if (node.nodeType == 1){
+						if(node.className.indexOf('itel') != -1 ||
+							node.className.indexOf('isear') != -1){
+							return
+						}
+					}
+					whereTimeout('ハイライト更新', ()=>{
+						highlight_all(node, words)
+						window.onresize(null)
+					}, 1000)
+				});
+			};
+			// ====================
+			observer.observe(document.body, def_option);
+		});
+		observer.observe(document.body, def_option);
+	}
+
 	return words_nums
 }

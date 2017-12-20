@@ -1,9 +1,9 @@
 // 一定時間呼ばれなければ実行する
 // キーボードイベントで一定時間操作しなければ実行 など
-var timeouter
-function whereTimeout(f, time){
-	clearTimeout(timeouter)
-	timeouter = setTimeout(f, time)
+var timeouter = {}
+function whereTimeout(group, f, time){
+	clearTimeout(timeouter[group])
+	timeouter[group] = setTimeout(f, time)
 }
 
 // 特定の長さになるまで左側を埋める

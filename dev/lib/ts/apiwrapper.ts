@@ -17,13 +17,19 @@ function executeHighlight(swords:string, bool=true):Promise<{[key:string]:number
 		bgColors = await storageGet('bgColors', bgColors, true)
 		await executeCode('bgColors = ' + JSON.stringify(bgColors))
 		await executeCode('browser_type = ' + JSON.stringify(browser_type))
-
-		// 引数を作成してハイライトを実行する
+		var au = await storageGet('auto_update', false, true)
+		await executeCode('auto_update = ' + JSON.stringify(au))
 		var enbar = await storageGet('enabled_bar', true, true)
+		await executeCode('enabled_bar = ' + JSON.stringify(enbar))
+		var regbool = await storageGet('regbool', false, true)
+		await executeCode('regbool = ' + JSON.stringify(regbool))
+
+		// 引数を作成して
 		var shbar = await storageGet('show_bar', true, true)
 		await executeCode('showBars = ' + JSON.stringify(shbar))
-		var regbool = await storageGet('regbool', false, true)
-		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+bool+', '+enbar+', '+regbool+')')
+		// ハイライトを実行
+		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+bool+')')
+		await executeCode('itel_inject_flag = true')
 		ok(<Promise<{[key:string]:number;}>> result[0])
 	})
 }
