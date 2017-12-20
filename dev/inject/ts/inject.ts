@@ -3,10 +3,13 @@ var auto_update = false
 var enabled_bar = true
 var regbool = false
 
+var def_option = {
+	childList: true,
+	characterData: true,
+	subtree: true,
+}
 
 function highlight_all(dest:any, words:Words){
-	removeBar()
-	removeTops()
 	for(let n = 0; n < words.array.length; n++){
 		let word = words.array[n]
 		if(!regbool){
@@ -17,11 +20,6 @@ function highlight_all(dest:any, words:Words){
 		word.barColor = word.bgColor
 		words_nums[word.origin] = 0
 		replace_auto(dest, word, hlClass)
-		// ハイライト位置くん
-		if(enabled_bar){
-			createBar(word)
-			createTops(word)
-		}
 	}
 }
 
@@ -356,7 +354,9 @@ function itel_main(search_words:string, enabled:boolean){
 		return
 	}
 
-	highlight_all(document.body, words)
+	silentRun(function(){
+		highlight_all(document.body, words)
+	})
 
 	if(enabled_bar){
 		createBarToggler(words.array.length)
@@ -372,55 +372,64 @@ function itel_main(search_words:string, enabled:boolean){
 			if(!enabled_bar){
 				return
 			}
+			silentRun(function(){
 
-			removeBar()
-			removeTops()
-			removeMbox()
-			removeBarToggler()
+				removeBar()
+				removeTops()
+				removeMbox()
+				removeBarToggler()
 
-			if(words.array.length == 0){
-				return
-			}
-			createBarToggler(words.array.length)
+				if(words.array.length == 0){
+					return
+				}
+				createBarToggler(words.array.length)
 
-			for(let n = 0; n < words.array.length; n++){
-				let word = words.array[n]
-				createBar(word)
-				createTops(word)
-			}
+				for(let n = 0; n < words.array.length; n++){
+					let word = words.array[n]
+					createBar(word)
+					createTops(word)
+				}
+				toggleBars(words.array.length)
+			})
 		}, 100)
 	}
 
 	if(auto_update){
-		var def_option = {
-			childList: true,
-			characterData: true,
-			subtree: true,
-		}
-		var observer = new MutationObserver(function (MutationRecords, MutationObserver) {
-			MutationObserver.disconnect()
-			// ====================
+		observer = new MutationObserver(function (MutationRecords, MutationObserver) {
 			var mutation = MutationRecords[0]
 
 			if (mutation.type=="childList" && mutation.addedNodes.length != 0) {
 				mutation.addedNodes.forEach(function(node) {
-					if (node.nodeType == 1){
-						if(node.className.indexOf('itel') != -1 ||
-							node.className.indexOf('isear') != -1){
-							return
-						}
-					}
 					whereTimeout('ハイライト更新', ()=>{
-						highlight_all(node, words)
-						window.onresize(null)
+						if (node.nodeType == 1){
+							if(node.className.indexOf('itel') != -1 ||
+								node.className.indexOf('isear') != -1 ||
+								node.id.indexOf('itel') != -1 ||
+								node.id.indexOf('isear') != -1){
+								return
+							}
+						}
+						silentRun(function(){
+							highlight_all(node, words)
+							window.onresize(null)
+						})
 					}, 1000)
 				});
 			};
-			// ====================
-			observer.observe(document.body, def_option);
 		});
 		observer.observe(document.body, def_option);
 	}
 
 	return words_nums
+}
+// オブザーバーに検知されないDOM操作
+var observer = null
+function silentRun(f){
+	if(observer != null){
+		observer.disconnect()
+	}
+	f()
+	if(observer != null){
+		observer.observe(document.body, def_option)
+	}
 }
