@@ -63,19 +63,25 @@ browser.runtime.onInstalled.addListener(()=>{
 		type: "normal",
 		id: 'select',
 		contexts: ['selection']
-	 })
-	 browser.contextMenus.create({
+	})
+	browser.contextMenus.create({
 		 title: 'ハイライトのON/OFFを切り替える',
 		 type: "normal",
 		 id: 'toggle_highlight',
-		 contexts: ['page']
-	 })
+		 contexts: ['browser_action']
+	})
 	browser.contextMenus.create({
 		title: 'ハイライトバー(右側)のON/OFFを切り替える',
 		type: "normal",
 		id: 'toggle_bars',
-		contexts: ['page']
-	 })
+		contexts: ['browser_action']
+	})
+	browser.contextMenus.create({
+		title: '検索ワードをクリアする',
+		type: "normal",
+		id: 'clear',
+		contexts: ['browser_action']
+	})
 });
 
 browser.contextMenus.onClicked.addListener(async function(itemData) {
@@ -107,6 +113,10 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		await storageSet('enabled', bool)
 		var swords:string = await storageGetWords()
 		await executeHighlight(swords, bool)
-
+		break
+	case 'clear':
+		await storageSetWords('')
+		await executeHighlightAuto('')
+		break
 	}
 });
