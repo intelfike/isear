@@ -364,7 +364,9 @@ function itel_main(search_words:string, enabled:boolean){
 			toggleBars(words.array.length)
 		}
 	}
+	var resized = false
 	window.onresize = ()=>{
+		resized = true
 		if(!enabled){
 			return
 		}
@@ -392,6 +394,9 @@ function itel_main(search_words:string, enabled:boolean){
 				toggleBars(words.array.length)
 			})
 		}, 100)
+	}
+	if(!resized){
+		window.onresize(null)
 	}
 
 	if(auto_update){

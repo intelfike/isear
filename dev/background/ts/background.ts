@@ -71,7 +71,7 @@ browser.runtime.onInstalled.addListener(()=>{
 		 contexts: ['browser_action']
 	})
 	browser.contextMenus.create({
-		title: 'ハイライトバー(右側)のON/OFFを切り替える',
+		title: 'ハイライトバー(右側)の表示/非表示を切り替える',
 		type: "normal",
 		id: 'toggle_bars',
 		contexts: ['browser_action']
