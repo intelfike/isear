@@ -3,6 +3,7 @@ const on_obj = <HTMLInputElement> document.getElementById('on')
 on_obj.onclick = ()=>{
 	var enabled:boolean = on_obj.innerText == 'ON'
 	extensionEnable(enabled)
+	inputsEnable(enabled)
 }
 
 // ⭮ボタンクリック時の処理
@@ -13,15 +14,6 @@ retry.onclick = async ()=>{
 	retry.disabled = false
 }
 
-// 全機能停止
-function extensionEnable(bool:boolean, update:boolean=true){
-	storageSet('enabled', bool)
-	inputsEnable(bool)
-	var words:string = getSwords()
-	if(update){
-		executeHighlight(words, bool)
-	}
-}
 // 入力禁止、デザイン変更
 async function inputsEnable(bool:boolean){
 	if(bool){
@@ -224,7 +216,7 @@ document.body.onload = async ()=>{
 	}
 
 	var en:boolean = await storageGet('enabled', true)
-	extensionEnable(en, false)
+	inputsEnable(en)
 	if(en){
 		search_words_obj.focus()
 		return

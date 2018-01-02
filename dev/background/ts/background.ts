@@ -110,9 +110,7 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 	case 'toggle_highlight':
 		var bool:boolean = await storageGet('enabled', true)
 		bool = !bool
-		await storageSet('enabled', bool)
-		var swords:string = await storageGetWords()
-		await executeHighlight(swords, bool)
+		extensionEnable(bool)
 		break
 	case 'clear':
 		await storageSetWords('')

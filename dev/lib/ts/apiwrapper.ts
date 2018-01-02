@@ -178,6 +178,18 @@ function executeCode(code:string):any{
 	})
 }
 
-function setIcon(icon){
+// trueで拡張機能を有効にする
+async function extensionEnable(bool:boolean){
+	await storageSet('enabled', bool)
+	var swords:string = await storageGetWords()
+	await executeHighlight(swords, bool)
+	var icon = 'data/icons/icon32.png'
+	if(!bool){
+		icon = 'data/icons/icon32grey.png'
+	}
 	chrome.browserAction.setIcon({path:icon})
 }
+
+// function setIcon(icon){
+// 	chrome.browserAction.setIcon({path:icon})
+// }
