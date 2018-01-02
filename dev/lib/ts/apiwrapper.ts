@@ -125,11 +125,11 @@ function storageSetWords(words:string){
 function storageGetWords(urlLoad=true):Promise<string> {
 	return new Promise(async ok => {
 		var tabId = await getTabId()
-		var swords:string = await storageGet(saveWordsPrefix+tabId, '')
-		if(swords == ''){
-			swords = await storageGet(latest_words, '')
+		var swords:string = await storageGet(saveWordsPrefix+tabId, undefined)
+		if(swords == undefined){
+			swords = await storageGet(latest_words, undefined)
 		}
-		if(swords != ''){
+		if(swords != undefined){
 			swords = swords.trim()
 		}
 
@@ -176,4 +176,8 @@ function executeCode(code:string):any{
 			}
 		)
 	})
+}
+
+function setIcon(icon){
+	chrome.browserAction.setIcon({path:icon})
 }

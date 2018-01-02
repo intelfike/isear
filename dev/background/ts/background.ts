@@ -1,8 +1,8 @@
-browser.tabs.onActivated.addListener(async function(){
-	await executeFile('inject.js')
-	var swords = await storageGetWords()
-	await storageSetWords(swords)
-})
+// browser.tabs.onActivated.addListener(async function(){
+// 	await executeFile('inject.js')
+// 	var swords = await storageGetWords()
+// 	await storageSetWords(swords)
+// })
 
 browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	var f = async ()=>{
