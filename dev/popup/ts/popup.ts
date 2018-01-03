@@ -41,7 +41,7 @@ async function inputsEnable(bool:boolean){
 // === 検索ワードのテキストボックス
 var search_words_obj = <HTMLInputElement> document.getElementById('search_words')
 search_words_obj.onkeydown = async (e)=>{
-	switch(e.code){
+	switch(e.key){
 	case 'Enter':
 		if(e.ctrlKey){
 			// google検索
