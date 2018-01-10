@@ -1,8 +1,8 @@
-// browser.tabs.onActivated.addListener(async function(){
-// 	await executeFile('inject.js')
-// 	var swords = await storageGetWords()
-// 	await storageSetWords(swords)
-// })
+// タブ移動で検索ワードを記録する為
+browser.tabs.onActivated.addListener(async function(){
+	var swords = await storageGetWords()
+	await storageSetWords(swords)
+})
 
 browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	var f = async ()=>{
