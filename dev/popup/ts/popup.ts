@@ -211,6 +211,8 @@ document.body.onload = async ()=>{
 	if(swords != undefined){
 		if(swords.length >= 1){
 			search_words_obj.value = swords + ' '
+			search_words_obj.selectionStart = 0
+			search_words_obj.selectionEnd = swords.length + 1
 		}
 		changeInput()
 	}

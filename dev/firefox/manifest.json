@@ -3,7 +3,7 @@
 
   "name": "isear",
   "description": "複数ワードに対応したページ内検索ツール",
-  "version": "1.48",
+  "version": "1.50",
 
   "commands": {
     "_execute_browser_action": {
@@ -25,9 +25,9 @@
     "default_popup": "popup.html"
   },
   "icons": {
-      "128": "data/icons/icon32.png",
-      "16": "data/icons/icon32.png",
-      "48": "data/icons/icon32.png"
+    "128": "data/icons/icon32.png",
+    "16": "data/icons/icon32.png",
+    "48": "data/icons/icon32.png"
   },
   "permissions": [
     "tabs", "storage", "contextMenus",

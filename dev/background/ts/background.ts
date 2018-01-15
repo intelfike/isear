@@ -19,7 +19,6 @@ browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab)
 		f()
 		return
 	}
-	whereTimeout("ページ更新", f, 200)
 })
 browser.tabs.onRemoved.addListener(async function(tabId:number){
 	storageRemove(saveWordsPrefix+tabId)
