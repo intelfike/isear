@@ -14,7 +14,7 @@ retry.onclick = async ()=>{
 	retry.disabled = false
 }
 
-// 入力禁止、デザイン変更
+// 入力をtrue有効・false無効、デザイン変更
 async function inputsEnable(bool:boolean){
 	if(bool){
 		on_obj.innerText = "OFF"
@@ -33,8 +33,6 @@ async function inputsEnable(bool:boolean){
 			btns[n].remove()
 		}
 		return
-	}else{
-		updateAll()
 	}
 }
 
