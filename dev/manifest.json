@@ -31,5 +31,6 @@
   "permissions": [
     "tabs", "storage", "contextMenus",
     "http://*/*", "https://*/*"
-  ]
+  ],
+  "homepage_url": "http://isear.intelf.link/"
 }
