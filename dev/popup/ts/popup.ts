@@ -207,10 +207,8 @@ document.body.onload = async ()=>{
 	// 以前の状態を思い出す
 	var swords:string = await storageGetWords()
 	if(swords != undefined){
-		if(swords.length >= 1){
+		if(swords.length != 0){
 			search_words_obj.value = swords + ' '
-			search_words_obj.selectionStart = 0
-			search_words_obj.selectionEnd = swords.length + 1
 		}
 		changeInput()
 	}
@@ -219,6 +217,8 @@ document.body.onload = async ()=>{
 	inputsEnable(en)
 	if(en){
 		search_words_obj.focus()
+		search_words_obj.selectionStart = 0
+		search_words_obj.selectionEnd = swords.length + 1
 		return
 	}
 }
