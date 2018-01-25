@@ -33,6 +33,8 @@ async function inputsEnable(bool:boolean){
 			btns[n].remove()
 		}
 		return
+	}else{
+		updateButton()
 	}
 }
 
