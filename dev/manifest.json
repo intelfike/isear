@@ -3,7 +3,7 @@
 
   "name": "isear",
   "description": "複数ワードに対応したページ内検索ツール",
-  "version": "1.54",
+  "version": "1.56",
 
   "commands": {
     "_execute_browser_action": {
@@ -32,5 +32,5 @@
     "tabs", "storage", "contextMenus",
     "http://*/*", "https://*/*"
   ],
-  "homepage_url": "http://isear.intelf.link/"
+  "homepage_url": "http://isear.intelfike.net/"
 }
