@@ -42,6 +42,16 @@ prefix.onchange = () => {
 }
 prefix.onkeydown = prefix.onchange
 
+const exchange = <HTMLInputElement> document.getElementById('exchange')
+exchange.onclick = () => {
+	var tmp = first.col.value
+	first.col.value = second.col.value
+	second.col.value = tmp
+	first.col.onchange(null)
+	second.col.onchange(null)
+}
+var first:{[key:string]:HTMLInputElement}
+var second:{[key:string]:HTMLInputElement}
 
 document.body.onload = async () => {
 	var sync = await storageGet('sync', false)
@@ -71,12 +81,42 @@ document.body.onload = async () => {
 	// 色の初期化
 	var start
 	for (let i = 0; i < bgColors.length; i++) {
+		// 選択用のチェックボックスを定義
+		let selector = <HTMLInputElement>document.createElement('input')
+		selector.type = "checkbox"
+		selector.id = 'selector' + i
+		selector.className = 'selector'
+
 		let color = bgColors[i]
 		let col = <HTMLInputElement>document.createElement('input')
 		col.type = 'color'
 		col.className = 'colors'
 		col.id = 'color' + i
 		col.value = color
+
+		// first secondを設定
+		if(second == undefined){
+			if(first == undefined){
+				first = {col:col, sel:selector}
+				selector.checked = true
+			} else {
+				second = {col:col, sel:selector}
+				selector.checked = true
+			}
+		}
+		// セレクタ
+		selector.onclick = (e) => {
+			if(!selector.checked){
+				e.preventDefault()
+				return false
+			}
+		}
+		selector.onchange = (e) => {
+			first.sel.checked = false
+			first = second
+			second = {col:col, sel:selector}
+		}
+		cols.appendChild(selector)
 
 		// カラーピッカーのイベント設定
 		col.onchange = ()=>{
