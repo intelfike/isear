@@ -211,6 +211,7 @@ document.body.onload = async ()=>{
 	if(swords != undefined){
 		if(swords.length != 0){
 			search_words_obj.value = swords + ' '
+			bgColors = await storageGet('bgColors', bgColors, true)
 		}
 		changeInput()
 	}
