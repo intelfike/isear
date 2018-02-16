@@ -30,7 +30,9 @@ function executeHighlight(swords:string, bool=true):Promise<{[key:string]:number
 		// ハイライトを実行
 		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+bool+')')
 		await executeCode('itel_inject_flag = true')
-		ok(<Promise<{[key:string]:number;}>> result[0])
+		var words = <Promise<{[key:string]:number;}>> result[0]
+		// 検索の状態を保存すべ！
+		ok(words)
 	})
 }
 
@@ -152,8 +154,8 @@ function storageSetNum(words_nums:{[key:string]:number;}){
 function storageGetNum():Promise<{[key:string]:number;}>{
 	return new Promise(async ok => {
 		var tabId = await getTabId()
-		var swords:{[key:string]:number;} = await storageGet(saveNumPrefix+tabId)
-		ok(swords)
+		var words_nums:{[key:string]:number;} = await storageGet(saveNumPrefix+tabId)
+		ok(words_nums)
 	})
 }
 

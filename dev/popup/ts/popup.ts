@@ -89,10 +89,14 @@ function changeInput(){
 }
 
 // アップデートイベント
-browser.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab){
+browser.runtime.onMessage.addListener(async function(request, sender, sendResponse){
+	if(request.name != 'done highlight'){
+		return
+	}
 	var enabled = await storageGet('enabled', true)
 	if(enabled){
-		whereTimeout("アップデート", updateButton, 200)
+		// whereTimeout('updateButton', updateButton, 200)
+		updateButton()
 	}
 })
 
@@ -159,6 +163,7 @@ async function updateButton(){
 		btn.className = 'btn'
 		btn.id = word.origin
 		btn.innerText = word.origin
+		btn.tabIndex = n + 1
 		btn.style.backgroundColor = word.bgColor
 		btn.onclick = (e)=>{
 			// クリック時のハイライト選択移動

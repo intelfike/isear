@@ -14,6 +14,7 @@ browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab)
 
 		await saveGoogleSearchWords(tabId, tab.url)
 		await highlighting(tabId)
+		browser.runtime.sendMessage({name: 'done highlight'})
 	}
 	if(changeInfo.status == 'complete'){
 		f()
@@ -53,7 +54,7 @@ function saveGoogleSearchWords(tabId, url){
 async function highlighting(tabId:number){
 	var swords:string = await storageGetWords()
 	var words_nums = await executeHighlightAuto(swords)
-	await storageSet(saveNumPrefix+tabId, words_nums)
+	await storageSetNum(words_nums)
 }
 
 browser.contextMenus.create({
