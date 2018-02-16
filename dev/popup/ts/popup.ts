@@ -163,7 +163,7 @@ async function updateButton(){
 		btn.className = 'btn'
 		btn.id = word.origin
 		btn.innerText = word.origin
-		btn.tabIndex = n + 1
+		btn.tabIndex = n + 2
 		btn.style.backgroundColor = word.bgColor
 		btn.onclick = (e)=>{
 			// クリック時のハイライト選択移動
