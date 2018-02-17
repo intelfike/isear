@@ -323,7 +323,11 @@ function countAllWords(word, className, regbool){
 	return count
 }
 
-function rightSpace(i:number):void{
+function rightSpace(i:number):void{}
+
+// 一時的に無効
+// 画面がガタつくので正直いらない子
+function ESC_rightSpace(i:number):void{
 	if(i == 0){
 		document.body.style.width = ''
 		return
