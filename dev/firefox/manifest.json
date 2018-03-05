@@ -3,7 +3,7 @@
 
   "name": "isear",
   "description": "複数ワードに対応したページ内検索ツール",
-  "version": "1.62",
+  "version": "1.63",
 
   "commands": {
     "_execute_browser_action": {
@@ -11,6 +11,24 @@
         "default": "Ctrl+Shift+F"
       },
       "description": "検索を開始する"
+    },
+    "switch_mode": {
+      "suggested_key": {
+        "default": "Alt+M"
+      },
+      "description": "コマンドモード切り替え"
+    },
+    "toggle_bars": {
+      "suggested_key": {
+        "default": "Alt+B"
+      },
+      "description": "ハイライトバーをON/OFF"
+    },
+    "retry": {
+      "suggested_key": {
+        "default": "Alt+R"
+      },
+      "description": "ハイライトを更新"
     }
   },
 

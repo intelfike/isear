@@ -32,11 +32,11 @@ function createBarToggler(length:number){
 	// 動作の設定
 	tog.onclick = () => {
 		showBars = tog.innerText == '<'
-		toggleBars(length)
+		barsVisible(length, showBars)
 	}
 	document.body.appendChild(tog)
 }
-function toggleBars(length:number){
+function barsVisible(length:number, show:boolean){
 	var rate:number = (1/window.devicePixelRatio)
 	var tog = document.getElementById('isear-toggler')
 	if(tog == null){
@@ -44,9 +44,9 @@ function toggleBars(length:number){
 	}
 	var bars = document.getElementsByClassName('isear-bar')
 	for (let i = bars.length - 1; i >= 0; i--) {
-		barVisible(i, showBars)
+		barVisible(i, show)
 	}
-	if(showBars){
+	if(show){
 		tog.innerText = '>'
 		var right:number = (length) * (barWidth+1) * rate
 		tog.style.right = right + 'px'
@@ -101,9 +101,9 @@ function createBar(word:Word){
 function barClick(e:MouseEvent, word:Word){
 	var key_event = <KeyboardEvent>(e||window.event)
 	if(key_event.shiftKey){
-		scrollFocusPrevWord(word.origin, hlClass, "itel-selected", word.regbool)
+		scrollFocusPrevWord(word.origin, hlClass, selected, word.regbool)
 	}else{
-		scrollFocusNextWord(word.origin, hlClass, "itel-selected", word.regbool)
+		scrollFocusNextWord(word.origin, hlClass, selected, word.regbool)
 	}
 }
 function removeBar(){

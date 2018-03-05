@@ -2,6 +2,10 @@
 browser.tabs.onActivated.addListener(async function(){
 	var swords = await storageGetWords()
 	await storageSetWords(swords)
+
+	// 設定を反映
+	var command_mode = await storageGet('command_mode')
+	await executeCode('command_mode = ' + command_mode)
 })
 
 browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
@@ -18,6 +22,10 @@ browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab)
 	}
 	if(changeInfo.status == 'complete'){
 		f()
+		// 設定を反映
+		var command_mode = await storageGet('command_mode')
+		await executeCode('command_mode = ' + command_mode)
+
 		return
 	}
 })
