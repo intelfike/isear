@@ -339,22 +339,20 @@ function ESC_rightSpace(i:number):void{
 // 検索結果をハイライトする処理
 var itel_inject_flag = false
 function itel_main(search_words:string, enabled:boolean){
-	// 全消し
-	offElementsByClassName('itel-highlight')
-
-	removeBar()
-	removeMbox()
-	removeBarToggler()
-
-	rightSpace(0)
-
-	if(!enabled){
-		return
-	}
-
+	global_enabled = enabled
 	var words:Words = new Words(search_words)
 	if(words.array.length == 0){
 		enabled = false
+	}
+	return parsed_main(words, enabled)
+}
+
+var global_enabled:boolean
+function parsed_main(words:Words, enabled:boolean){
+	// 全部リセット
+	reset_all()
+
+	if(!enabled){
 		return
 	}
 
@@ -364,13 +362,27 @@ function itel_main(search_words:string, enabled:boolean){
 
 	if(enabled_bar){
 		createBarToggler(words.array.length)
-		if(!showBars){
-			toggleBars(words.array.length)
-		}
+		barsVisible(words.array.length, showBars)
 	}
-	var resized = false
+
+	defineEvents(words, enabled)
+
+	window.onresize(null)
+
+	return words_nums
+}
+
+var already_event = false
+var global_words:Words
+function defineEvents(words:Words, enabled:boolean){
+	global_words = words
+	if(already_event){
+		return
+	}
+	already_event = true
+	document.body.onkeydown = (e)=>{bodyKeydownEvent(e, global_words)}
+
 	window.onresize = ()=>{
-		resized = true
 		if(!enabled){
 			return
 		}
@@ -385,22 +397,19 @@ function itel_main(search_words:string, enabled:boolean){
 				removeMbox()
 				removeBarToggler()
 
-				if(words.array.length == 0){
+				if(global_words.array.length == 0){
 					return
 				}
-				createBarToggler(words.array.length)
+				createBarToggler(global_words.array.length)
 
-				for(let n = 0; n < words.array.length; n++){
-					let word = words.array[n]
+				for(let n = 0; n < global_words.array.length; n++){
+					let word = global_words.array[n]
 					createBar(word)
 					createTops(word)
 				}
-				toggleBars(words.array.length)
+				barsVisible(global_words.array.length, showBars)
 			})
 		}, 100)
-	}
-	if(!resized){
-		window.onresize(null)
 	}
 
 	if(auto_update){
@@ -419,7 +428,7 @@ function itel_main(search_words:string, enabled:boolean){
 							}
 						}
 						silentRun(function(){
-							highlight_all(node, words)
+							highlight_all(node, global_words)
 							window.onresize(null)
 						})
 					}, 1000)
@@ -428,8 +437,6 @@ function itel_main(search_words:string, enabled:boolean){
 		});
 		observer.observe(document.body, def_option);
 	}
-
-	return words_nums
 }
 // オブザーバーに検知されないDOM操作
 var observer = null
@@ -441,4 +448,15 @@ function silentRun(f){
 	if(observer != null){
 		observer.observe(document.body, def_option)
 	}
+}
+
+function reset_all(){
+	// 全消し
+	offElementsByClassName('itel-highlight')
+
+	removeBar()
+	removeMbox()
+	removeBarToggler()
+
+	rightSpace(0)
 }

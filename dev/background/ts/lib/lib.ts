@@ -12,7 +12,7 @@ function toggle_bars(){
 		await executeCode('showBars = ' + sb)
 		var swords:string = await storageGetWords()
 		var words:Words = new Words(swords)
-		await executeCode('toggleBars('+words.array.length+')')
+		await executeCode('barsVisible('+words.array.length+', '+sb+')')
 		await storageSet('show_bar', sb, true)
 		ok()
 	})
