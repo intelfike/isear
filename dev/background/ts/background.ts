@@ -1,4 +1,4 @@
-// タブ移動で検索ワードを記録する為
+// タブ移動で最新の検索ワードを記録する為
 browser.tabs.onActivated.addListener(async function(){
 	var swords = await storageGetWords()
 	await storageSetWords(swords)
@@ -54,65 +54,4 @@ function saveGoogleSearchWords(tabId, url){
 async function highlighting(tabId:number){
 	var swords:string = await storageGetWords()
 	var words_nums = await executeHighlightAuto(swords)
-	await storageSetNum(words_nums)
 }
-
-browser.contextMenus.create({
-	title: 'isear 検索ワードに追加',
-	type: "normal",
-	id: 'select',
-	contexts: ['selection']
-})
-browser.contextMenus.create({
-	 title: 'ハイライトのON/OFFを切り替える',
-	 type: "normal",
-	 id: 'toggle_highlight',
-	 contexts: ['browser_action']
-})
-browser.contextMenus.create({
-	title: 'ハイライトバー(右側)の表示/非表示を切り替える',
-	type: "normal",
-	id: 'toggle_bars',
-	contexts: ['browser_action']
-})
-browser.contextMenus.create({
-	title: '検索ワードをクリアする',
-	type: "normal",
-	id: 'clear',
-	contexts: ['browser_action']
-})
-
-browser.contextMenus.onClicked.addListener(async function(itemData) {
-	switch(itemData.menuItemId){
-	case 'select':
-		var text:string = itemData.selectionText
-		if(/[\s\t　]/g.test(text)){
-			text = text.replace(/[\s\t　]+/g, ' ')
-			text = '"'+text+'"'
-		}
-		var swords:string = await storageGetWords()
-		swords = swords + ' ' + text
-		await storageSetWords(swords)
-		var words_nums = await executeHighlightAuto(swords)
-		await storageSetNum(words_nums)
-		break
-	case 'toggle_bars':
-		var sb = await executeCode('showBars')
-		sb = !sb[0]
-		await executeCode('showBars = ' + sb)
-		var swords:string = await storageGetWords()
-		var words:Words = new Words(swords)
-		await executeCode('toggleBars('+words.array.length+')')
-		await storageSet('show_bar', sb, true)
-		break
-	case 'toggle_highlight':
-		var bool:boolean = await storageGet('enabled', true)
-		bool = !bool
-		extensionEnable(bool)
-		break
-	case 'clear':
-		await storageSetWords('')
-		await executeHighlightAuto('')
-		break
-	}
-});

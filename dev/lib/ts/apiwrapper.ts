@@ -1,17 +1,17 @@
 
 // swordは原文を渡す
-function executeHighlightAuto(swords:string):Promise<{[key:string]:number;}>{
+function executeHighlightAuto(swords:string){
 	return new Promise(async ok=>{
 		var enb:boolean = await storageGet('enabled')
 		if(enb == undefined){
 			enb = true
 		}
-		var result:{[key:string]:number;} = await executeHighlight(swords, enb)
-		ok(result)
+		await executeHighlight(swords, enb)
+		ok()
 	})
 }
 // boolはfalseならハイライトをオフ
-function executeHighlight(swords:string, bool=true):Promise<{[key:string]:number;}>{
+function executeHighlight(swords:string, bool=true){
 	return new Promise(async ok=>{
 		// ページに値を渡す処理
 		bgColors = await storageGet('bgColors', bgColors, true)
@@ -30,9 +30,9 @@ function executeHighlight(swords:string, bool=true):Promise<{[key:string]:number
 		// ハイライトを実行
 		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+bool+')')
 		await executeCode('itel_inject_flag = true')
-		var words = <Promise<{[key:string]:number;}>> result[0]
-		// 検索の状態を保存すべ！
-		ok(words)
+		// 検索件数を保存
+		await storageSetNum(<{[key:string]:number;}>result[0])
+		ok()
 	})
 }
 
@@ -178,6 +178,12 @@ function executeCode(code:string):any{
 			}
 		)
 	})
+}
+
+async function toggleEnable(){
+	var bool:boolean = await storageGet('enabled', true)
+	bool = !bool
+	extensionEnable(bool)
 }
 
 // trueで拡張機能を有効にする

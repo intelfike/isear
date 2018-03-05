@@ -136,8 +136,7 @@ function updateAll(){
 		var swords:string = getSwords()
 		var words:Words = await getWords()
 
-		var words_nums:{[key:string]:number;} = await executeHighlight(swords)
-		await storageSetNum(words_nums)
+		await executeHighlight(swords)
 
 		updateButton()
 		storageSetWords(swords)
@@ -198,6 +197,7 @@ document.body.onload = async ()=>{
 		switch(e.key){
 		case 'e':
 			search_words_obj.focus()
+			search_words_obj.value = ""
 			break
 		case 'r':
 			retry.onclick(null)

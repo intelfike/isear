@@ -2,3 +2,4 @@
 /// <reference path="../lib/ts/common.ts" />
 /// <reference path="ts/bar.ts" />
 /// <reference path="ts/inject.ts" />
+/// <reference path="ts/key.ts" />
