@@ -1,7 +1,6 @@
 var command_mode = false
 
 function bodyKeydownEvent(e:KeyboardEvent, words:Words){
-		console.log(e.shiftKey)
 	if(!command_mode){
 		return
 	}
