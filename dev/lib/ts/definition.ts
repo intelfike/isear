@@ -35,8 +35,8 @@ if(browser == undefined){
 
 class Word{
 	id:       number
-	origin:   string
-	unified:  string
+	origin:   string // ユーザー入力のオリジナルワード
+	unified:  string // 検索用に統一されたワード(あいまい検索用)
 	bgColor:  string
 	barColor: string
 	regexp:   RegExp

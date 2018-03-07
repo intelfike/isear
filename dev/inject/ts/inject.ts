@@ -79,6 +79,7 @@ function replace_auto(dest:any, word:Word, className:string){
 			return
 		}
 		word.elems.push(newObj)
+		word.count.num++
 
 		icnt++
 	})
@@ -374,8 +375,11 @@ function parsed_main(words:Words, enabled:boolean){
 
 var already_event = false
 var global_words:Words
+var global_enabled:boolean
 function defineEvents(words:Words, enabled:boolean){
+	// イベントは一度しか登録しなくていいけど、値は共有すべき
 	global_words = words
+	global_enabled = enabled
 	if(already_event){
 		return
 	}

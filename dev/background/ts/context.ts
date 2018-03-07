@@ -5,19 +5,19 @@ browser.contextMenus.create({
 	contexts: ['selection']
 })
 browser.contextMenus.create({
-	 title: 'ハイライトのON/OFFを切り替える',
-	 type: "normal",
-	 id: 'toggle_highlight',
-	 contexts: ['browser_action']
+	title: 'ハイライトの表示切り替え',
+	type: "normal",
+	id: 'toggle_highlight',
+	contexts: ['browser_action']
 })
 browser.contextMenus.create({
-	title: 'ハイライトバー(右側)の表示/非表示を切り替える',
+	title: 'ハイライトバーの表示切り替え',
 	type: "normal",
 	id: 'toggle_bars',
 	contexts: ['browser_action']
 })
 browser.contextMenus.create({
-	title: '検索ワードをクリアする',
+	title: '検索ワードをクリア',
 	type: "normal",
 	id: 'clear',
 	contexts: ['browser_action']

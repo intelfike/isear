@@ -1,6 +1,7 @@
 var command_mode = false
 
 function bodyKeydownEvent(e:KeyboardEvent, words:Words){
+		console.log(e.shiftKey)
 	if(!command_mode){
 		return
 	}
@@ -33,11 +34,16 @@ function bodyKeydownEvent(e:KeyboardEvent, words:Words){
 		// parsed_main(words, true)
 		break
 	default:
-		// isNaNの仕様により、" "が0に変換される
-		if(isNaN(e.key) || e.key == ' '){
+		var isDigit = /^Digit\d$/.test(e.code)
+		var isNumpad = /^Numpad\d$/.test(e.code)
+		if(!isDigit && !isNumpad){
 			break
 		}
-		var num:number = parseInt(e.key)
+		var key_num = e.code.substr(5)
+		if(isNumpad){
+			key_num = e.code.substr(6)
+		}
+		var num:number = parseInt(key_num)
 		var reverse = e.shiftKey
 		if(num == 0){
 			patrolAll(reverse)
@@ -60,6 +66,9 @@ function patrolAll(reverse:boolean){
 }
 
 function patrolWord(word:Word, reverse:boolean){
+	if(word.count.num == 0){
+		return
+	}
 	if(!reverse){
 		scrollFocusNextWord(word.origin, hlClass, selected, word.regbool)
 		return
