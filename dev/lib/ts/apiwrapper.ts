@@ -133,12 +133,11 @@ function storageGetWords(urlLoad=true):Promise<string> {
 		}
 		if(swords != undefined){
 			swords = swords.trim()
-		}
-
-		// 接頭文字をつける
-		var pf = await storageGet('prefix', '', true)
-		if(swords.indexOf(pf) != 0){
-			swords = pf + ' ' + swords
+			// 接頭文字をつける
+			var pf = await storageGet('prefix', '', true)
+			if(swords.indexOf(pf) != 0){
+				swords = pf + ' ' + swords
+			}
 		}
 
 		ok(swords)
@@ -195,9 +194,11 @@ async function extensionEnable(bool:boolean){
 	if(!bool){
 		icon = 'data/icons/icon32grey.png'
 	}
-	chrome.browserAction.setIcon({path:icon})
+	setIcon(icon)
 }
 
-// function setIcon(icon){
-// 	chrome.browserAction.setIcon({path:icon})
-// }
+
+
+function setIcon(icon){
+	chrome.browserAction.setIcon({path:icon})
+}
