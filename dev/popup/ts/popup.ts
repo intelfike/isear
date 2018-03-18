@@ -190,6 +190,23 @@ async function updateButton(){
 
 // 最初に実行される
 document.body.onload = async ()=>{
+	var enabled:boolean = await storageGet('enabled', true)
+	bodyKeyDownEvent(enabled)
+
+	// 以前の状態を思い出す
+	var swords:string = await storageGetWords()
+	await remind(swords)
+
+	inputsEnable(enabled)
+	if(enabled){
+		search_words_obj.focus()
+		search_words_obj.selectionStart = 0
+		search_words_obj.selectionEnd = swords.length + 1
+		return
+	}
+}
+
+function bodyKeyDownEvent(enabled:boolean){
 	document.body.onkeydown = async (e)=>{
 		if(!e.ctrlKey){
 			return
@@ -200,6 +217,9 @@ document.body.onload = async ()=>{
 			search_words_obj.value = ""
 			break
 		case 'r':
+			if(enabled){
+				return
+			}
 			retry.onclick(null)
 			break
 		case 'h':
@@ -210,23 +230,22 @@ document.body.onload = async ()=>{
 		}
 		e.preventDefault()
 	}
+}
 
-	// 以前の状態を思い出す
-	var swords:string = await storageGetWords()
-	if(swords != undefined){
-		if(swords.length != 0){
-			search_words_obj.value = swords + ' '
-			bgColors = await storageGet('bgColors', bgColors, true)
+function remind(swords:string){
+	return new Promise(async ok=>{
+		bgColors = await storageGet('bgColors', bgColors, true)
+
+		if(swords == undefined){
+			return
 		}
-		changeInput()
-	}
+		if(swords.length == 0){
+			return
+		}
 
-	var en:boolean = await storageGet('enabled', true)
-	inputsEnable(en)
-	if(en){
-		search_words_obj.focus()
-		search_words_obj.selectionStart = 0
-		search_words_obj.selectionEnd = swords.length + 1
-		return
-	}
+		search_words_obj.value = swords + ' '
+		
+		changeInput()
+		ok()
+	})
 }

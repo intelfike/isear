@@ -408,7 +408,7 @@ function defineEvents(words:Words, enabled:boolean){
 
 				for(let n = 0; n < global_words.array.length; n++){
 					let word = global_words.array[n]
-					createBar(word)
+					createBar(word, words.array.length)
 					createTops(word)
 				}
 				barsVisible(global_words.array.length, showBars)

@@ -66,7 +66,7 @@ function removeBarToggler(){
 	tog.remove()
 }
 
-function createBar(word:Word){
+function createBar(word:Word, length:number){
 	var rate:number = (1/window.devicePixelRatio)
 	var bar = document.createElement('iseardiv')
 	bar.id = 'isear-bar-' + (word.id-1)
@@ -80,7 +80,7 @@ function createBar(word:Word){
 	bar.style.width = barWidth * rate + 'px'
 	bar.style.height = '100%'
 	bar.style.top = '0'
-	var right:number = (word.id-1) * (barWidth+1) * rate
+	var right:number = (length - word.id) * (barWidth+1) * rate
 	bar.style.right = right + 'px'
 	bar.style.zIndex = '99999999'
 	var visibility = 'visible'
