@@ -237,9 +237,11 @@ function remind(swords:string){
 		bgColors = await storageGet('bgColors', bgColors, true)
 
 		if(swords == undefined){
+			ok()
 			return
 		}
 		if(swords.length == 0){
+			ok()
 			return
 		}
 

@@ -409,7 +409,7 @@ function defineEvents(words:Words, enabled:boolean){
 				for(let n = 0; n < global_words.array.length; n++){
 					let word = global_words.array[n]
 					createBar(word, words.array.length)
-					createTops(word)
+					createTops(word, words.array.length)
 				}
 				barsVisible(global_words.array.length, showBars)
 			})

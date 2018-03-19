@@ -162,7 +162,7 @@ function removeMbox(){
 		mboxs[n].remove()
 	}
 }
-function createTops(word:Word){
+function createTops(word:Word, length:number){
 	for (let n = word.elems.length - 1; n >= 0; n--) {
 		let obj = word.elems[n]
 		
@@ -181,7 +181,7 @@ function createTops(word:Word){
 		d.style.position = 'fixed'
 		var arrowHeight = 16 * rate
 		d.style.top = (objtop/document.body.scrollHeight*(window.innerHeight-arrowHeight*2))+arrowHeight+'px'
-		d.style.right = (word.id-1) * (barWidth+1) * rate + 'px'
+		d.style.right = (length - word.id) * (barWidth+1) * rate + 'px'
 		d.style.height = 3 * rate + 'px'
 		d.style.width = barWidth * rate + 'px'
 		d.style.zIndex = '999999999'
