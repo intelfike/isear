@@ -340,7 +340,7 @@ function ESC_rightSpace(i:number):void{
 // 検索結果をハイライトする処理
 var itel_inject_flag = false
 function itel_main(search_words:string, enabled:boolean){
-	global_enabled = enabled
+	gstatus.enabled = enabled
 	var words:Words = new Words(search_words)
 	if(words.array.length == 0){
 		enabled = false
@@ -348,7 +348,6 @@ function itel_main(search_words:string, enabled:boolean){
 	return parsed_main(words, enabled)
 }
 
-var global_enabled:boolean
 function parsed_main(words:Words, enabled:boolean){
 	// 全部リセット
 	reset_all()
@@ -374,19 +373,21 @@ function parsed_main(words:Words, enabled:boolean){
 }
 
 var already_event = false
-var global_words:Words
-var global_enabled:boolean
+var gstatus = {words:null, enabled:null}
+// var global_words:Words
+// var global_enabled:boolean
 function defineEvents(words:Words, enabled:boolean){
 	// イベントは一度しか登録しなくていいけど、値は共有すべき
-	global_words = words
-	global_enabled = enabled
+	gstatus.words = words
+	gstatus.enabled = enabled
 	if(already_event){
 		return
 	}
 	already_event = true
-	document.body.onkeydown = (e)=>{bodyKeydownEvent(e, global_words)}
+	document.body.onkeydown = (e)=>{bodyKeydownEvent(e, gstatus.words)}
 
 	window.onresize = ()=>{
+		words = gstatus.words
 		if(!enabled){
 			return
 		}
@@ -401,17 +402,20 @@ function defineEvents(words:Words, enabled:boolean){
 				removeMbox()
 				removeBarToggler()
 
-				if(global_words.array.length == 0){
+				let length = gstatus.words.array.length
+
+				if(length == 0){
 					return
 				}
-				createBarToggler(global_words.array.length)
 
-				for(let n = 0; n < global_words.array.length; n++){
-					let word = global_words.array[n]
-					createBar(word, words.array.length)
-					createTops(word, words.array.length)
+				createBarToggler(length)
+
+				for(let n = 0; n < length; n++){
+					let word = gstatus.words.array[n]
+					createBar(word, length)
+					createTops(word, length)
 				}
-				barsVisible(global_words.array.length, showBars)
+				barsVisible(length, showBars)
 			})
 		}, 100)
 	}
@@ -432,7 +436,7 @@ function defineEvents(words:Words, enabled:boolean){
 							}
 						}
 						silentRun(function(){
-							highlight_all(node, global_words)
+							highlight_all(node, gstatus.words)
 							window.onresize(null)
 						})
 					}, 1000)
