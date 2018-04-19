@@ -190,15 +190,25 @@ async function extensionEnable(bool:boolean){
 	await storageSet('enabled', bool)
 	var swords:string = await storageGetWords()
 	await executeHighlight(swords, bool)
-	var icon = 'data/icons/icon32.png'
-	if(!bool){
-		icon = 'data/icons/icon32grey.png'
-	}
-	setIcon(icon)
+	autoSetIcon()
 }
 
 
 
-function setIcon(icon){
+function setIcon(icon:string){
 	chrome.browserAction.setIcon({path:icon})
+}
+
+async function autoSetIcon(){
+	var icon = 'data/icons/icon32.png'
+	
+	var command_mode = await storageGet('command_mode')
+	if(command_mode){
+		icon = 'data/icons/icon32command.png'
+	}
+	var enabled = await storageGet('enabled')
+	if(!enabled){
+		icon = 'data/icons/icon32grey.png'
+	}
+	setIcon(icon)
 }

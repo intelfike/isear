@@ -8,6 +8,7 @@ browser.tabs.onActivated.addListener(async function(){
 	await executeCode('command_mode = ' + command_mode)
 })
 
+// ページが更新された時の処理
 browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	var f = async ()=>{
 		await executeFile('inject.js')

@@ -8,12 +8,11 @@ chrome.commands.onCommand.addListener(async function(name:string){
 		command_mode = !command_mode
 		await storageSet('command_mode', command_mode)
 		await executeCode('command_mode = ' + command_mode)
+		autoSetIcon()
 		if(command_mode){
-			setIcon('data/icons/icon32command.png')
 			alert("isearのコマンドモードが有効になりました\n\n[1]~[9] 対応する番号のワードを巡回する\n[0] 全ワードを巡回する\n[B] ハイライトバーの表示を切り替える")
 			return
 		}
-		setIcon('data/icons/icon32.png')
 		alert("isearのコマンドモードが無効になりました")
 		return
 	}
