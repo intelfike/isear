@@ -19,36 +19,30 @@ function executeHighlight(swords:string, enabled=true){
 		await executeCode('browser_type = ' + JSON.stringify(browser_type))
 		var au = await storageGet('auto_update', false, true)
 		await executeCode('auto_update = ' + JSON.stringify(au))
-		var enbar = await storageGet('enabled_bar', true, true)
-		await executeCode('enabled_bar = ' + JSON.stringify(enbar))
 		var regbool = await storageGet('regbool', false, true)
 		await executeCode('regbool = ' + JSON.stringify(regbool))
-		// 値を変換
-		// ハイライトのブラックリストを適用
-		var curSite = await getSite()
-		var list = await storageGet('hl-blacklist', [])
-		for (const n in list) {
-			if (list.hasOwnProperty(n)) {
-				const site = list[n];
-				if (site == curSite) {
-					enabled = false
-				}
-			}
-		}
 		// ハイライトバーのブラックリストを適用
-		var blist = await storageGet('hlbar-blacklist', [])
-		for (const n in blist) {
-			if (blist.hasOwnProperty(n)) {
-				const site = blist[n];
-				if (site == curSite) {
-					enabled = false
-				}
+		var enbar = await storageGet('enabled_bar', true, true)
+		var curSite = await getSite()
+		var blist = await storageGet('hlbar-blacklist', {})
+		for (const site in blist) {
+			if (site == curSite) {
+				enbar = blist[site] // 基本falseを代入
 			}
 		}
-
+		await executeCode('enabled_bar = ' + JSON.stringify(enbar))
+		
 		// 引数を作成して
 		var shbar = await storageGet('show_bar', true, true)
 		await executeCode('showBars = ' + JSON.stringify(shbar))
+		// ハイライトのブラックリストを適用
+		var list = await storageGet('hl-blacklist', {})
+		for (const site in list) {
+			if (site == curSite) {
+				enabled = list[site] // 基本falseを代入
+			}
+		}
+
 		// ハイライトを実行
 		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+enabled+')')
 		await executeCode('itel_inject_flag = true')

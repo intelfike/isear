@@ -58,16 +58,19 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		await clear_words()
 		break
 	case 'hl-blacklist':
-		var list = await storageGet('hl-blacklist', [])
+		var list = await storageGet('hl-blacklist', {}, true)
 		var site = await getSite()
-		list.push(site)
-		await storageSet('hl-blacklist', list)
+		list[site] = false
+		await storageSet('hl-blacklist', list, true)
+		var swords:string = await storageGetWords()
+		await executeHighlightAuto(swords)
 		break
 	case 'hlbar-blacklist':
-		var list = await storageGet('hlbar-blacklist', [])
+		var list = await storageGet('hlbar-blacklist', {}, true)
 		var site = await getSite()
-		list.push(site)
-		await storageSet('hlbar-blacklist', list)
+		list[site] = false
+		await storageSet('hlbar-blacklist', list, true)
+		await executeCode('barsVisible(0, '+false+')')
 		break
 	}
 });
