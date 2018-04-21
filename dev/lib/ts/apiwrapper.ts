@@ -11,7 +11,7 @@ function executeHighlightAuto(swords:string){
 	})
 }
 // boolはfalseならハイライトをオフ
-function executeHighlight(swords:string, bool=true){
+function executeHighlight(swords:string, enabled=true){
 	return new Promise(async ok=>{
 		// ページに値を渡す処理
 		bgColors = await storageGet('bgColors', bgColors, true)
@@ -23,12 +23,34 @@ function executeHighlight(swords:string, bool=true){
 		await executeCode('enabled_bar = ' + JSON.stringify(enbar))
 		var regbool = await storageGet('regbool', false, true)
 		await executeCode('regbool = ' + JSON.stringify(regbool))
+		// 値を変換
+		// ハイライトのブラックリストを適用
+		var curSite = await getSite()
+		var list = await storageGet('hl-blacklist', [])
+		for (const n in list) {
+			if (list.hasOwnProperty(n)) {
+				const site = list[n];
+				if (site == curSite) {
+					enabled = false
+				}
+			}
+		}
+		// ハイライトバーのブラックリストを適用
+		var blist = await storageGet('hlbar-blacklist', [])
+		for (const n in blist) {
+			if (blist.hasOwnProperty(n)) {
+				const site = blist[n];
+				if (site == curSite) {
+					enabled = false
+				}
+			}
+		}
 
 		// 引数を作成して
 		var shbar = await storageGet('show_bar', true, true)
 		await executeCode('showBars = ' + JSON.stringify(shbar))
 		// ハイライトを実行
-		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+bool+')')
+		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+enabled+')')
 		await executeCode('itel_inject_flag = true')
 		// 検索件数を保存
 		await storageSetNum(<{[key:string]:number;}>result[0])
@@ -50,7 +72,7 @@ function changeURL(url:string){
 	})
 }
 
-function getURL(){
+function getURL():Promise<string>{
 	return new Promise((ok, reject) => {
 		browser.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 			if(tabs.length == 0){
@@ -62,6 +84,15 @@ function getURL(){
 		})
 	})
 }
+
+function getSite():Promise<string>{
+	return new Promise(async ok => {
+		var url = await getURL()
+		var site = url.match(/https?:\/\/[^/]+\//g)[0]
+		ok(site)
+	})
+}
+
 function getTabId(): Promise<number>{
 	return new Promise((ok, reject) => {
 		browser.tabs.query({currentWindow: true, active: true}, (tab)=>{

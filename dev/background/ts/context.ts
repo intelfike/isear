@@ -22,6 +22,18 @@ browser.contextMenus.create({
 	id: 'clear',
 	contexts: ['browser_action']
 })
+browser.contextMenus.create({
+	title: 'このサイトではハイライトしない',
+	type: "normal",
+	id: 'hl-blacklist',
+	contexts: ['browser_action']
+})
+browser.contextMenus.create({
+	title: 'このサイトではハイライトバーを表示しない',
+	type: "normal",
+	id: 'hlbar-blacklist',
+	contexts: ['browser_action']
+})
 
 browser.contextMenus.onClicked.addListener(async function(itemData) {
 	switch(itemData.menuItemId){
@@ -44,6 +56,18 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		break
 	case 'clear':
 		await clear_words()
+		break
+	case 'hl-blacklist':
+		var list = await storageGet('hl-blacklist', [])
+		var site = await getSite()
+		list.push(site)
+		await storageSet('hl-blacklist', list)
+		break
+	case 'hlbar-blacklist':
+		var list = await storageGet('hlbar-blacklist', [])
+		var site = await getSite()
+		list.push(site)
+		await storageSet('hlbar-blacklist', list)
 		break
 	}
 });
