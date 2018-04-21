@@ -1,3 +1,5 @@
+autoSetIcon()
+
 // タブ移動で最新の検索ワードを記録する為
 browser.tabs.onActivated.addListener(async function(){
 	var swords = await storageGetWords()

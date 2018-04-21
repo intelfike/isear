@@ -17,6 +17,12 @@ auto_update.onchange = () => {
 	storageSet('auto_update', enable, true)
 }
 
+const command_mode = <HTMLInputElement> document.getElementById('command_mode')
+command_mode.onchange = () => {
+	var enable = command_mode.checked
+	storageSet('command_mode', enable, true)
+}
+
 const regbool = <HTMLInputElement> document.getElementById('regbool')
 regbool.onchange = () => {
 	var enable = regbool.checked
@@ -62,6 +68,9 @@ document.body.onload = async () => {
 
 	var au = await storageGet('auto_update', false, true)
 	auto_update.checked = au
+
+	var rb = await storageGet('command_mode', false, true)
+	command_mode.checked = rb
 
 	var rb = await storageGet('regbool', false, true)
 	regbool.checked = rb
