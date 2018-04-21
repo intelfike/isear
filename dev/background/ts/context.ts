@@ -5,13 +5,13 @@ browser.contextMenus.create({
 	contexts: ['selection']
 })
 browser.contextMenus.create({
-	title: 'ハイライトの表示切り替え',
+	title: 'ハイライトをOFFにする',
 	type: "normal",
 	id: 'toggle_highlight',
 	contexts: ['browser_action']
 })
 browser.contextMenus.create({
-	title: 'ハイライトバーの表示切り替え',
+	title: 'ハイライトバーをOFFにする',
 	type: "normal",
 	id: 'toggle_bars',
 	contexts: ['browser_action']
@@ -36,6 +36,7 @@ browser.contextMenus.create({
 })
 
 browser.contextMenus.onClicked.addListener(async function(itemData) {
+	var title = ''
 	switch(itemData.menuItemId){
 	case 'select':
 		var text:string = itemData.selectionText
@@ -49,10 +50,18 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		await executeHighlightAuto(swords)
 		break
 	case 'toggle_highlight':
-		toggleEnable()
+		var enabled = await toggleEnable()
+		var title = "ハイライトをOFFにする"			
+		if (!enabled) {
+			title = "ハイライトをONにする"
+		}
 		break
-	case 'toggle_bars':
-		toggle_bars()
+		case 'toggle_bars':
+		var sb = toggle_bars()
+		var title = "ハイライトバーをOFFにする"			
+		if (!sb) {
+			title = "ハイライトバーをONにする"
+		}
 		break
 	case 'clear':
 		await clear_words()
@@ -60,7 +69,11 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 	case 'hl-blacklist':
 		var list = await storageGet('hl-blacklist', {}, true)
 		var site = await getSite()
-		list[site] = false
+		if(list.hasOwnProperty(site)){
+			list[site] = !list[site]
+		}else{
+			list[site] = false
+		}
 		await storageSet('hl-blacklist', list, true)
 		var swords:string = await storageGetWords()
 		await executeHighlightAuto(swords)
@@ -68,9 +81,20 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 	case 'hlbar-blacklist':
 		var list = await storageGet('hlbar-blacklist', {}, true)
 		var site = await getSite()
-		list[site] = false
+		if(list.hasOwnProperty(site)){
+			list[site] = !list[site]
+		}else{
+			list[site] = false
+		}
 		await storageSet('hlbar-blacklist', list, true)
-		await executeCode('barsVisible(0, '+false+')')
+		var swords:string = await storageGetWords()
+		var words:Words = new Words(swords)
+		await executeCode('barsVisible('+words.array.length+', '+list[site]+')')
 		break
+	}
+	if(title != ''){
+		chrome.contextMenus.update(itemData.menuItemId, {
+			title: title,
+		})
 	}
 });

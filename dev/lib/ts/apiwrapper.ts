@@ -48,6 +48,14 @@ function executeHighlight(swords:string, enabled=true){
 		await executeCode('itel_inject_flag = true')
 		// 検索件数を保存
 		await storageSetNum(<{[key:string]:number;}>result[0])
+
+		var clear_text = '検索ワードをクリア'
+		if(swords == ''){
+			clear_text = '-'
+		}
+		chrome.contextMenus.update('clear', {
+			title: clear_text,
+		})
 		ok()
 	})
 }
@@ -204,10 +212,14 @@ function executeCode(code:string):any{
 	})
 }
 
-async function toggleEnable(){
-	var bool:boolean = await storageGet('enabled', true)
-	bool = !bool
-	extensionEnable(bool)
+// エラー出るけど問題ない
+async function toggleEnable():Promise<boolean>{
+	return new Promise(async ok => {
+		var bool:boolean = await storageGet('enabled', true)
+		bool = !bool
+		extensionEnable(bool)
+		ok(bool)
+	})
 }
 
 // trueで拡張機能を有効にする
