@@ -22,3 +22,30 @@ function retry(){
 		ok()
 	})
 }
+
+// ブラックリスト入りかどうか(ハイライト)
+// falseならブラックリスト入り
+function hlGetSiteMode():Promise<boolean>{
+	return new Promise(async ok => {
+		var list:{[key:string]:boolean;} = await storageGet('hl_blacklist', {}, true)
+		var site = await getSite()
+		if(list.hasOwnProperty(site)){
+			ok(list[site])
+		}else{
+			ok(true)
+		}
+	})
+}
+// ブラックリスト入りかどうか(ハイライトバー)
+// falseならブラックリスト入り
+function hlbarGetSiteMode():Promise<boolean>{
+	return new Promise(async ok => {
+		var list:{[key:string]:boolean;} = await storageGet('hlbar_blacklist', {}, true)
+		var site = await getSite()
+		if(list.hasOwnProperty(site)){
+			ok(list[site])
+		}else{
+			ok(true)
+		}
+	})
+}

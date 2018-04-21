@@ -24,7 +24,7 @@ function executeHighlight(swords:string, enabled=true){
 		// ハイライトバーのブラックリストを適用
 		var enbar = await storageGet('enabled_bar', true, true)
 		var curSite = await getSite()
-		var blist = await storageGet('hlbar-blacklist', {})
+		var blist = await storageGet('hlbar_blacklist', {})
 		for (const site in blist) {
 			if (site == curSite) {
 				enbar = blist[site] // 基本falseを代入
@@ -36,7 +36,7 @@ function executeHighlight(swords:string, enabled=true){
 		var shbar = await storageGet('show_bar', true, true)
 		await executeCode('showBars = ' + JSON.stringify(shbar))
 		// ハイライトのブラックリストを適用
-		var list = await storageGet('hl-blacklist', {})
+		var list = await storageGet('hl_blacklist', {})
 		for (const site in list) {
 			if (site == curSite) {
 				enabled = list[site] // 基本falseを代入
@@ -49,10 +49,8 @@ function executeHighlight(swords:string, enabled=true){
 		// 検索件数を保存
 		await storageSetNum(<{[key:string]:number;}>result[0])
 
-		var clear_text = '検索ワードをクリア'
-		if(swords == ''){
-			clear_text = '-'
-		}
+		// コンテキスト クリアテキストを変更
+		var clear_text = ctx_title['clear'][''+(swords!='')]
 		chrome.contextMenus.update('clear', {
 			title: clear_text,
 		})

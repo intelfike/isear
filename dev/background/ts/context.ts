@@ -5,33 +5,33 @@ browser.contextMenus.create({
 	contexts: ['selection']
 })
 browser.contextMenus.create({
-	title: 'ハイライトをOFFにする',
+	title: ctx_title['toggle_hl']['true'],
 	type: "normal",
-	id: 'toggle_highlight',
+	id: 'toggle_hl',
 	contexts: ['browser_action']
 })
 browser.contextMenus.create({
-	title: 'ハイライトバーをOFFにする',
+	title: ctx_title['toggle_bars']['true'],
 	type: "normal",
 	id: 'toggle_bars',
 	contexts: ['browser_action']
 })
 browser.contextMenus.create({
-	title: '検索ワードをクリア',
+	title: ctx_title['clear']['true'],
 	type: "normal",
 	id: 'clear',
 	contexts: ['browser_action']
 })
 browser.contextMenus.create({
-	title: 'このサイトではハイライトしない',
+	title: ctx_title['hl_blacklist']['true'],
 	type: "normal",
-	id: 'hl-blacklist',
+	id: 'hl_blacklist',
 	contexts: ['browser_action']
 })
 browser.contextMenus.create({
-	title: 'このサイトではハイライトバーを表示しない',
+	title: ctx_title['hlbar_blacklist']['true'],
 	type: "normal",
-	id: 'hlbar-blacklist',
+	id: 'hlbar_blacklist',
 	contexts: ['browser_action']
 })
 
@@ -49,47 +49,43 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		await storageSetWords(swords)
 		await executeHighlightAuto(swords)
 		break
-	case 'toggle_highlight':
+	case 'toggle_hl':
 		var enabled = await toggleEnable()
-		var title = "ハイライトをOFFにする"			
-		if (!enabled) {
-			title = "ハイライトをONにする"
-		}
+		title = ctx_title['toggle_hl'][''+enabled]
 		break
-		case 'toggle_bars':
+	case 'toggle_bars':
 		var sb = toggle_bars()
-		var title = "ハイライトバーをOFFにする"			
-		if (!sb) {
-			title = "ハイライトバーをONにする"
-		}
+		title = ctx_title['toggle_bars'][''+sb]
 		break
 	case 'clear':
 		await clear_words()
 		break
-	case 'hl-blacklist':
-		var list = await storageGet('hl-blacklist', {}, true)
+	case 'hl_blacklist':
+		var list = await storageGet('hl_blacklist', {}, true)
 		var site = await getSite()
 		if(list.hasOwnProperty(site)){
 			list[site] = !list[site]
 		}else{
 			list[site] = false
 		}
-		await storageSet('hl-blacklist', list, true)
+		await storageSet('hl_blacklist', list, true)
 		var swords:string = await storageGetWords()
 		await executeHighlightAuto(swords)
+		title = ctx_title['hl_blacklist'][''+list[site]]
 		break
-	case 'hlbar-blacklist':
-		var list = await storageGet('hlbar-blacklist', {}, true)
+	case 'hlbar_blacklist':
+		var list = await storageGet('hlbar_blacklist', {}, true)
 		var site = await getSite()
 		if(list.hasOwnProperty(site)){
 			list[site] = !list[site]
 		}else{
 			list[site] = false
 		}
-		await storageSet('hlbar-blacklist', list, true)
+		await storageSet('hlbar_blacklist', list, true)
 		var swords:string = await storageGetWords()
 		var words:Words = new Words(swords)
 		await executeCode('barsVisible('+words.array.length+', '+list[site]+')')
+		title = ctx_title['hlbar_blacklist'][''+list[site]]
 		break
 	}
 	if(title != ''){

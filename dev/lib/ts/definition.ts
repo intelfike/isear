@@ -1,3 +1,26 @@
+var ctx_title = {
+	toggle_hl:{
+		true:'ハイライトをOFFにする',
+		false:'ハイライトをONにする',
+	},
+	toggle_bars:{
+		true:'ハイライトバーをOFFにする',
+		false:'ハイライトバーをONにする',
+	},
+	clear:{
+		true:'検索ワードをクリアする',
+		false:'-',
+	},
+	hl_blacklist:{
+		true:'このサイトではハイライトをOFFにする',
+		false:'このサイトではハイライトをONにする',
+	},
+	hlbar_blacklist:{
+		true:'このサイトではハイライトバーをOFFにする',
+		false:'このサイトではハイライトバーをONにする',
+	},
+}
+
 // ストレージに保存する時のキー
 const latest_words = "latest_words"
 const saveWordsPrefix = 'words_'

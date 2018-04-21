@@ -4,8 +4,21 @@ browser.tabs.onActivated.addListener(async function(){
 	await storageSetWords(swords)
 
 	// 設定を反映
+	// コマンドモード
 	var command_mode = await storageGet('command_mode')
 	await executeCode('command_mode = ' + command_mode)
+	// ブラックリスト用のテキストを更新
+	var hl_mode = await hlGetSiteMode()
+	var hl_title = ctx_title['hl_blacklist'][''+hl_mode]
+	chrome.contextMenus.update('hl_blacklist', {
+		title: hl_title,
+	})
+
+	var hlbar_mode = await hlbarGetSiteMode()
+	var hlbar_title = ctx_title['hlbar_blacklist'][''+hlbar_mode]
+	chrome.contextMenus.update('hlbar_blacklist', {
+		title: hlbar_title,
+	})
 })
 
 // ページが更新された時の処理
