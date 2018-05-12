@@ -3,7 +3,7 @@
 
   "name": "isear",
   "description": "複数ワードに対応したページ内検索ツール",
-  "version": "1.73",
+  "version": "1.75",
 
   "commands": {
     "_execute_browser_action": {

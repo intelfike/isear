@@ -1,5 +1,7 @@
-// タブ移動で最新の検索ワードを記録する為
-browser.tabs.onActivated.addListener(async function(){
+browser.tabs.onActivated.addListener(async function(activeInfo){
+	// ==============================
+	//  タブごとの設定を反映し直す
+	// ==============================
 	var swords = await storageGetWords()
 	await storageSetWords(swords)
 
@@ -19,29 +21,36 @@ browser.tabs.onActivated.addListener(async function(){
 	chrome.contextMenus.update('hlbar_blacklist', {
 		title: hlbar_title,
 	})
+
+	// ==============================
+	//  ハイライトを再度実行する
+	// ==============================
+	executeAllSequence(activeInfo.tabId, await getURL())
 })
 
 // ページが更新された時の処理
 browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
-	var f = async ()=>{
-		await executeFile('inject.js')
-		browser.tabs.insertCSS(null, {
-			code: '#itel-selected, #isear-top-selected{background-color:red !important; color:white !important;}\n' +
-			'#isear-top-selected{border-color:white !important; z-index:9999999998 !important;}'
-		})
-
-		await saveGoogleSearchWords(tabId, tab.url)
-		await highlighting(tabId)
-		browser.runtime.sendMessage({name: 'done highlight'})
-	}
 	if(changeInfo.status == 'complete'){
-		f()
+		executeAllSequence(tabId, tab.url)
 		// 設定を反映
 		var command_mode = await storageGet('command_mode')
 		await executeCode('command_mode = ' + command_mode)
 		return
 	}
 })
+// ハイライトのためのすべての手順を実行する
+async function executeAllSequence(tabId, url) {
+	await executeFile('inject.js')
+	browser.tabs.insertCSS(null, {
+		code: '#itel-selected, #isear-top-selected{background-color:red !important; color:white !important;}\n' +
+		'#isear-top-selected{border-color:white !important; z-index:9999999998 !important;}'
+	})
+
+	await saveGoogleSearchWords(tabId, url)
+	await highlighting(tabId)
+	browser.runtime.sendMessage({name: 'done highlight'})
+}
+
 browser.tabs.onRemoved.addListener(async function(tabId:number){
 	storageRemove(saveWordsPrefix+tabId)
 	storageRemove(saveNumPrefix+tabId)

@@ -1,5 +1,4 @@
 cd `dirname $0`
-bash build.bash
 cd ..
 
 echo '=== chrome ==='

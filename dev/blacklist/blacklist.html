@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>isearの設定</title>
+	<script src="blacklist.js" defer></script>
+	<style>
+		@font-face {
+			font-family: 'Noto Mono';
+			src: url("data/NotoMono-hinted/NotoMono-Regular.ttf");
+		}
+		body{
+			font-family: "Noto Mono";
+			font-size: 16px;
+			margin: 0;
+			background: linear-gradient(-90deg, #ACF, #DEF);
+		}
+		article{
+			background-color: white;
+			padding: 8px;
+			margin: 8px;
+			margin-top: 0;
+		}
+		h1, h2, h3, h4, h5, h6{
+			padding: 8px;
+			margin: 0;
+		}
+		h2, h3, h4, h5, h6{
+			margin-top: 16px;
+			padding-bottom: 0;
+		}
+		hr{
+			margin: 0;
+		}
+
+		button, input{
+			font-family: "Noto Mono";
+		}
+		button{
+			height: 24px;
+		}
+		button:disabled{
+			background-color: #DDD !important;
+		}
+		ul li{
+			list-style-type: none;
+			margin-top: 4px;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<h1>ブラックリストの設定</h1>
+	</header>
+	<article>
+		<p>この設定はisearの拡張機能アイコンを右クリックした時に出るメニューの「このサイトではハイライトしない」「このサイトではハイライトバーを表示しない」機能と連携しています。</p>
+		<h2>ハイライトを無効にしているサイト一覧</h2>
+		<table id="hl" border="1">
+			<tr><th>ブラックリストを適用する</th><th>サイト</th><th>操作</th></tr>
+		</table>
+		<h2>ハイライトバーの表示を無効にしているサイト一覧</h2>
+		<table id="hlbar" border="1">
+			<tr><th>ブラックリストを適用する</th><th>サイト</th><th>操作</th></tr>
+		</table>
+	</article>
+</body>
