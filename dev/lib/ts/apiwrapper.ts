@@ -23,11 +23,11 @@ function executeHighlight(swords:string, enabled=true){
 		await executeCode('regbool = ' + JSON.stringify(regbool))
 		// ハイライトバーのブラックリストを適用
 		var enbar = await storageGet('enabled_bar', true, true)
-		var curSite = await getSite()
-		var blist = await storageGet('hlbar_blacklist', {})
-		for (const site in blist) {
-			if (site == curSite) {
-				enbar = blist[site] // 基本falseを代入
+		var curURL = await getURL()
+		var blist = await storageGet('hlbar_blacklist', {}, true)
+		for (const reg in blist) {
+			if (new RegExp(reg).test(curURL)) {
+				enbar = blist[reg] // 基本falseを代入
 			}
 		}
 		await executeCode('enabled_bar = ' + JSON.stringify(enbar))
@@ -36,10 +36,10 @@ function executeHighlight(swords:string, enabled=true){
 		var shbar = await storageGet('show_bar', true, true)
 		await executeCode('showBars = ' + JSON.stringify(shbar))
 		// ハイライトのブラックリストを適用
-		var list = await storageGet('hl_blacklist', {})
-		for (const site in list) {
-			if (site == curSite) {
-				enabled = list[site] // 基本falseを代入
+		var list = await storageGet('hl_blacklist', {}, true)
+		for (const reg in list) {
+			if (new RegExp(reg).test(curURL)) {
+				enabled = list[reg] // 基本falseを代入
 			}
 		}
 
