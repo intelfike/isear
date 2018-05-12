@@ -11,6 +11,7 @@ cp -r ../data ../build
 bash inject/build.bash
 bash popup/build.bash
 bash option/build.bash
+bash blacklist/build.bash
 bash background/build.bash
 
 echo '=== firefox ==='

@@ -1,5 +1,11 @@
 browser.tabs.onActivated.addListener(async function(activeInfo){
 	// ==============================
+	//  ハイライトを再度実行する
+	// ==============================
+	// 毎度実行するから重いかも？
+	executeAllSequence(activeInfo.tabId, await getURL())
+
+	// ==============================
 	//  タブごとの設定を反映し直す
 	// ==============================
 	var swords = await storageGetWords()
@@ -21,11 +27,6 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 	chrome.contextMenus.update('hlbar_blacklist', {
 		title: hlbar_title,
 	})
-
-	// ==============================
-	//  ハイライトを再度実行する
-	// ==============================
-	executeAllSequence(activeInfo.tabId, await getURL())
 })
 
 // ページが更新された時の処理

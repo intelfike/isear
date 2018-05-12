@@ -21,6 +21,10 @@ echo '#compile option.js'
 google-closure-compiler-js option.js > option.min.js
 rm option.js
 mv option.min.js option.js
+echo '#compile blacklist.js'
+google-closure-compiler-js blacklist.js > blacklist.min.js
+rm blacklist.js
+mv blacklist.min.js blacklist.js
 echo '#compile background.js'
 google-closure-compiler-js background.js > background.min.js
 rm background.js
