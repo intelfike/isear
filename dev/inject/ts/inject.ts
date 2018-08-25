@@ -408,20 +408,25 @@ function defineEvents(words:Words, enabled:boolean){
 				removeMbox()
 				removeBarToggler()
 
-				let length = gstatus.words.array.length
+				let hitted:Word[] = []
+				
+				for (let n = 0; n < gstatus.words.array.length; n++) {
+					let word = gstatus.words.array[n]
+					if (word.elems.length != 0) {
+						hitted.push(word)
+					}
+				}
 
-				if(length == 0){
+				if(hitted.length == 0){
 					return
 				}
 
-				createBarToggler(length)
-
-				for(let n = 0; n < length; n++){
-					let word = gstatus.words.array[n]
-					createBar(word, length)
-					createTops(word, length)
+				createBarToggler(hitted.length)
+				for(let n = 0; n < hitted.length; n++){
+					createBar(hitted[n], n+1, hitted.length)
+					createTops(hitted[n], n+1, hitted.length)
 				}
-				barsVisible(length, showBars)
+				barsVisible(hitted.length, showBars)
 			})
 		}, 100)
 	}

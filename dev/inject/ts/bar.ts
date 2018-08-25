@@ -66,10 +66,10 @@ function removeBarToggler(){
 	tog.remove()
 }
 
-function createBar(word:Word, length:number){
+function createBar(word:Word, location:number, range:number){
 	var rate:number = (1/window.devicePixelRatio)
 	var bar = document.createElement('iseardiv')
-	bar.id = 'isear-bar-' + (word.id-1)
+	bar.id = 'isear-bar-' + (location-1)
 	bar.className = 'isear-bar'
 	bar.style.backgroundColor = word.barColor
 
@@ -80,7 +80,7 @@ function createBar(word:Word, length:number){
 	bar.style.width = barWidth * rate + 'px'
 	bar.style.height = '100%'
 	bar.style.top = '0'
-	var right:number = (length - word.id) * (barWidth+1) * rate
+	var right:number = (range - location) * (barWidth+1) * rate
 	bar.style.right = right + 'px'
 	bar.style.zIndex = '99999999'
 	var visibility = 'visible'
@@ -162,7 +162,7 @@ function removeMbox(){
 		mboxs[n].remove()
 	}
 }
-function createTops(word:Word, length:number){
+function createTops(word:Word, location:number, range:number){
 	for (let n = word.elems.length - 1; n >= 0; n--) {
 		let obj = word.elems[n]
 		
@@ -172,7 +172,7 @@ function createTops(word:Word, length:number){
 		var rate:number = (1/window.devicePixelRatio)
 		d.className = 'isear-top'
 		d.className += ' isear-top-'+obj.classList[1]
-		d.className += ' isear-top-group-'+(word.id-1)
+		d.className += ' isear-top-group-'+(location-1)
 		d.style.display = 'block'
 		d.style.backgroundColor = '#000'
 		d.style.boxSizing = 'content-box'
@@ -181,7 +181,7 @@ function createTops(word:Word, length:number){
 		d.style.position = 'fixed'
 		var arrowHeight = 16 * rate
 		d.style.top = (objtop/document.body.scrollHeight*(window.innerHeight-arrowHeight*2))+arrowHeight+'px'
-		d.style.right = (length - word.id) * (barWidth+1) * rate + 'px'
+		d.style.right = (range - location) * (barWidth+1) * rate + 'px'
 		d.style.height = 3 * rate + 'px'
 		d.style.width = barWidth * rate + 'px'
 		d.style.zIndex = '999999999'
