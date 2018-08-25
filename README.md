@@ -1,7 +1,6 @@
 # 統合検索ツールisear (Integrated Search)
 Google検索連携のWebページ内検索ツールです。<br>
 Exceeded "Google Toolbar" in the page search.<br>
-圧倒的ページ内検索力で、以前の「Google Toolbar」を凌駕する拡張機能です。
 
 ## 特徴
 - chrome標準のページ内検索と同等か、それ以上の使い心地
@@ -55,6 +54,23 @@ Exceeded "Google Toolbar" in the page search.<br>
 	一番下にスクロールし、「キーボード ショートカット」をクリック<br>
 	isearの［未設定］と書かれたテキストボックスをクリック<br>
 	「Ctrl」キーを押しながら「F」キーを押す（他のキーを割り当てたい場合は任意のキーを押す）<br>
+
+# 開発の手順
+推奨環境 Ubuntu16.04
+## ビルド手順
+
+```
+# リポジトリをクローンする
+git clone https://github.com/intelfike/isear
+cd isear
+# 開発環境をセットアップ
+./setup.bash
+cd dev
+# プロジェクト直下に実行可能なbuildディレクトリを作成
+./build.bash
+# アップロード可能な状態に最適化 zip、xpi作成
+./deploy.bash
+```
 
 # LICENSE
 ## GPLv2
