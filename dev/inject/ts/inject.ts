@@ -107,8 +107,12 @@ function textNode_req(obj:any, className:string, callback:(obj:Text)=>void){
 				continue
 			}
 			if(child.tagName == 'IFRAME'){
-				if(child.hasOwnProperty('contentDocument')){
-					textNode_req(child.contentDocument.body, className, callback)
+				if('contentDocument' in child){
+					try {
+						textNode_req(child.contentDocument.body, className, callback)
+					} catch (e) {
+						console.log(e)
+					}
 				}
 				continue
 			}
