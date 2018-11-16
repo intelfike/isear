@@ -1,41 +1,50 @@
-browser.contextMenus.create({
-	title: 'isear 検索ワードに追加',
-	type: "normal",
-	id: 'select',
-	contexts: ['selection']
-})
-browser.contextMenus.create({
-	title: ctx_title['toggle_hl']['true'],
-	type: "normal",
-	id: 'toggle_hl',
-	contexts: ['browser_action']
-})
-browser.contextMenus.create({
-	title: ctx_title['toggle_bars']['true'],
-	type: "normal",
-	id: 'toggle_bars',
-	contexts: ['browser_action']
-})
-browser.contextMenus.create({
-	title: ctx_title['clear']['true'],
-	type: "normal",
-	id: 'clear',
-	contexts: ['browser_action']
-})
-browser.contextMenus.create({
-	title: ctx_title['hl_blacklist']['true'],
-	type: "normal",
-	id: 'hl_blacklist',
-	contexts: ['browser_action']
-})
-browser.contextMenus.create({
-	title: ctx_title['hlbar_blacklist']['true'],
-	type: "normal",
-	id: 'hlbar_blacklist',
-	contexts: ['browser_action']
-})
+async function setContext() {
+	var STRING = getSTRING()
+	var STRINGBG = STRING['background']
+	console.log(STRING)
+	browser.contextMenus.create({
+		title: STRINGBG['PICKUP_WORD'],
+		type: "normal",
+		id: 'select',
+		contexts: ['selection']
+	})
+	browser.contextMenus.create({
+		title: STRINGBG['TOGGLE_HIGHLIGHT']['true'],
+		type: "normal",
+		id: 'toggle_hl',
+		contexts: ['browser_action']
+	})
+	browser.contextMenus.create({
+		title: STRINGBG['TOGGLE_HIGHLIGHT_BAR']['true'],
+		type: "normal",
+		id: 'toggle_bars',
+		contexts: ['browser_action']
+	})
+	browser.contextMenus.create({
+		title: STRINGBG['CLEAR_WORDS']['true'],
+		type: "normal",
+		id: 'clear',
+		contexts: ['browser_action']
+	})
+	browser.contextMenus.create({
+		title: STRINGBG['TOGGLE_HIGHLIGHT_HERE']['true'],
+		type: "normal",
+		id: 'hl_blacklist',
+		contexts: ['browser_action']
+	})
+	browser.contextMenus.create({
+		title: STRINGBG['TOGGLE_HIGHLIGHT_BAR_HERE']['true'],
+		type: "normal",
+		id: 'hlbar_blacklist',
+		contexts: ['browser_action']
+	})
+}
+
+setContext()
 
 browser.contextMenus.onClicked.addListener(async function(itemData) {
+	var STRING = getSTRING()
+	var STRINGBG = STRING['background']
 	var title = ''
 	switch(itemData.menuItemId){
 	case 'select':
@@ -51,11 +60,11 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		break
 	case 'toggle_hl':
 		var enabled = await toggleEnable()
-		title = ctx_title['toggle_hl'][''+enabled]
+		title = STRINGBG['TOGGLE_HIGHLIGHT'][''+enabled]
 		break
 	case 'toggle_bars':
 		var sb = toggle_bars()
-		title = ctx_title['toggle_bars'][''+sb]
+		title = STRINGBG['TOGGLE_HIGHLIGHT_BAR'][''+sb]
 		break
 	case 'clear':
 		await clear_words()
@@ -71,7 +80,7 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		await storageSet('hl_blacklist', list, true)
 		var swords:string = await storageGetWords()
 		await executeHighlightAuto(swords)
-		title = ctx_title['hl_blacklist'][''+list[site]]
+		title = STRINGBG['TOGGLE_HIGHLIGHT_HERE'][''+list[site]]
 		break
 	case 'hlbar_blacklist':
 		var list = await storageGet('hlbar_blacklist', {}, true)
@@ -85,7 +94,7 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		var swords:string = await storageGetWords()
 		var words:Words = new Words(swords)
 		await executeCode('barsVisible('+words.array.length+', '+list[site]+')')
-		title = ctx_title['hlbar_blacklist'][''+list[site]]
+		title = STRINGBG['TOGGLE_HIGHLIGHT_BAR_HERE'][''+list[site]]
 		break
 	}
 	if(title != ''){

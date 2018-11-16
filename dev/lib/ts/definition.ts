@@ -1,3 +1,5 @@
+var lang = {}
+
 var ctx_title = {
 	toggle_hl:{
 		true:'ハイライトをOFFにする',
@@ -170,6 +172,19 @@ class Words{
 			result.push(w)
 		}
 		return result
+	}
+
+	getHittedList():Word[] {
+		let hitted:Word[] = []
+
+		for (let n = 0; n < this.array.length; n++) {
+			let word = this.array[n]
+			if (word.elems.length != 0) {
+				hitted.push(word)
+			}
+		}
+
+		return hitted
 	}
 }
 

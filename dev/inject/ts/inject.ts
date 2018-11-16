@@ -110,9 +110,7 @@ function textNode_req(obj:any, className:string, callback:(obj:Text)=>void){
 				if('contentDocument' in child){
 					try {
 						textNode_req(child.contentDocument.body, className, callback)
-					} catch (e) {
-						console.log(e)
-					}
+					} catch (e) {}
 				}
 				continue
 			}
@@ -347,9 +345,20 @@ function ESC_rightSpace(i:number):void{
 	document.body.style.width = (window.innerWidth-(i*rate)) + 'px'
 }
 
+var initedGSflag = false;
+
 // 検索結果をハイライトする処理
-var itel_inject_flag = false
 function itel_main(search_words:string, enabled:boolean){
+	var span = document.createElement('span')
+	span.id = 'isear-executed'
+	span.innerText = 'true'
+	span.style = 'display:none;'
+	document.body.appendChild(span)
+
+	if (!initedGSflag) {
+		initGlobalStorage()
+		initedGSflag = true;
+	}
 	gstatus.enabled = enabled
 	var words:Words = new Words(search_words)
 	if(words.array.length == 0){
@@ -368,12 +377,22 @@ function parsed_main(words:Words, enabled:boolean){
 
 	silentRun(function(){
 		highlight_all(document.body, words)
+
+		if(enabled_bar){
+			let hitted:Word[] = words.getHittedList()
+			if (hitted.length != 0) {	
+				createBarToggler(hitted.length)
+
+				globalStorage.iframe.onload = e => {
+					globalStorage.getItem('bar-visible', data => {
+						showBars = (data == 'true')
+						barsVisible(hitted.length, showBars)
+					})
+				}
+			}
+		}
 	})
 
-	if(enabled_bar){
-		createBarToggler(words.array.length)
-		barsVisible(words.array.length, showBars)
-	}
 
 	defineEvents(words, enabled)
 
@@ -412,25 +431,15 @@ function defineEvents(words:Words, enabled:boolean){
 				removeMbox()
 				removeBarToggler()
 
-				let hitted:Word[] = []
-				
-				for (let n = 0; n < gstatus.words.array.length; n++) {
-					let word = gstatus.words.array[n]
-					if (word.elems.length != 0) {
-						hitted.push(word)
+				let hitted:Word[] = gstatus.words.getHittedList()
+				if(hitted.length != 0){
+					createBarToggler(hitted.length)
+					for(let n = 0; n < hitted.length; n++){
+						createBar(hitted[n], n+1, hitted.length)
+						createTops(hitted[n], n+1, hitted.length)
 					}
+					barsVisible(hitted.length, showBars)
 				}
-
-				if(hitted.length == 0){
-					return
-				}
-
-				createBarToggler(hitted.length)
-				for(let n = 0; n < hitted.length; n++){
-					createBar(hitted[n], n+1, hitted.length)
-					createTops(hitted[n], n+1, hitted.length)
-				}
-				barsVisible(hitted.length, showBars)
 			})
 		}, 100)
 	}

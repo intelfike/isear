@@ -17,13 +17,14 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 	await executeCode('command_mode = ' + command_mode)
 	// ブラックリスト用のテキストを更新
 	var hl_mode = await hlGetSiteMode()
-	var hl_title = ctx_title['hl_blacklist'][''+hl_mode]
+	var STRING = getSTRING()
+	var hl_title = STRING['background']['TOGGLE_HIGHLIGHT_HERE'][''+hl_mode]
 	chrome.contextMenus.update('hl_blacklist', {
 		title: hl_title,
 	})
 
 	var hlbar_mode = await hlbarGetSiteMode()
-	var hlbar_title = ctx_title['hlbar_blacklist'][''+hlbar_mode]
+	var hlbar_title = STRING['background']['TOGGLE_HIGHLIGHT_BAR_HERE'][''+hlbar_mode]
 	chrome.contextMenus.update('hlbar_blacklist', {
 		title: hlbar_title,
 	})
@@ -41,16 +42,25 @@ browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab)
 })
 // ハイライトのためのすべての手順を実行する
 async function executeAllSequence(tabId, url) {
-	await executeFile('inject.js')
-	browser.tabs.insertCSS(null, {
-		code: '#itel-selected, #isear-top-selected{background-color:red !important; color:white !important;}\n' +
-		'#isear-top-selected{border-color:white !important; z-index:9999999998 !important;}'
-	})
+	var injected = await executeCode('document.getElementById("isear-executed")')
+	console.log(injected)
+	if (!(typeof injected && injected[0])) {
+		await executeFile('inject.js')
+		browser.tabs.insertCSS(null, {
+			code: '#itel-selected, #isear-top-selected{background-color:red !important; color:white !important;}\n' +
+			'#isear-top-selected{border-color:white !important; z-index:9999999998 !important;}'
+		})
+	}
 
 	await saveGoogleSearchWords(tabId, url)
 	await highlighting(tabId)
 	browser.runtime.sendMessage({name: 'done highlight'})
 }
+async function highlighting(tabId:number){
+	var swords:string = await storageGetWords()
+	var words_nums = await executeHighlightAuto(swords)
+}
+
 
 browser.tabs.onRemoved.addListener(async function(tabId:number){
 	storageRemove(saveWordsPrefix+tabId)
@@ -81,8 +91,4 @@ function saveGoogleSearchWords(tabId, url){
 		await storageSetWords(swords)
 		ok()
 	})
-}
-async function highlighting(tabId:number){
-	var swords:string = await storageGetWords()
-	var words_nums = await executeHighlightAuto(swords)
 }

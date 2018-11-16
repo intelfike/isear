@@ -31,12 +31,16 @@ function createBarToggler(length:number){
 	tog.style.right = right + 'px'
 	// 動作の設定
 	tog.onclick = () => {
+		// 切り替えボタンの表示を切り替える
 		showBars = tog.innerText == '<'
-		barsVisible(length, showBars)
+		// ハイライトバーの表示を切り替える
+		barsVisible(length, showBars, true)
+		// ローカルストレージに記録
+		// 未実装
 	}
 	document.body.appendChild(tog)
 }
-function barsVisible(length:number, show:boolean){
+function barsVisible(length:number, show:boolean, updateStorage:boolean=false){
 	var rate:number = (1/window.devicePixelRatio)
 	var tog = document.getElementById('isear-toggler')
 	if(tog == null){
@@ -55,6 +59,10 @@ function barsVisible(length:number, show:boolean){
 		tog.innerText = '<'
 		tog.style.right = '0'
 		rightSpace(0)
+	}
+
+	if (updateStorage) {
+		globalStorage.setItem('bar-visible', show)
 	}
 }
 

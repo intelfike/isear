@@ -33,8 +33,8 @@ function executeHighlight(swords:string, enabled=true){
 		await executeCode('enabled_bar = ' + JSON.stringify(enbar))
 		
 		// 引数を作成して
-		var shbar = await storageGet('show_bar', true, true)
-		await executeCode('showBars = ' + JSON.stringify(shbar))
+		// var shbar = await storageGet('show_bar', true, true)
+		// await executeCode('showBars = ' + JSON.stringify(shbar))
 		// ハイライトのブラックリストを適用
 		var list = await storageGet('hl_blacklist', {}, true)
 		for (const reg in list) {
@@ -45,12 +45,12 @@ function executeHighlight(swords:string, enabled=true){
 
 		// ハイライトを実行
 		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+enabled+')')
-		await executeCode('itel_inject_flag = true')
 		// 検索件数を保存
 		await storageSetNum(<{[key:string]:number;}>result[0])
 
 		// コンテキスト クリアテキストを変更
-		var clear_text = ctx_title['clear'][''+(swords!='')]
+		var STRING = getSTRING()
+		var clear_text = STRING['background']['CLEAR_WORDS'][''+(swords!='')]
 		chrome.contextMenus.update('clear', {
 			title: clear_text,
 		})

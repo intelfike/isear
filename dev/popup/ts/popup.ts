@@ -190,6 +190,9 @@ async function updateButton(){
 
 // 最初に実行される
 document.body.onload = async ()=>{
+	var STRING = getSTRING()
+	search_words_obj.placeholder = STRING['popup']['SEARCH_BOX']
+
 	var enabled:boolean = await storageGet('enabled', true)
 	bodyKeyDownEvent(enabled)
 
