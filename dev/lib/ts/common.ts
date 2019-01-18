@@ -7,9 +7,9 @@ function whereTimeout(group, f, time){
 }
 
 // 特定の長さになるまで左側を埋める
-function leftfill(str, char, len){
+function leftfill(str, c, len){
 	while(str.length < len){
-		str = char + str
+		str = c + str
 	}
 	return str
 }

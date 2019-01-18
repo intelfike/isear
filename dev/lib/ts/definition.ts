@@ -43,7 +43,7 @@ var bgColors = [
 	'#CCDDFF',
 	'#FF88FF',
 	'#FF8888',
-	'#FFAA00',
+	'#FFAA00'
 ]
 var barColors = bgColors
 
@@ -208,8 +208,8 @@ function shiftLeftCode(code:number, leftCode:number, rightCode:number, range:num
 	}
 	return code
 }
-function shiftLeftChar(char:string, leftChar:string, rightChar:string, range:number):string{
-	var code = char.charCodeAt(0)
+function shiftLeftChar(c:string, leftChar:string, rightChar:string, range:number):string{
+	var code = c.charCodeAt(0)
 	var leftCode = leftChar.charCodeAt(0)
 	var rightCode = rightChar.charCodeAt(0)
 	code = shiftLeftCode(code, leftCode, rightCode, range)
