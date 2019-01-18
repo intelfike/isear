@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>isear Settings</title>
+	<script src="option.js" defer></script>
+	<style>
+		@font-face {
+			font-family: 'Noto Mono';
+			src: url("data/NotoMono-hinted/NotoMono-Regular.ttf");
+		}
+		body{
+			font-family: "Noto Mono";
+			font-size: 16px;
+			margin: 0;
+			background: linear-gradient(-90deg, #ACF, #DEF);
+		}
+		article{
+			background-color: white;
+			padding: 8px;
+			margin: 8px;
+			margin-top: 0;
+		}
+		h1, h2, h3, h4, h5, h6{
+			padding: 8px;
+			margin: 0;
+		}
+		h2, h3, h4, h5, h6{
+			margin-top: 16px;
+			padding-bottom: 0;
+		}
+		hr{
+			margin: 0;
+		}
+
+		button, input{
+			font-family: "Noto Mono";
+		}
+		button{
+			height: 24px;
+		}
+		button:disabled{
+			background-color: #DDD !important;
+		}
+		ul li{
+			list-style-type: none;
+			margin-top: 4px;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<h1>isear settings</h1>
+	</header>
+	<article>
+	<h2>Extensions Settings</h2>
+		<hr>
+		<p>Extensnions Moving Setting</p>
+		<ul>
+			<li>
+				<input type="checkbox" id="enabled_sync">
+				<label for="enabled_sync">Enable synchronous settings for multiple browser with a account.</label>
+			</li>
+			<li>
+				<input type="checkbox" id="google_words" checked>
+				<label for="google_words">Enable getting Google Search words</label>
+			</li>
+			<li>
+				<input type="checkbox" id="auto_update">
+				<label for="auto_update">Enable automatically update highlight.(testing)</label>
+			</li>
+			<li>
+				<input type="checkbox" id="command_mode">
+				<label for="command_mode">Enable command mode. [Alt+M] <a href="https://isear.intelfike.net/_usage/CommandMode/">detail</a></label>
+			</li>
+			<li>
+				<input type="checkbox" id="regbool">
+				<label for="regbool">Enable RegExp. "@RE:" <a href="https://isear.intelfike.net/_usage/SWord/">detail</a></label>
+			</li>
+		</ul>
+
+		<h2>HighLight Bar Settings</h2>
+		<hr>
+		<p>Enable displaying HighLight Bar on next to scroll bar.</p>
+		<ul>
+			<li>
+				<input type="checkbox" id="enabled_bar" checked>
+				<label for="enabled_bar">Enable displaying HighLight Bar.</label>
+			</li>
+		</ul>
+		<h2>Color Settings</h2>
+		<hr>
+		<p>Color seggings for HighLights. Useful Drag & Drop(chrome)</p>
+		<ul>
+			<li>
+				<div id="colors"></div>
+				<button id="exchange">入れ替え</button>
+			</li>
+		</ul>
+		<h2>Template</h2>
+		<hr>
+		<p>Google searching word prefix. For example regist NG word.</p>
+		<input type="text" id="prefix">
+		<h2>Black List</h2>
+		<a href="blacklist.html">Settings</a>
+		<h2>Please support development money</h2>
+		Money will be helping development.<br>
+		<a href="https://paypal.me/intelfike">Here!!</a>
+	</article>
+</body>
+</html>

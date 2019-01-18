@@ -35,12 +35,6 @@ enabled_bar.onchange = () => {
 	storageSet('enabled_bar', enable, true)
 }
 
-const show_bar = <HTMLInputElement> document.getElementById('show_bar')
-show_bar.onchange = () => {
-	var enable = show_bar.checked
-	storageSet('show_bar', enable, true)
-}
-
 const prefix = <HTMLInputElement> document.getElementById('prefix')
 prefix.onchange = () => {
 	var pf = prefix.value
@@ -60,6 +54,11 @@ var first:{[key:string]:HTMLInputElement}
 var second:{[key:string]:HTMLInputElement}
 
 document.body.onload = async () => {
+	if (navigator.language != 'ja') {
+		location.href = 'option_en.html'
+		return
+	}
+
 	var sync = await storageGet('sync', false)
 	enabled_sync.checked = sync
 
@@ -77,9 +76,6 @@ document.body.onload = async () => {
 
 	var sb = await storageGet('enabled_bar', true, true)
 	enabled_bar.checked = sb
-
-	var sb = await storageGet('show_bar', true, true)
-	show_bar.checked = sb
 
 	var pf = await storageGet('prefix', '', true)
 	prefix.value = pf
