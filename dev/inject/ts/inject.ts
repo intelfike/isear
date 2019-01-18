@@ -352,7 +352,7 @@ function itel_main(search_words:string, enabled:boolean){
 	var span = document.createElement('span')
 	span.id = 'isear-executed'
 	span.innerText = 'true'
-	span.style = 'display:none;'
+	span.style.display = 'none'
 	document.body.appendChild(span)
 
 	if (!initedGSflag) {
@@ -383,12 +383,19 @@ function parsed_main(words:Words, enabled:boolean){
 			if (hitted.length != 0) {	
 				createBarToggler(hitted.length)
 
-				globalStorage.iframe.onload = e => {
-					globalStorage.getItem('bar-visible', data => {
-						showBars = (data == 'true')
-						barsVisible(hitted.length, showBars)
-					})
-				}
+				// globalStorage.iframe.onload = e => {
+				// 	globalStorage.getItem('bar-visible', data => {
+				// 		showBars = (data == 'true')
+				// 		barsVisible(hitted.length, showBars)
+				// 	})
+				// }
+				globalStorage.getItem('bar-visible', data => {
+					if (data == null) {
+						return
+					}
+					showBars = (data == 'true')
+					barsVisible(hitted.length, showBars)
+				})
 			}
 		}
 	})
@@ -449,7 +456,7 @@ function defineEvents(words:Words, enabled:boolean){
 			var mutation = MutationRecords[0]
 
 			if (mutation.type=="childList" && mutation.addedNodes.length != 0) {
-				mutation.addedNodes.forEach(function(node) {
+				mutation.addedNodes.forEach(function(node:HTMLElement) {
 					whereTimeout('ハイライト更新', ()=>{
 						if (node.nodeType == 1){
 							if(node.className.indexOf('itel') != -1 ||

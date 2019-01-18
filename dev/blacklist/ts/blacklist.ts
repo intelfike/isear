@@ -50,7 +50,7 @@ async function run(table_obj, storage_key) {
 		button.onclick = async () => {
 			delete list[key]
 			await storageSet(storage_key, list, true)
-			rec_tr.style = 'display: none;'
+			rec_tr.style.display = 'none'
 		}
 	}
 }
@@ -118,7 +118,7 @@ async function add(target_id){
 	button.onclick = async () => {
 		delete list[key]
 		await storageSet(storage_key, list, true)
-		rec_tr.style = 'display: none;'
+		rec_tr.style.display = 'none'
 	}
 }
 var add_hl = document.getElementById('add_hl')
