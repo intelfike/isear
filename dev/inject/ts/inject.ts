@@ -383,17 +383,11 @@ function parsed_main(words:Words, enabled:boolean){
 			if (hitted.length != 0) {	
 				createBarToggler(hitted.length)
 
-				// globalStorage.iframe.onload = e => {
-				// 	globalStorage.getItem('bar-visible', data => {
-				// 		showBars = (data == 'true')
-				// 		barsVisible(hitted.length, showBars)
-				// 	})
-				// }
 				globalStorage.getItem('bar-visible', data => {
 					if (data == null) {
 						return
 					}
-					showBars = (data == 'true')
+					showBars = (data == true)
 					barsVisible(hitted.length, showBars)
 				})
 			}
