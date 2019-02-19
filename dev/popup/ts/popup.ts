@@ -42,8 +42,7 @@ async function inputsEnable(bool:boolean){
 // === 検索ワードのテキストボックス
 var search_words_obj = <HTMLInputElement> document.getElementById('search_words')
 search_words_obj.onkeyup = () => {
-	console.log(search_words_obj.value)
-	storageSetWords(search_words_obj.value)	
+	storageSetWords(search_words_obj.value)
 }
 search_words_obj.onkeydown = async (e) => {
 	switch(e.key){
