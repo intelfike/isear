@@ -1,5 +1,5 @@
 browser.runtime.onMessage.addListener(function(data, sender, sendResponse){
-	if (data.pass != 'isear') {
+	if (data.pass != 'isear-globalStorage-send') {
 		return
 	}
 	let item = data.item
@@ -23,5 +23,5 @@ browser.runtime.onMessage.addListener(function(data, sender, sendResponse){
 
 async function getData(key){
 	 let data = await storageGet(key)
-	 return JSON.stringify({'type':'globalStorage','data':data})
+	 return JSON.stringify({'type':'isear-globalStorage','data':data})
 }

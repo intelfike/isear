@@ -146,6 +146,11 @@ function barVisible(n:number, bool:boolean){
 		}
 	}
 }
+
+function reloadBar() {
+
+}
+
 function createMbox(mes:string, color:string, right:number){
 	var rate:number = (1/window.devicePixelRatio)
 	var mbox = document.createElement('isearmbox')

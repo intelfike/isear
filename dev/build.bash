@@ -20,4 +20,4 @@ mkdir -p ../firefox
 echo '@copy build'
 cp -r ../build ../firefox
 echo '@copy manifest.json'
-cp firefox/manifest.json ../firefox/build
+cp manifest_firefox.json ../firefox/build/manifest.json

@@ -28,6 +28,8 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 	chrome.contextMenus.update('hlbar_blacklist', {
 		title: hlbar_title,
 	})
+
+	// TODO: ハイライトバーの制御を追加する
 })
 
 // ページが更新された時の処理
@@ -44,7 +46,7 @@ browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab)
 async function executeAllSequence(tabId, url) {
 	var injected = await executeCode('document.getElementById("isear-executed")')
 	console.log(injected)
-	if (!(typeof injected && injected[0])) {
+	if (typeof injected == 'undefined' || !injected[0]) {
 		await executeFile('inject.js')
 		browser.tabs.insertCSS(null, {
 			code: '#itel-selected, #isear-top-selected{background-color:red !important; color:white !important;}\n' +

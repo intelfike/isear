@@ -1,7 +1,7 @@
 class GlobalStorage{
 	send(method, item, func=null) {
 		var data = {
-			'pass'   : 'isear',
+			'pass'   : 'isear-globalStorage-send',
 			'method' : method,
 			'item'   : item,
 		}
@@ -21,7 +21,7 @@ class GlobalStorage{
 	getItem(key, callback){
 		this.send('get', {'key':key}, function(j){
 			var data = JSON.parse(j)
-			if (typeof data.type == undefined || data.type != 'globalStorage') {
+			if (typeof data.type == undefined || data.type != 'isear-globalStorage') {
 				return
 			}
 			callback(data.data)
