@@ -45,7 +45,6 @@ browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab)
 // ハイライトのためのすべての手順を実行する
 async function executeAllSequence(tabId, url) {
 	var injected = await executeCode('document.getElementById("isear-executed")')
-	console.log(injected)
 	if (typeof injected == 'undefined' || !injected[0]) {
 		await executeFile('inject.js')
 		browser.tabs.insertCSS(null, {

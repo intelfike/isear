@@ -1,3 +1,4 @@
+var changeInput = true
 // === on/offボタンクリック時の処理
 const on_obj = <HTMLInputElement> document.getElementById('on')
 on_obj.onclick = ()=>{
@@ -40,15 +41,19 @@ async function inputsEnable(bool:boolean){
 
 // === 検索ワードのテキストボックス
 var search_words_obj = <HTMLInputElement> document.getElementById('search_words')
-search_words_obj.onkeydown = async (e)=>{
+search_words_obj.onkeyup = () => {
+	console.log(search_words_obj.value)
+	storageSetWords(search_words_obj.value)	
+}
+search_words_obj.onkeydown = async (e) => {
 	switch(e.key){
 	case 'Enter':
 		if(e.ctrlKey){
 			// google検索
-			var swords:string[] = search_words_obj.value.split(/[\s\t]/g)
+			var sswords:string[] = search_words_obj.value.split(/[\s\t]/g)
 			var search_swords:string[] = []
-			for(let n = 0; n < swords.length; n++){
-				let word = swords[n]
+			for(let n = 0; n < sswords.length; n++){
+				let word = sswords[n]
 				if(word.toUpperCase() == regPrefix){
 					break
 				}
@@ -66,7 +71,8 @@ search_words_obj.onkeydown = async (e)=>{
 			}
 			break
 		}
-		if(changeInput()){
+		if(changeInput){
+			changeInput = false
 			updateAll()
 		}
 
@@ -76,17 +82,12 @@ search_words_obj.onkeydown = async (e)=>{
 			inject('scrollFocusNext("itel-highlight","itel-selected")')
 		}
 		break
+	default:
+		changeInput = true
+		break
 	}
 }
 
-var prev_input = ""
-function changeInput(){
-	var input = search_words_obj.value
-	var bool = (input != prev_input)
-	// log(input)
-	prev_input = input
-	return bool
-}
 
 // アップデートイベント
 browser.runtime.onMessage.addListener(async function(request, sender, sendResponse){
@@ -250,7 +251,6 @@ function remind(swords:string){
 
 		search_words_obj.value = swords + ' '
 		
-		changeInput()
 		ok()
 	})
 }
