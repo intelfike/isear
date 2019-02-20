@@ -1,0 +1,9 @@
+#itel-selected, #isear-top-selected{
+	background-color:red !important;
+	color:white !important;
+}
+
+#isear-top-selected{
+	border-color:white !important;
+	z-index:9999999998 !important;
+}

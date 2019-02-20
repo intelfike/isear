@@ -1,7 +1,6 @@
 async function setContext() {
 	var STRING = getSTRING()
 	var STRINGBG = STRING['background']
-	console.log(STRING)
 	browser.contextMenus.create({
 		title: STRINGBG['PICKUP_WORD'],
 		type: "normal",
@@ -15,9 +14,9 @@ async function setContext() {
 		contexts: ['browser_action']
 	})
 	browser.contextMenus.create({
-		title: STRINGBG['TOGGLE_HIGHLIGHT_BAR']['true'],
+		title: STRINGBG['TOGGLE_HIGHLIGHT_HERE']['true'],
 		type: "normal",
-		id: 'toggle_bars',
+		id: 'hl_blacklist',
 		contexts: ['browser_action']
 	})
 	browser.contextMenus.create({
@@ -26,18 +25,18 @@ async function setContext() {
 		id: 'clear',
 		contexts: ['browser_action']
 	})
-	browser.contextMenus.create({
-		title: STRINGBG['TOGGLE_HIGHLIGHT_HERE']['true'],
-		type: "normal",
-		id: 'hl_blacklist',
-		contexts: ['browser_action']
-	})
-	browser.contextMenus.create({
-		title: STRINGBG['TOGGLE_HIGHLIGHT_BAR_HERE']['true'],
-		type: "normal",
-		id: 'hlbar_blacklist',
-		contexts: ['browser_action']
-	})
+	// browser.contextMenus.create({
+	// 	title: STRINGBG['TOGGLE_HIGHLIGHT_BAR']['true'],
+	// 	type: "normal",
+	// 	id: 'toggle_bars',
+	// 	contexts: ['browser_action']
+	// })
+	// browser.contextMenus.create({
+	// 	title: STRINGBG['TOGGLE_HIGHLIGHT_BAR_HERE']['true'],
+	// 	type: "normal",
+	// 	id: 'hlbar_blacklist',
+	// 	contexts: ['browser_action']
+	// })
 }
 
 setContext()
@@ -62,10 +61,10 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		var enabled = await toggleEnable()
 		title = STRINGBG['TOGGLE_HIGHLIGHT'][''+enabled]
 		break
-	case 'toggle_bars':
-		var sb = toggle_bars()
-		title = STRINGBG['TOGGLE_HIGHLIGHT_BAR'][''+sb]
-		break
+	// case 'toggle_bars':
+	// 	var sb = toggle_bars()
+	// 	title = STRINGBG['TOGGLE_HIGHLIGHT_BAR'][''+sb]
+	// 	break
 	case 'clear':
 		await clear_words()
 		break
@@ -82,20 +81,20 @@ browser.contextMenus.onClicked.addListener(async function(itemData) {
 		await executeHighlightAuto(swords)
 		title = STRINGBG['TOGGLE_HIGHLIGHT_HERE'][''+list[site]]
 		break
-	case 'hlbar_blacklist':
-		var list = await storageGet('hlbar_blacklist', {}, true)
-		var site = await getSite()
-		if(list.hasOwnProperty(site)){
-			list[site] = !list[site]
-		}else{
-			list[site] = false
-		}
-		await storageSet('hlbar_blacklist', list, true)
-		var swords:string = await storageGetWords()
-		var words:Words = new Words(swords)
-		await executeCode('barsVisible('+words.array.length+', '+list[site]+')')
-		title = STRINGBG['TOGGLE_HIGHLIGHT_BAR_HERE'][''+list[site]]
-		break
+	// case 'hlbar_blacklist':
+	// 	var list = await storageGet('hlbar_blacklist', {}, true)
+	// 	var site = await getSite()
+	// 	if(list.hasOwnProperty(site)){
+	// 		list[site] = !list[site]
+	// 	}else{
+	// 		list[site] = false
+	// 	}
+	// 	await storageSet('hlbar_blacklist', list, true)
+	// 	var swords:string = await storageGetWords()
+	// 	var words:Words = new Words(swords)
+	// 	await executeCode('barsVisible('+words.array.length+', '+list[site]+')')
+	// 	title = STRINGBG['TOGGLE_HIGHLIGHT_BAR_HERE'][''+list[site]]
+	// 	break
 	}
 	if(title != ''){
 		chrome.contextMenus.update(itemData.menuItemId, {

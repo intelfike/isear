@@ -48,8 +48,7 @@ async function executeAllSequence(tabId, url) {
 	if (typeof injected == 'undefined' || !injected[0]) {
 		await executeFile('inject.js')
 		browser.tabs.insertCSS(null, {
-			code: '#itel-selected, #isear-top-selected{background-color:red !important; color:white !important;}\n' +
-			'#isear-top-selected{border-color:white !important; z-index:9999999998 !important;}'
+			file: 'style.css',
 		})
 	}
 
