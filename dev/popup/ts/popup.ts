@@ -27,16 +27,16 @@ async function inputsEnable(bool:boolean){
 		document.body.className = 'offbg'
 	}
 	// search_words_obj.disabled = !bool
-	retry.disabled = !bool
-	if(!bool){
-		var btns = btn_list_obj.children
-		for(let n = btns.length-1; n >= 0; n--){
-			btns[n].remove()
-		}
-		return
-	}else{
+	// retry.disabled = !bool
+	// if(!bool){
+	// 	var btns = btn_list_obj.children
+	// 	for(let n = btns.length-1; n >= 0; n--){
+	// 		btns[n].remove()
+	// 	}
+	// 	return
+	// }else{
 		updateButton()
-	}
+	// }
 }
 
 // === 検索ワードのテキストボックス
@@ -205,7 +205,10 @@ document.body.onload = async ()=>{
 		search_words_obj.focus()
 		search_words_obj.selectionStart = 0
 		search_words_obj.selectionEnd = swords.length + 1
-		return
+	}
+
+	if (changeInput) {
+		updateAll()
 	}
 }
 
@@ -253,3 +256,9 @@ function remind(swords:string){
 		ok()
 	})
 }
+
+browser.tabs.onActivated.addListener(async function(activeInfo){
+	var swords:string = await storageGetWords()
+	await remind(swords)
+	search_words_obj.focus()
+})
