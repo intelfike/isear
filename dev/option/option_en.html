@@ -36,67 +36,64 @@
 		button, input{
 			font-family: "Noto Mono";
 		}
-		button{
-			height: 24px;
-		}
-		button:disabled{
-			background-color: #DDD !important;
-		}
 		ul li{
 			list-style-type: none;
 			margin-top: 4px;
 		}
 	</style>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
 	<header>
-		<h1>isear settings</h1>
+		<h1 class="text-center">isear settings</h1>
 	</header>
-	<article>
-	<h2>Extensions Settings</h2>
-		<hr>
-		<p>Extensnions Moving Setting</p>
-		<ul>
-			<li>
-				<input type="checkbox" id="enabled_sync">
-				<label for="enabled_sync">Enable synchronous settings for multiple browser with a account.</label>
-			</li>
-			<li>
-				<input type="checkbox" id="google_words" checked>
-				<label for="google_words">Enable getting Google Search words</label>
-			</li>
-			<li>
-				<input type="checkbox" id="auto_update">
-				<label for="auto_update">Enable automatically update highlight.(testing)</label>
-			</li>
-			<li>
-				<input type="checkbox" id="command_mode">
-				<label for="command_mode">Enable command mode. [Alt+M] <a href="https://isear.intelfike.net/_usage/CommandMode/">detail</a></label>
-			</li>
-			<li>
-				<input type="checkbox" id="regbool">
-				<label for="regbool">Enable RegExp. "@RE:" <a href="https://isear.intelfike.net/_usage/SWord/">detail</a></label>
-			</li>
-		</ul>
-
-		<h2>HighLight Bar Settings</h2>
-		<hr>
-		<p>Enable displaying HighLight Bar on next to scroll bar.</p>
-		<ul>
-			<li>
-				<input type="checkbox" id="enabled_bar" checked>
-				<label for="enabled_bar">Enable displaying HighLight Bar.</label>
-			</li>
-		</ul>
+	<article class="container">
 		<h2>Color Settings</h2>
 		<hr>
 		<p>Color seggings for HighLights. Useful Drag & Drop(chrome)</p>
 		<ul>
 			<li>
-				<div id="colors"></div>
-				<button id="exchange">入れ替え</button>
+				<select id="color-select" class="form-control form-control-sm w-25">
+					<option value="normal">normal</option>
+					<option value="pastel">pastel</option>
+					<option value="dark">dark</option>
+					<option value="custom">custom</option>
+				</select>
+				<div id="colors" class="d-flex p-2"></div>
+				<button id="exchange" class="btn btn-primary">入れ替え</button>
 			</li>
 		</ul>
+
+	<h2>Settings</h2>
+		<hr>
+		<p>Extensnions Moving Setting</p>
+		<ul>
+			<li>
+				<input type="checkbox" id="enabled_sync" class="form-check-input">
+				<label for="enabled_sync">Enable synchronous settings for multiple browser with a account.</label>
+			</li>
+			<li>
+				<input type="checkbox" id="google_words" checked class="form-check-input">
+				<label for="google_words">Enable getting Google Search words</label>
+			</li>
+			<li>
+				<input type="checkbox" id="auto_update" class="form-check-input">
+				<label for="auto_update">Enable automatically update highlight.(testing)</label>
+			</li>
+			<li>
+				<input type="checkbox" id="command_mode" class="form-check-input">
+				<label for="command_mode">Enable command mode. [Alt+M] <a href="https://isear.intelfike.net/_usage/CommandMode/">detail</a></label>
+			</li>
+			<li>
+				<input type="checkbox" id="regbool" class="form-check-input">
+				<label for="regbool">Enable RegExp. "@RE:" <a href="https://isear.intelfike.net/_usage/SWord/">detail</a></label>
+			</li>
+			<li>
+				<input type="checkbox" id="enabled_bar" checked class="form-check-input">
+				<label for="enabled_bar">Enable displaying HighLight Bar.</label>
+			</li>
+		</ul>
+
 		<h2>Template</h2>
 		<hr>
 		<p>Google searching word prefix. For example regist NG word.</p>
@@ -107,5 +104,6 @@
 		Please give me support for better provide service.<br>
 		<a href="https://paypal.me/intelfike">Here</a>
 	</article>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap.native@2.0.15/dist/bootstrap-native-v4.min.js"></script>
 </body>
 </html>

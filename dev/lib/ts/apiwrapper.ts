@@ -14,7 +14,11 @@ function executeHighlightAuto(swords:string){
 function executeHighlight(swords:string, enabled=true){
 	return new Promise(async ok=>{
 		// ページに値を渡す処理
-		bgColors = await storageGet('bgColors', bgColors, true)
+		let colset = await storageGet('color-set', 'normal', true)
+		bgColors = color_sets[colset]
+		if (colset == 'custom') {
+			bgColors = await storageGet('bgColors', bgColors, true)
+		}
 		await executeCode('bgColors = ' + JSON.stringify(bgColors))
 		await executeCode('browser_type = ' + JSON.stringify(browser_type))
 		var au = await storageGet('auto_update', false, true)

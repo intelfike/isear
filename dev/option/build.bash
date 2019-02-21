@@ -6,4 +6,4 @@ cp option.html ../../firefox/build/
 cp option_en.html ../../firefox/build/
 echo '@compile option'
 tsc --out ../../build/option.js collect.ts
-cp ../../build/background.js ../../firefox/build/
+cp ../../build/option.js ../../firefox/build/

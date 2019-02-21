@@ -36,15 +36,13 @@ const top_selected = 'isear-top-selected'
 const regPrefix = '@RE:'
 
 // 検索結果のハイライトの色の表示順
-var bgColors = [
-	'#FFFF00',
-	'#88FF88',
-	'#00FFFF',
-	'#CCDDFF',
-	'#FF88FF',
-	'#FF8888',
-	'#FFAA00'
-]
+let color_sets = {
+	'normal' : ['#FFFF00', '#88FF88', '#00FFFF', '#CCDDFF', '#FF88FF', '#FF8888', '#FFAA00'],
+	'pastel' : ['#F0D0E4', '#F9DFD5', '#FEF7D5', '#F8FAD4', '#C8EFEA', '#CBE6F3', '#E5D7EE'],
+	'dark' : ['#F9DB57', '#E4EC5B', '#40BFB0', '#45A1CF', '#9D73BB', '#C35B9D', '#E6855E'],
+}
+
+var bgColors = ['#FFFF00', '#88FF88', '#00FFFF', '#CCDDFF', '#FF88FF', '#FF8888', '#FFAA00']
 var barColors = bgColors
 
 var browser // TypeScriptエラー対策

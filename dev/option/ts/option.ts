@@ -81,16 +81,48 @@ document.body.onload = async () => {
 	prefix.value = pf
 
 	// 色の設定
-	const cols = document.getElementById('colors')
 	bgColors = await storageGet('bgColors', bgColors, true)
+
+	let colset = <HTMLInputElement>document.getElementById("color-select")
+	colset.value = await storageGet('color-set', 'normal', true)
+	colset.onchange = async e => {
+		const cols = document.getElementById('colors')
+		cols.innerText = ''
+		let sets = {
+			'normal' : ['#FFFF00', '#88FF88', '#00FFFF', '#CCDDFF', '#FF88FF', '#FF8888', '#FFAA00'],
+			'pastel' : ['#F0D0E4', '#F9DFD5', '#FEF7D5', '#F8FAD4', '#C8EFEA', '#CBE6F3', '#E5D7EE'],
+			'dark' : ['#F9DB57', '#E4EC5B', '#40BFB0', '#45A1CF', '#9D73BB', '#C35B9D', '#E6855E'],
+		}
+		let set = sets[colset.value]
+		if (colset.value == 'custom') {
+			set = await storageGet('bgColors', bgColors, true)
+			editableColors(set, true)
+		} else {
+			editableColors(set, false)
+		}
+
+		let colors = document.getElementsByClassName('colors')
+		for (let i in colors) {
+			let col = <HTMLInputElement>colors[i]
+			col.value = set[i]
+		}
+		storageSet('color-set', colset.value, true)
+	}
+	colset.onchange(null)
+}
+
+async function editableColors(bgColors, enable) {
+	const cols = document.getElementById('colors')
 	// 色の初期化
 	var start
 	for (let i = 0; i < bgColors.length; i++) {
 		// 選択用のチェックボックスを定義
+		let container = document.createElement('div')
+
 		let selector = <HTMLInputElement>document.createElement('input')
-		selector.type = "checkbox"
-		selector.id = 'selector' + i
-		selector.className = 'selector'
+		if (enable) {
+			container.appendChild(selector)
+		}
 
 		let color = bgColors[i]
 		let col = <HTMLInputElement>document.createElement('input')
@@ -98,30 +130,8 @@ document.body.onload = async () => {
 		col.className = 'colors'
 		col.id = 'color' + i
 		col.value = color
-
-		// first secondを設定
-		if(second == undefined){
-			if(first == undefined){
-				first = {col:col, sel:selector}
-				selector.checked = true
-			} else {
-				second = {col:col, sel:selector}
-				selector.checked = true
-			}
-		}
-		// セレクタ
-		selector.onclick = (e) => {
-			if(!selector.checked){
-				e.preventDefault()
-				return false
-			}
-		}
-		selector.onchange = (e) => {
-			first.sel.checked = false
-			first = second
-			second = {col:col, sel:selector}
-		}
-		cols.appendChild(selector)
+		col.disabled = !enable
+		container.appendChild(col)
 
 		// カラーピッカーのイベント設定
 		col.onchange = ()=>{
@@ -148,6 +158,38 @@ document.body.onload = async () => {
 
 		col.ondragover = (e)=>{e.preventDefault()}
 		col.ondragenter = (e)=>{e.preventDefault()}
-		cols.appendChild(col)
+		cols.appendChild(container)
+		if (enable) {
+			selector.type = "checkbox"
+			selector.id = 'selector' + i
+			selector.className = 'selector'
+			// first secondを設定
+			if(second == undefined){
+				if(first == undefined){
+					first = {col:col, sel:selector}
+					selector.checked = true
+				} else {
+					second = {col:col, sel:selector}
+					selector.checked = true
+				}
+			}
+			// セレクタ
+			selector.onclick = (e) => {
+				if(!selector.checked){
+					e.preventDefault()
+					return false
+				}
+			}
+			selector.onchange = (e) => {
+				first.sel.checked = false
+				first = second
+				second = {col:col, sel:selector}
+			}
+		}
+	}
+	if (enable) {
+		exchange.style.display = 'block'
+	} else {
+		exchange.style.display = 'none'
 	}
 }

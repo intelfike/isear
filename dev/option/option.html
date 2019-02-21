@@ -36,67 +36,63 @@
 		button, input{
 			font-family: "Noto Mono";
 		}
-		button{
-			height: 24px;
-		}
-		button:disabled{
-			background-color: #DDD !important;
-		}
 		ul li{
 			list-style-type: none;
 			margin-top: 4px;
 		}
 	</style>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
 	<header>
-		<h1>isearの設定</h1>
+		<h1 class="text-center">isearの設定</h1>
 	</header>
-	<article>
-	<h2>拡張機能の設定</h2>
+	<article class="container">
+		<h2>色の設定</h2>
+		<hr>
+		<p>ハイライトで利用される色を設定します。</p>
+		<ul>
+			<li>
+				<select id="color-select" class="form-control form-control-sm w-25">
+					<option value="normal">標準</option>
+					<option value="pastel">パステル</option>
+					<option value="dark">ダーク</option>
+					<option value="custom">カスタム</option>
+				</select>
+				<div id="colors" class="d-flex p-2"></div>
+				<button id="exchange" class="btn btn-primary">チェックを入れた２つを入れ替える</button>
+			</li>
+		</ul>
+	<h2>詳細設定</h2>
 		<hr>
 		<p>拡張機能の挙動を設定します。</p>
 		<ul>
 			<li>
-				<input type="checkbox" id="enabled_sync">
+				<input type="checkbox" id="enabled_sync" class="form-check-input">
 				<label for="enabled_sync">同一アカウント内で設定を共有する(同じアカウントであれば、異なるPCでも設定が共有されます)</label>
 			</li>
 			<li>
-				<input type="checkbox" id="google_words" checked>
+				<input type="checkbox" id="google_words" checked class="form-check-input">
 				<label for="google_words">Googleの検索ワードを自動取得する</label>
 			</li>
 			<li>
-				<input type="checkbox" id="auto_update">
+				<input type="checkbox" id="auto_update" class="form-check-input">
 				<label for="auto_update">ページコンテンツの更新時にハイライトを自動更新する(試験的)</label>
 			</li>
 			<li>
-				<input type="checkbox" id="command_mode">
+				<input type="checkbox" id="command_mode" class="form-check-input">
 				<label for="command_mode">コマンドモードを利用する [Alt+M] <a href="https://isear.intelfike.net/_usage/CommandMode/">詳細</a></label>
 			</li>
 			<li>
-				<input type="checkbox" id="regbool">
+				<input type="checkbox" id="regbool" class="form-check-input">
 				<label for="regbool">正規表現検索をする "@RE:" <a href="https://isear.intelfike.net/_usage/SWord/">詳細</a></label>
 			</li>
-		</ul>
-
-		<h2>「ハイライトバー」の設定</h2>
-		<hr>
-		<p>閲覧しているページの右側に出現する、カラフルなバーの設定をします。</p>
-		<ul>
 			<li>
-				<input type="checkbox" id="enabled_bar" checked>
+				<input type="checkbox" id="enabled_bar" checked class="form-check-input">
 				<label for="enabled_bar">ハイライトバーを有効にする</label>
 			</li>
 		</ul>
-		<h2>色の設定</h2>
-		<hr>
-		<p>ハイライトで利用される色を設定します。ドラッグ&ドロップで入れ替えられます。(chromeのみ)</p>
-		<ul>
-			<li>
-				<div id="colors"></div>
-				<button id="exchange">入れ替え</button>
-			</li>
-		</ul>
+
 		<h2>定型文</h2>
 		<hr>
 		<p>常に検索ワードの先頭にくっつきます。NGワードの登録などにご利用ください。</p>
@@ -107,5 +103,6 @@
 		より良いサービス提供のため、ご支援よろしくお願いします<br>
 		<a href="https://paypal.me/intelfike">ここから</a>
 	</article>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap.native@2.0.15/dist/bootstrap-native-v4.min.js"></script>
 </body>
 </html>
