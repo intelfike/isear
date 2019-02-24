@@ -241,11 +241,11 @@ function setIcon(icon:string){
 async function autoSetIcon(){
 	var icon = 'data/icons/icon32.png'
 	
-	var command_mode = await storageGet('command_mode')
+	var command_mode = await storageGet('command_mode', false)
 	if(command_mode){
 		icon = 'data/icons/icon32command.png'
 	}
-	var enabled = await storageGet('enabled')
+	var enabled = await storageGet('enabled', false)
 	if(!enabled){
 		icon = 'data/icons/icon32grey.png'
 	}

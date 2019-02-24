@@ -42,7 +42,9 @@ async function inputsEnable(bool:boolean){
 // === 検索ワードのテキストボックス
 var search_words_obj = <HTMLInputElement> document.getElementById('search_words')
 search_words_obj.onkeyup = () => {
-	storageSetWords(search_words_obj.value)
+	whereTimeout('キーワード保存', ()=>{
+		storageSetWords(search_words_obj.value)
+	}, 500)
 }
 search_words_obj.onkeydown = async (e) => {
 	switch(e.key){
@@ -72,12 +74,13 @@ search_words_obj.onkeydown = async (e) => {
 		}
 		if(changeInput){
 			changeInput = false
-			updateAll()
+			updateAll() // ハイライトを更新するときはハイライトを辿らない
+			return
 		}
 
 		if(e.shiftKey){
 			inject('scrollFocusPrev("itel-highlight","itel-selected")')
-		}else{
+		} else {
 			inject('scrollFocusNext("itel-highlight","itel-selected")')
 		}
 		break
