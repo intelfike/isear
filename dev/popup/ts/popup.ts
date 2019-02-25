@@ -1,9 +1,9 @@
-var changeInput = true
+var changeInput = false
 // === on/offボタンクリック時の処理
 const on_obj = <HTMLInputElement> document.getElementById('on')
-on_obj.onclick = ()=>{
+on_obj.onclick = async ()=>{
 	var enabled:boolean = on_obj.innerText == 'ON'
-	extensionEnable(enabled)
+	await extensionEnable(enabled)
 	inputsEnable(enabled)
 }
 
@@ -35,7 +35,7 @@ async function inputsEnable(bool:boolean){
 	// 	}
 	// 	return
 	// }else{
-		updateButton()
+		updateButtons()
 	// }
 }
 
@@ -46,6 +46,7 @@ search_words_obj.onkeyup = () => {
 		storageSetWords(search_words_obj.value)
 	}, 500)
 }
+var prev = '';
 search_words_obj.onkeydown = async (e) => {
 	switch(e.key){
 	case 'Enter':
@@ -99,7 +100,7 @@ browser.runtime.onMessage.addListener(async function(request, sender, sendRespon
 	var enabled = await storageGet('enabled', true)
 	if(enabled){
 		// whereTimeout('updateButton', updateButton, 200)
-		updateButton()
+		updateButtons()
 	}
 })
 
@@ -121,6 +122,7 @@ function getWords():Promise<Words>{
 		var words:Words = new Words(swords)
 		// ボタンの個数を取得
 		var words_nums:{[key:string]:number;} = await storageGetNum()
+		console.log(words_nums)
 		for(let sword in words_nums){
 			let num = words_nums[sword]
 			let word = words.map[sword]
@@ -141,7 +143,7 @@ function updateAll(){
 
 		await executeHighlight(swords)
 
-		updateButton()
+		updateButtons()
 		storageSetWords(swords)
 		ok()
 	})
@@ -153,7 +155,7 @@ function updateAllTimeout(time:number){
 
 // 引数は文字列型配列、それによってボタンを作成
 var btn_list_obj = document.getElementById('btn_list')
-async function updateButton(){
+async function updateButtons(){
 	var words:Words = await getWords()
 
 	btn_list_obj.innerText = ''
@@ -243,7 +245,7 @@ function bodyKeyDownEvent(enabled:boolean){
 
 function remind(swords:string){
 	return new Promise(async ok=>{
-		bgColors = await storageGet('bgColors', bgColors, true)
+		bgColors = await getBgColor()
 
 		if(swords == undefined){
 			ok()

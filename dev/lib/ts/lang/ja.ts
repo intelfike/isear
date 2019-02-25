@@ -1,6 +1,6 @@
 lang['ja'] = {
 	'popup' : {
-		'SEARCH_BOX' : 'ctrl+(shift+)EnterでGoogle検索',
+		'SEARCH_BOX' : 'Enterでページ内検索',
 	},
 	'background' : {
 		'TOGGLE_HIGHLIGHT' : {

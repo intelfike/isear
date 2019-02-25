@@ -381,11 +381,9 @@ function parsed_main(words:Words, enabled:boolean){
 		if(enabled_bar){
 			let hitted:Word[] = words.getHittedList()
 			if (hitted.length != 0) {	
-				console.log('createbar')
 				createBarToggler(hitted.length)
 
 				globalStorage.getItem('bar-visible', data => {
-					console.log(data)
 					if (data == null) {
 						return
 					}

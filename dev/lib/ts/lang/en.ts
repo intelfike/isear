@@ -1,6 +1,6 @@
 lang['en'] = {
 	'popup' : {
-		'SEARCH_BOX' : 'ctrl+(shift+)Enter: Google Search',
+		'SEARCH_BOX' : 'Enter: Search on Page',
 	},
 	'background' : {
 		'TOGGLE_HIGHLIGHT' : {

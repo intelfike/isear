@@ -1,7 +1,7 @@
 function getSTRING() {
-	var language = navigator.language
+	var language = navigator.language.substr(0, 2)
 	if (!lang.hasOwnProperty(language)) {
-		return lang['en']
+		language = 'en'
 	}
 	return lang[language]
 }
