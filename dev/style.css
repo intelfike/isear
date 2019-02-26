@@ -7,3 +7,38 @@
 	border-color:white !important;
 	z-index:9999999998 !important;
 }
+
+#isear-toggler{
+	color: #FFF;
+	font-weight: bold;
+	text-align: center;
+	user-select: none;
+	background-color: #000;
+	opacity: 0.9;
+	z-index: 99999999;
+
+	position: fixed;
+}
+
+.isear-bar{
+	box-sizing: content-box;
+	position: fixed;
+	top: 0;
+	z-index: 99999999;
+}
+
+.isear-mbox{
+	display: block;
+	color: #000;
+	position: fixed;
+	z-index: 9999999999;
+}
+
+.isear-top{
+	display: block;
+	background-color: #000;
+	box-sizing: content-box;
+	position: fixed;
+	z-index: 999999999;
+	pointer-events: none;
+}

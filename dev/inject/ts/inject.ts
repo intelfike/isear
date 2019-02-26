@@ -20,6 +20,9 @@ function highlight_all(dest:any, words:Words){
 		word.barColor = word.bgColor
 		words_nums[word.origin] = 0
 		replace_auto(dest, word, hlClass)
+		// let clone_node = dest.cloneNode(true) // 遅延描画のため
+		// replace_auto(clone_node, word, hlClass)
+		// dest.parentNode.replaceChild(clone_node, dest) // 描画実行
 	}
 }
 
@@ -29,7 +32,7 @@ var words_nums = {}
 var icnt = 0
 function replace_auto(dest:any, word:Word, className:string){
 	//word.id, document.body, word.origin, className, word.bgColor, word.regbool, word.barColor
-	textNode_req(document.body, className, (obj:Text)=>{
+	textNode_req(dest, className, (obj:Text)=>{
 		var tmpword = word.origin
 		// 置換処理
 		var text = obj.data
@@ -487,6 +490,7 @@ function reset_all(){
 	// 全消し
 	offElementsByClassName('itel-highlight')
 
+	removeTops()
 	removeBar()
 	removeMbox()
 	removeBarToggler()

@@ -2,10 +2,16 @@
 // swordは原文を渡す
 function executeHighlightAuto(swords:string, tabId:number=null){
 	return new Promise(async ok=>{
-		var enb:boolean = await storageGet('enabled')
-		if(enb == undefined){
-			enb = true
+		var enb:boolean = await storageGet('enabled', true, true)
+
+		// ハイライトのブラックリストを適用
+		var list = await storageGet('hl_blacklist', {}, true)
+		for (const reg in list) {
+			if (new RegExp(reg).test(curURL)) {
+				enb = list[reg] && enb // 基本falseを代入
+			}
 		}
+
 		await executeHighlight(swords, enb, tabId)
 		ok()
 	})
@@ -22,9 +28,10 @@ function executeHighlight(swords:string, enabled=true, tabId:number=null){
 		await executeCode('auto_update = ' + JSON.stringify(au), tabId)
 		var regbool = await storageGet('regbool', false, true)
 		await executeCode('regbool = ' + JSON.stringify(regbool), tabId)
-		// ハイライトバーのブラックリストを適用
+
 		var enbar = await storageGet('enabled_bar', true, true)
 		var curURL = await getURL()
+		// ハイライトバーのブラックリストを適用
 		var blist = await storageGet('hlbar_blacklist', {}, true)
 		for (const reg in blist) {
 			if (new RegExp(reg).test(curURL)) {
@@ -32,17 +39,10 @@ function executeHighlight(swords:string, enabled=true, tabId:number=null){
 			}
 		}
 		await executeCode('enabled_bar = ' + JSON.stringify(enbar), tabId)
-		
-		// 引数を作成して
-		// var shbar = await storageGet('show_bar', true, true)
-		// await executeCode('showBars = ' + JSON.stringify(shbar))
-		// ハイライトのブラックリストを適用
-		var list = await storageGet('hl_blacklist', {}, true)
-		for (const reg in list) {
-			if (new RegExp(reg).test(curURL)) {
-				enabled = list[reg] // 基本falseを代入
-			}
-		}
+
+		// ハイライトバーの初期状態を設定
+		var showBars = globalStorage.getItem('bar-visible')
+		await executeCode('showBars = ' + JSON.stringify(showBars), tabId)
 
 		// ハイライトを実行
 		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+enabled+')', tabId)
@@ -261,7 +261,7 @@ function setIcon(icon:string){
 
 async function autoSetIcon(){
 	var icon = 'data/icons/icon32.png'
-	
+
 	var command_mode = await storageGet('command_mode', false)
 	if(command_mode){
 		icon = 'data/icons/icon32command.png'

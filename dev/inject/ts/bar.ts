@@ -4,10 +4,6 @@ function createBarToggler(length:number){
 	var tog = document.createElement('iseartoggler')
 	// 定義の設定
 	tog.id = 'isear-toggler'
-	// 要素全体の設定
-	tog.style.backgroundColor = 'black'
-	tog.style.opacity = '0.9'
-	tog.style.zIndex = '99999999'
 	// テキストの設定
 	var text = '>'
 	var right:number = (length) * (barWidth+1) * rate
@@ -17,14 +13,9 @@ function createBarToggler(length:number){
 	}
 	tog.innerText = text
 
-	tog.style.color = 'white'
-	tog.style.fontWeight = 'bold'
 	tog.style.fontSize = (16 * rate)+'px'
 	tog.style.lineHeight = (16 * rate)+'px'
-	tog.style.textAlign = 'center'
-	tog.style.userSelect = 'none'
 	// 配置の設定
-	tog.style.position = 'fixed'
 	tog.style.width = (barWidth * rate) + 'px'
 	tog.style.height = (16 * rate) + 'px'
 	tog.style.top = '0'
@@ -82,15 +73,12 @@ function createBar(word:Word, location:number, range:number){
 	bar.style.backgroundColor = word.barColor
 
 	// bar.style.opacity = '0.9'
-	bar.style.boxSizing = 'content-box'
 	bar.style.borderLeft = rate+'px solid black'
-	bar.style.position = 'fixed'
 	bar.style.width = barWidth * rate + 'px'
 	bar.style.height = '100%'
 	bar.style.top = '0'
 	var right:number = (range - location) * (barWidth+1) * rate
 	bar.style.right = right + 'px'
-	bar.style.zIndex = '99999999'
 	var visibility = 'visible'
 	if(!showBars){
 		visibility = 'hidden'
@@ -173,16 +161,12 @@ function createMbox(mes:string, color:string, right:number){
 	mbox.className = 'isear-mbox'
 	mbox.innerText = mes
 	mbox.style.fontSize = (16*rate)+'px'
-	mbox.style.display = 'block'
 	mbox.style.backgroundColor = color
-	mbox.style.color = 'black'
-	mbox.style.position = 'fixed'
 	mbox.style.top = '0'
 	mbox.style.right = right + 'px'
 	mbox.style.padding = '0 '+(8*rate)+'px'
 	mbox.style.borderLeft = rate+'px solid black'
 	mbox.style.borderBottom = rate+'px solid black'
-	mbox.style.zIndex = '9999999999'
 	document.body.appendChild(mbox)
 }
 function removeMbox(){
@@ -192,6 +176,8 @@ function removeMbox(){
 	}
 }
 function createTops(word:Word, location:number, range:number){
+	var topsContainer = document.createElement('isearcont')
+	topsContainer.id = 'isear-tops-container'
 	for (let n = word.elems.length - 1; n >= 0; n--) {
 		let obj = word.elems[n]
 		
@@ -202,30 +188,25 @@ function createTops(word:Word, location:number, range:number){
 		d.className = 'isear-top'
 		d.className += ' isear-top-'+obj.classList[1]
 		d.className += ' isear-top-group-'+(location-1)
-		d.style.display = 'block'
-		d.style.backgroundColor = '#000'
-		d.style.boxSizing = 'content-box'
 		d.style.borderTop = rate+'px solid ' + word.barColor
 		d.style.borderBottom = rate+'px solid ' + word.barColor
-		d.style.position = 'fixed'
 		var arrowHeight = 16 * rate
 		d.style.top = (objtop/document.body.scrollHeight*(window.innerHeight-arrowHeight*2))+arrowHeight+'px'
 		d.style.right = (range - location) * (barWidth+1) * rate + 'px'
 		d.style.height = 3 * rate + 'px'
 		d.style.width = barWidth * rate + 'px'
-		d.style.zIndex = '999999999'
-		d.style.pointerEvents = 'none'
 		var visibility = 'visible'
 		if(!showBars){
 			visibility = 'hidden'
 		}
 		d.style.visibility = visibility
-		document.body.appendChild(d)
+		topsContainer.appendChild(d)
 	}
+	document.body.appendChild(topsContainer)
 }
 function removeTops(){
-	var isear = document.getElementsByClassName('isear-top')
-	for (var n = isear.length - 1; n >= 0; n--) {
-		isear[n].remove()
+	let con = document.getElementById('isear-tops-container')
+	if (con) {
+		con.remove()
 	}
 }
