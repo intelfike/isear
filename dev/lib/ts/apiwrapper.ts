@@ -1,27 +1,27 @@
 
 // swordは原文を渡す
-function executeHighlightAuto(swords:string){
+function executeHighlightAuto(swords:string, tabId:number=null){
 	return new Promise(async ok=>{
 		var enb:boolean = await storageGet('enabled')
 		if(enb == undefined){
 			enb = true
 		}
-		await executeHighlight(swords, enb)
+		await executeHighlight(swords, enb, tabId)
 		ok()
 	})
 }
 // boolはfalseならハイライトをオフ
-function executeHighlight(swords:string, enabled=true){
+function executeHighlight(swords:string, enabled=true, tabId:number=null){
 	return new Promise(async ok=>{
 		// ページに値を渡す処理
 		bgColors = await getBgColor()
 
-		await executeCode('bgColors = ' + JSON.stringify(bgColors))
-		await executeCode('browser_type = ' + JSON.stringify(browser_type))
+		await executeCode('bgColors = ' + JSON.stringify(bgColors), tabId)
+		await executeCode('browser_type = ' + JSON.stringify(browser_type), tabId)
 		var au = await storageGet('auto_update', false, true)
-		await executeCode('auto_update = ' + JSON.stringify(au))
+		await executeCode('auto_update = ' + JSON.stringify(au), tabId)
 		var regbool = await storageGet('regbool', false, true)
-		await executeCode('regbool = ' + JSON.stringify(regbool))
+		await executeCode('regbool = ' + JSON.stringify(regbool), tabId)
 		// ハイライトバーのブラックリストを適用
 		var enbar = await storageGet('enabled_bar', true, true)
 		var curURL = await getURL()
@@ -31,7 +31,7 @@ function executeHighlight(swords:string, enabled=true){
 				enbar = blist[reg] // 基本falseを代入
 			}
 		}
-		await executeCode('enabled_bar = ' + JSON.stringify(enbar))
+		await executeCode('enabled_bar = ' + JSON.stringify(enbar), tabId)
 		
 		// 引数を作成して
 		// var shbar = await storageGet('show_bar', true, true)
@@ -45,8 +45,10 @@ function executeHighlight(swords:string, enabled=true){
 		}
 
 		// ハイライトを実行
-		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+enabled+')')
-		console.log(result)
+		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+enabled+')', tabId)
+		if (typeof result == 'undefined') {
+			return
+		}
 		// 検索件数を保存
 		await storageSetNum(<{[key:string]:number;}>result[0])
 
@@ -148,9 +150,11 @@ function storageRemove(key:string){
 	})
 }
 // wordsには文字列を渡してね
-function storageSetWords(words:string, saveLatest:boolean = false){
+function storageSetWords(words:string, saveLatest:boolean=false, tabId:number=undefined){
 	return new Promise(async ok => {
-		var tabId = await getTabId()
+		if (typeof tabId == 'undefined') {
+			tabId = await getTabId()
+		}
 		await storageSet(saveWordsPrefix+tabId, words)
 		if (saveLatest) {
 			await storageSet(latest_words, words)
@@ -204,9 +208,12 @@ function getBgColor():Promise<string[]> {
 	})
 }
 
-function executeFile(file:string):any{
+function executeFile(file:string, tabId:number=null):any{
 	return new Promise(ok => {
-		browser.tabs.executeScript(null,
+		if (typeof browser.tabs == 'undefined') {
+			ok()
+		}
+		browser.tabs.executeScript(tabId,
 			{file:file},
 			(result)=>{
 				ok(result)
@@ -214,9 +221,12 @@ function executeFile(file:string):any{
 		)
 	})
 }
-function executeCode(code:string):any{
+function executeCode(code:string, tabId:number=null):any{
 	return new Promise(ok => {
-		browser.tabs.executeScript(null,
+		if (typeof browser.tabs == 'undefined') {
+			ok()
+		}
+		browser.tabs.executeScript(tabId,
 			{code:code},
 			(result)=>{
 				ok(result)

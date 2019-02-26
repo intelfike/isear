@@ -3,7 +3,6 @@ browser.runtime.onMessage.addListener(function(data, sender, sendResponse){
 		return
 	}
 	let item = data.item
-	console.log(data.method, item)
 	switch (data.method) {
 	case 'get':
 		getData(item.key).then(sendResponse)

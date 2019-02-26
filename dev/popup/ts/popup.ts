@@ -122,7 +122,6 @@ function getWords():Promise<Words>{
 		var words:Words = new Words(swords)
 		// ボタンの個数を取得
 		var words_nums:{[key:string]:number;} = await storageGetNum()
-		console.log(words_nums)
 		for(let sword in words_nums){
 			let num = words_nums[sword]
 			let word = words.map[sword]
@@ -186,9 +185,10 @@ async function updateButtons(){
 				inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
 			}
 		}
-		btn.onmousewheel = (e) => {
-			if (e.deltaY != 0) {
-				if (e.deltaY <= 1) {
+		btn.addEventListener('wheel', e => {
+			let y = e.deltaY
+			if (y != 0) {
+				if (y <= 1) {
 					// 上スクロール
 					inject('scrollFocusPrevWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
 				} else {
@@ -196,7 +196,7 @@ async function updateButtons(){
 					inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
 				}
 			}
-		}
+		})
 		if(word.count.num == 0){
 			btn.disabled = true
 		}

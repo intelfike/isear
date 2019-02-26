@@ -98,6 +98,10 @@ function createBar(word:Word, location:number, range:number){
 	bar.style.visibility = visibility
 	
 	bar.onclick = (e) => {barClick(e, word)}
+	bar.addEventListener('wheel', e => {
+		e.preventDefault()
+		barWheel(e, word)
+	})
 	bar.onmouseover = () => {
 		createMbox(word.origin, word.bgColor, right + (barWidth*rate))
 	}
@@ -114,6 +118,18 @@ function barClick(e:MouseEvent, word:Word){
 		scrollFocusNextWord(word.origin, hlClass, selected, word.regbool)
 	}
 }
+function barWheel(e:MouseWheelEvent, word:Word){
+	if (e.deltaY != 0) {
+		if (e.deltaY <= 1) {
+			// 上スクロール
+			scrollFocusPrevWord(word.origin, hlClass, selected, word.regbool)
+		} else {
+			// 下スクロール
+			scrollFocusNextWord(word.origin, hlClass, selected, word.regbool)
+		}
+	}
+}
+
 function removeBar(){
 	var bars = document.getElementsByClassName('isear-bar')
 	for(let n = bars.length-1; n >= 0; n--){

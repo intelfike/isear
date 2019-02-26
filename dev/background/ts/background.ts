@@ -3,7 +3,8 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 	//  ハイライトを再度実行する
 	// ==============================
 	// 毎度実行するから重いかも？
-	executeAllSequence(activeInfo.tabId, await getURL())
+	let tabId = activeInfo.tabId
+	executeAllSequence(tabId, await getURL())
 
 	// ==============================
 	//  タブごとの設定を反映し直す
@@ -14,7 +15,7 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 	// 設定を反映
 	// コマンドモード
 	var command_mode = await storageGet('command_mode')
-	await executeCode('command_mode = ' + command_mode)
+	await executeCode('command_mode = ' + command_mode, tabId)
 	// ブラックリスト用のテキストを更新
 	var hl_mode = await hlGetSiteMode()
 	var STRING = getSTRING()
@@ -38,15 +39,15 @@ browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab)
 		executeAllSequence(tabId, tab.url)
 		// 設定を反映
 		var command_mode = await storageGet('command_mode')
-		await executeCode('command_mode = ' + command_mode)
+		await executeCode('command_mode = ' + command_mode, tabId)
 		return
 	}
 })
 // ハイライトのためのすべての手順を実行する
 async function executeAllSequence(tabId, url) {
-	var injected = await executeCode('document.getElementById("isear-executed")')
+	var injected = await executeCode('document.getElementById("isear-executed")', tabId)
 	if (typeof injected == 'undefined' || !injected[0]) {
-		await executeFile('inject.js')
+		await executeFile('inject.js', tabId)
 		browser.tabs.insertCSS(null, {
 			file: 'style.css',
 		})
@@ -58,7 +59,7 @@ async function executeAllSequence(tabId, url) {
 }
 async function highlighting(tabId:number){
 	var swords:string = await storageGetWords()
-	var words_nums = await executeHighlightAuto(swords)
+	var words_nums = await executeHighlightAuto(swords, tabId)
 }
 
 
@@ -88,7 +89,7 @@ function saveGoogleSearchWords(tabId, url){
 		q = decodeURIComponent(q)
 
 		var swords = q.split('+').join(' ')
-		await storageSetWords(swords, true)
+		await storageSetWords(swords, true, tabId)
 		ok()
 	})
 }
