@@ -44,10 +44,21 @@ var search_words_obj = <HTMLInputElement> document.getElementById('search_words'
 search_words_obj.onkeyup = () => {
 	whereTimeout('キーワード保存', ()=>{
 		storageSetWords(search_words_obj.value)
-	}, 500)
+	}, 200)
 }
-var prev = '';
+var prev = null;
 search_words_obj.onkeydown = async (e) => {
+	// 入力内容にさいが出ていないかチェック
+	if (prev == null){
+		prev = await storageGetWords()
+	}
+	let current = search_words_obj.value.trim()
+	console.log(prev, current)
+	if (prev != current) {
+		prev = current
+		changeInput = true
+	}
+
 	switch(e.key){
 	case 'Enter':
 		if(e.ctrlKey){
@@ -86,7 +97,6 @@ search_words_obj.onkeydown = async (e) => {
 		}
 		break
 	default:
-		changeInput = true
 		break
 	}
 }

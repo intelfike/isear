@@ -1,12 +1,15 @@
 class GlobalStorage{
 	setItem(key:string ,value){
-		storageSet(item.key, item.value)
+		storageSet(key, value)
 	}
-	getItem(key, callback){
-		storageGet(key).then(callback)
+	getItem(key){
+		return new Promise(async ok => {
+			let val = storageGet(key)
+			ok(val)
+		})
 	}
 	removeItem(key){
-		storageRemove(item.key)
+		storageRemove(key)
 	}
 }
 

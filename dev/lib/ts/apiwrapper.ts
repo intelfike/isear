@@ -5,6 +5,7 @@ function executeHighlightAuto(swords:string, tabId:number=null){
 		var enb:boolean = await storageGet('enabled', true, true)
 
 		// ハイライトのブラックリストを適用
+		var curURL = await getURL()
 		var list = await storageGet('hl_blacklist', {}, true)
 		for (const reg in list) {
 			if (new RegExp(reg).test(curURL)) {
@@ -41,7 +42,7 @@ function executeHighlight(swords:string, enabled=true, tabId:number=null){
 		await executeCode('enabled_bar = ' + JSON.stringify(enbar), tabId)
 
 		// ハイライトバーの初期状態を設定
-		var showBars = globalStorage.getItem('bar-visible')
+		var showBars = await globalStorage.getItem('bar-visible')
 		await executeCode('showBars = ' + JSON.stringify(showBars), tabId)
 
 		// ハイライトを実行
