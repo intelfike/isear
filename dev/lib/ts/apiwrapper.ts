@@ -148,16 +148,18 @@ function storageRemove(key:string){
 	})
 }
 // wordsには文字列を渡してね
-function storageSetWords(words:string){
+function storageSetWords(words:string, saveLatest:boolean = false){
 	return new Promise(async ok => {
 		var tabId = await getTabId()
 		await storageSet(saveWordsPrefix+tabId, words)
-		await storageSet(latest_words, words)
+		if (saveLatest) {
+			await storageSet(latest_words, words)
+		}
 		ok()
 	})
 }
 // 保存された検索ワードをテキストボックスに自動入力
-function storageGetWords(urlLoad=true):Promise<string> {
+function storageGetWords():Promise<string> {
 	return new Promise(async ok => {
 		var tabId = await getTabId()
 		var swords:string = await storageGet(saveWordsPrefix+tabId, undefined)

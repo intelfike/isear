@@ -144,7 +144,7 @@ function updateAll(){
 		await executeHighlight(swords)
 
 		updateButtons()
-		storageSetWords(swords)
+		storageSetWords(swords, true)
 		ok()
 	})
 }
@@ -184,6 +184,17 @@ async function updateButtons(){
 				inject('scrollFocusPrevWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
 			}else{
 				inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
+			}
+		}
+		btn.onmousewheel = (e) => {
+			if (e.deltaY != 0) {
+				if (e.deltaY <= 1) {
+					// 上スクロール
+					inject('scrollFocusPrevWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
+				} else {
+					// 下スクロール
+					inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
+				}
 			}
 		}
 		if(word.count.num == 0){

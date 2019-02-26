@@ -88,7 +88,7 @@ function saveGoogleSearchWords(tabId, url){
 		q = decodeURIComponent(q)
 
 		var swords = q.split('+').join(' ')
-		await storageSetWords(swords)
+		await storageSetWords(swords, true)
 		ok()
 	})
 }
