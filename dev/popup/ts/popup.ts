@@ -53,7 +53,6 @@ search_words_obj.onkeydown = async (e) => {
 		prev = await storageGetWords()
 	}
 	let current = search_words_obj.value.trim()
-	console.log(prev, current)
 	if (prev != current) {
 		prev = current
 		changeInput = true

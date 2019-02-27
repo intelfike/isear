@@ -2,7 +2,7 @@
 // swordは原文を渡す
 function executeHighlightAuto(swords:string, tabId:number=null){
 	return new Promise(async ok=>{
-		var enb:boolean = await storageGet('enabled', true, true)
+		var enb:boolean = await storageGet('enabled', true)
 
 		// ハイライトのブラックリストを適用
 		var curURL = await getURL()
@@ -12,7 +12,6 @@ function executeHighlightAuto(swords:string, tabId:number=null){
 				enb = list[reg] && enb // 基本falseを代入
 			}
 		}
-
 		await executeHighlight(swords, enb, tabId)
 		ok()
 	})
@@ -248,10 +247,13 @@ async function toggleEnable():Promise<boolean>{
 
 // trueで拡張機能を有効にする
 async function extensionEnable(bool:boolean){
-	await storageSet('enabled', bool)
-	var swords:string = await storageGetWords()
-	await executeHighlight(swords, bool)
-	autoSetIcon()
+	return new Promise(async ok => {
+		await storageSet('enabled', bool)
+		var swords:string = await storageGetWords()
+		await executeHighlight(swords, bool)
+		autoSetIcon()
+		ok()
+	})
 }
 
 
