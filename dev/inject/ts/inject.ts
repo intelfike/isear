@@ -2,6 +2,7 @@ const barWidth:number = 16
 var auto_update = false
 var enabled_bar = true
 var regbool = false
+var enabled = true
 
 var def_option = {
 	childList: true,
@@ -421,7 +422,7 @@ function defineEvents(words:Words, enabled:boolean){
 
 	window.onresize = ()=>{
 		words = gstatus.words
-		if(!enabled){
+		if(!gstatus.enabled){
 			return
 		}
 		whereTimeout('ハイライトバーを更新', ()=>{

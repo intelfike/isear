@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 	<meta charset="UTF-8">
-	<title>isearの設定</title>
+	<title lang-set="title">isear Settings</title>
 	<script src="option.js" defer></script>
 	<style>
 		@font-face {
@@ -45,65 +45,66 @@
 </head>
 <body>
 	<header>
-		<h1 class="text-center">isearの設定</h1>
+		<h1 class="text-center" lang-set="title">isear settings</h1>
 	</header>
 	<article class="container">
-		<h2>色の設定</h2>
+		<h2 lang-set="color-title">Color Settings</h2>
 		<hr>
-		<p>ハイライトで利用される色を設定します。</p>
+		<p lang-set="color-detail">Color seggings for HighLights. Useful Drag & Drop(chrome)</p>
 		<ul>
 			<li>
 				<select id="color-select" class="form-control form-control-sm w-25">
-					<option value="normal">標準</option>
-					<option value="pastel">パステル</option>
-					<option value="dark">ダーク</option>
-					<option value="custom">カスタム</option>
+					<option value="normal" lang-set="color-normal">normal</option>
+					<option value="pastel" lang-set="color-pastel">pastel</option>
+					<option value="dark" lang-set="color-dark">dark</option>
+					<option value="custom" lang-set="color-custom">custom</option>
 				</select>
 				<div id="colors" class="d-flex p-2"></div>
-				<button id="exchange" class="btn btn-primary">チェックを入れた２つを入れ替える</button>
+				<button id="exchange" class="btn btn-primary" lang-set="color-button">exchanging checked color</button>
 			</li>
 		</ul>
-	<h2>詳細設定</h2>
+	<h2 lang-set="detail-title">Settings</h2>
 		<hr>
-		<p>拡張機能の挙動を設定します。</p>
+		<p lang-set="detail-detail">Extensnions Moving Setting</p>
 		<ul>
 			<li>
 				<input type="checkbox" id="enabled_sync" class="form-check-input">
-				<label for="enabled_sync">同一アカウント内で設定を共有する(同じアカウントであれば、異なるPCでも設定が共有されます)</label>
+				<label for="enabled_sync" lang-set="detail-enabled_sync">Enable synchronous settings for multiple browser with a account.</label>
 			</li>
 			<li>
 				<input type="checkbox" id="google_words" checked class="form-check-input">
-				<label for="google_words">Googleの検索ワードを自動取得する</label>
+				<label for="google_words" lang-set="detail-google_words">Enable getting Google Search words</label>
 			</li>
 			<li>
 				<input type="checkbox" id="auto_update" class="form-check-input">
-				<label for="auto_update">ページコンテンツの更新時にハイライトを自動更新する(試験的)</label>
+				<label for="auto_update" lang-set="detail-auto_update">Enable automatically update highlight.(testing)</label>
 			</li>
 			<li>
 				<input type="checkbox" id="command_mode" class="form-check-input">
-				<label for="command_mode">コマンドモードを利用する [Alt+M] <a href="https://isear.intelfike.net/_usage/CommandMode/">詳細</a></label>
+				<label for="command_mode" lang-set="detail-command_mode">Enable command mode. [Alt+M] </label><a href="https://isear.intelfike.net/_usage/CommandMode/" lang-set="detail-link">detail</a>
 			</li>
 			<li>
 				<input type="checkbox" id="regbool" class="form-check-input">
-				<label for="regbool">正規表現検索をする "@RE:" <a href="https://isear.intelfike.net/_usage/SWord/">詳細</a></label>
+				<label for="regbool" lang-set="detail-regbool">Enable RegExp. "@RE:" </label><a href="https://isear.intelfike.net/_usage/SWord/" lang-set="detail-link">detail</a>
 			</li>
 			<li>
 				<input type="checkbox" id="enabled_bar" checked class="form-check-input">
-				<label for="enabled_bar">ハイライトバーを有効にする</label>
+				<label for="enabled_bar" lang-set="detail-enabled_bar">Enable displaying HighLight Bar.</label>
 			</li>
 		</ul>
 
-		<h2>定型文</h2>
+		<h2 lang-set="template-title">Template</h2>
 		<hr>
-		<p>常に検索ワードの先頭にくっつきます。NGワードの登録などにご利用ください。</p>
+		<p lang-set="template-detail">Google searching word prefix. For example regist NG word.</p>
 		<input type="text" id="prefix">
-		<h2>ブラックリスト</h2>
+		<h2 lang-set="blacklist-title">Black List</h2>
 		<hr>
-		<a href="blacklist.html">設定</a>
-		<h2>支援</h2>
+		<p lang-set="blacklist-detail">If settings Black List then some site are not highlight.</p>
+		<a href="blacklist.html" lang-set="blacklist-link">Settings</a>
+		<h2 lang-set="support-title">Please support development money</h2>
 		<hr>
-		より良いサービス提供のため、ご支援よろしくお願いします<br>
-		<a href="https://paypal.me/intelfike">ここから</a>
+		<p lang-set="support-detail">Please give me support for better provide service.</p><br>
+		<a href="https://paypal.me/intelfike" lang-set="support-link">Here</a>
 	</article>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap.native@2.0.15/dist/bootstrap-native-v4.min.js"></script>
 </body>

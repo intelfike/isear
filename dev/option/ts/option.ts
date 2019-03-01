@@ -1,3 +1,129 @@
+const lang_data = {
+	'title' : {
+		en : 'isear Settings',
+		ja : 'isearの設定',
+	},
+	'color' : {
+		title : {
+			en : 'Color Settings',
+			ja : '色の設定',
+		},
+		detail : {
+			en : 'Color seggings for HighLights. Useful Drag & Drop(chrome)',
+			ja : 'ハイライトで利用される色を設定します。',
+		},
+		normal : {
+			en : 'normal',
+			ja : '標準',
+		},
+		pastel : {
+			en : 'pastel',
+			ja : 'パステル',
+		},
+		dark : {
+			en : 'dark',
+			ja : 'ダーク',
+		},
+		custom : {
+			en : 'custom',
+			ja : 'カスタム',
+		},
+		button : {
+			en : 'exchanging checked color.',
+			ja : 'チェックを入れた２つを入れ替える',
+		},
+	},
+	'detail' : {
+		title : {
+			en : 'Settings',
+			ja : '詳細設定',
+		},
+		detail : {
+			en : 'Extensnions Moving Setting',
+			ja : '拡張機能の挙動を設定します。',
+		},
+		enabled_sync : {
+			en : 'Enable synchronous settings for multiple browser with a account.',
+			ja : '同一アカウント内で設定を共有する(同じアカウントであれば、異なるPCでも設定が共有されます)',
+		},
+		google_words : {
+			en : 'Enable getting Google Search words',
+			ja : 'Googleの検索ワードを自動取得する',
+		},
+		auto_update : {
+			en : 'Enable automatically update highlight.(testing)',
+			ja : 'ページコンテンツの更新時にハイライトを自動更新する(試験的)',
+		},
+		command_mode : {
+			en : 'Enable command mode. [Alt+M] ',
+			ja : 'コマンドモードを利用する [Alt+M]',
+		},
+		regbool : {
+			en : 'Enable RegExp. "@RE:" ',
+			ja : '正規表現検索をする "@RE:"',
+		},
+		enabled_bar : {
+			en : 'Enable displaying HighLight Bar.',
+			ja : 'ハイライトバーを有効にする',
+		},
+		link : {
+			en : 'detail',
+			ja : '詳細',
+		}
+	},
+	'template' : {
+		title : {
+			en : 'Template',
+			ja : '定型文',
+		},
+		detail : {
+			en : 'Google searching word prefix. For example regist NG word.',
+			ja : '常に検索ワードの先頭にくっつきます。NGワードの登録などにご利用ください。',
+		},
+	},
+	'blacklist' : {
+		title : {
+			en : 'Black List',
+			ja : 'ブラックリスト',
+		},
+		detail : {
+			en : 'If settings Black List then some site are not highlight.',
+			ja : 'ブラックリストを設定することによって、一部のサイトをハイライトの対象外にすることができます。',
+		},
+		link : {
+			en : 'Settings',
+			ja : '設定',
+		},
+	},
+	'support' : {
+		title : {
+			en : 'Please support development money',
+			ja : '支援',
+		},
+		detail : {
+			en : 'Please give me support for better provide service.',
+			ja : 'より良いサービス提供のため、ご支援よろしくお願いします',
+		},
+		link : {
+			en : 'Here',
+			ja : 'ここから',
+		}
+	},
+}
+for (let key1 in lang_data) {
+	let value = lang_data[key1]
+	if (typeof value.ja != 'undefined') {
+		lang_set(key1 , value)
+		continue
+	}
+	for (let key2 in value) {
+		let data = value[key2]
+		lang_set(key1 + '-' + key2 , data)
+	}
+}
+
+// 設定の管理
+
 const enabled_sync = <HTMLInputElement> document.getElementById('enabled_sync')
 enabled_sync.onchange = async () => {
 	var enable = enabled_sync.checked
@@ -54,11 +180,6 @@ var first:{[key:string]:HTMLInputElement}
 var second:{[key:string]:HTMLInputElement}
 
 document.body.onload = async () => {
-	if (navigator.language != 'ja') {
-		location.href = 'option_en.html'
-		return
-	}
-
 	var sync = await storageGet('sync', false)
 	enabled_sync.checked = sync
 
