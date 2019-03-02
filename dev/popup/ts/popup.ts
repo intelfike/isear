@@ -91,23 +91,31 @@ search_words_obj.onkeydown = async (e) => {
 		}
 		break
 	case 'ArrowUp':
-		var logs = await getLogs()
-		if (log_num < logs.length) {
-			if (log_num == 0) {
-				not_log = current
+		if(await getLogsEnabled()){
+			var logs = await getLogs()
+			if (log_num < logs.length) {
+				if (log_num == 0) {
+					not_log = current
+				}
+				log_num++
 			}
-			log_num++
+			logs.splice(0, 0, '')
+			search_words_obj.value = logs[log_num]
+		} else {
+			clearLogs()
 		}
-		logs.splice(0, 0, '')
-		search_words_obj.value = logs[log_num]
 		break
 	case 'ArrowDown':
-		var logs = await getLogs()
-		if (log_num > 0) {
-			log_num--
+		if(await getLogsEnabled()){
+			var logs = await getLogs()
+			if (log_num > 0) {
+				log_num--
+			}
+			logs.splice(0, 0, not_log)
+			search_words_obj.value = logs[log_num]
+		} else {
+			clearLogs()
 		}
-		logs.splice(0, 0, not_log)
-		search_words_obj.value = logs[log_num]
 		break
 	default:
 		break

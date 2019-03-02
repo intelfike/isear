@@ -28,9 +28,7 @@
 		h2, h3, h4, h5, h6{
 			margin-top: 16px;
 			padding-bottom: 0;
-		}
-		hr{
-			margin: 0;
+			border-bottom: double #666 3px;
 		}
 
 		button, input{
@@ -48,63 +46,78 @@
 		<h1 class="text-center" lang-set="title">isear settings</h1>
 	</header>
 	<article class="container">
-		<h2 lang-set="color-title">Color Settings</h2>
-		<hr>
-		<p lang-set="color-detail">Color seggings for HighLights. Useful Drag & Drop(chrome)</p>
-		<ul>
-			<li>
-				<select id="color-select" class="form-control form-control-sm w-25">
-					<option value="normal" lang-set="color-normal">normal</option>
-					<option value="pastel" lang-set="color-pastel">pastel</option>
-					<option value="dark" lang-set="color-dark">dark</option>
-					<option value="custom" lang-set="color-custom">custom</option>
-				</select>
-				<div id="colors" class="d-flex p-2"></div>
-				<button id="exchange" class="btn btn-primary" lang-set="color-button">exchanging checked color</button>
-			</li>
-		</ul>
-	<h2 lang-set="detail-title">Settings</h2>
-		<hr>
-		<p lang-set="detail-detail">Extensnions Moving Setting</p>
-		<ul>
-			<li>
-				<input type="checkbox" id="enabled_sync" class="form-check-input">
-				<label for="enabled_sync" lang-set="detail-enabled_sync">Enable synchronous settings for multiple browser with a account.</label>
-			</li>
-			<li>
-				<input type="checkbox" id="google_words" checked class="form-check-input">
-				<label for="google_words" lang-set="detail-google_words">Enable getting Google Search words</label>
-			</li>
-			<li>
-				<input type="checkbox" id="auto_update" class="form-check-input">
-				<label for="auto_update" lang-set="detail-auto_update">Enable automatically update highlight.(testing)</label>
-			</li>
-			<li>
-				<input type="checkbox" id="command_mode" class="form-check-input">
-				<label for="command_mode" lang-set="detail-command_mode">Enable command mode. [Alt+M] </label><a href="https://isear.intelfike.net/_usage/CommandMode/" lang-set="detail-link">detail</a>
-			</li>
-			<li>
-				<input type="checkbox" id="regbool" class="form-check-input">
-				<label for="regbool" lang-set="detail-regbool">Enable RegExp. "@RE:" </label><a href="https://isear.intelfike.net/_usage/SWord/" lang-set="detail-link">detail</a>
-			</li>
-			<li>
-				<input type="checkbox" id="enabled_bar" checked class="form-check-input">
-				<label for="enabled_bar" lang-set="detail-enabled_bar">Enable displaying HighLight Bar.</label>
-			</li>
-		</ul>
-
-		<h2 lang-set="template-title">Template</h2>
-		<hr>
-		<p lang-set="template-detail">Google searching word prefix. For example regist NG word.</p>
-		<input type="text" id="prefix">
-		<h2 lang-set="blacklist-title">Black List</h2>
-		<hr>
-		<p lang-set="blacklist-detail">If settings Black List then some site are not highlight.</p>
-		<a href="blacklist.html" lang-set="blacklist-link">Settings</a>
-		<h2 lang-set="support-title">Please support development money</h2>
-		<hr>
-		<p lang-set="support-detail">Please give me support for better provide service.</p><br>
-		<a href="https://paypal.me/intelfike" lang-set="support-link">Here</a>
+		<h2 class="lead" lang-set="color-title">Color Settings</h2>
+		<div class="block m-4">
+			<p lang-set="color-detail">Color seggings for HighLights. Useful Drag & Drop(chrome)</p>
+			<ul>
+				<li>
+					<select id="color-select" class="form-control form-control-sm w-25">
+						<option value="normal" lang-set="color-normal">normal</option>
+						<option value="pastel" lang-set="color-pastel">pastel</option>
+						<option value="dark" lang-set="color-dark">dark</option>
+						<option value="custom" lang-set="color-custom">custom</option>
+					</select>
+					<div id="colors" class="d-flex p-2"></div>
+					<button id="exchange" class="btn btn-primary d-none" lang-set="color-button">exchanging checked color</button>
+				</li>
+			</ul>
+		</div>
+		<h2 class="lead" lang-set="logs-title">Color Settings</h2>
+		<div class="block m-4">
+			<p lang-set="logs-detail">If you want see log then press [↑][↓] key with searching box.</p>
+			<ul>
+				<li>
+					<input type="checkbox" id="enabled_log" class="form-check-input">
+					<label for="enabled_log" lang-set="logs-enable">Enable logging Search Words. </label>
+				</li>
+			</ul>
+			<button id="logs_clear" class="btn" lang-set="logs-clear">clear logs</button>
+		</div>
+		<h2 class="lead" lang-set="detail-title">Settings</h2>
+		<div class="block m-4">
+			<p lang-set="detail-detail">Extensnions Moving Setting</p>
+			<ul>
+				<li>
+					<input type="checkbox" id="enabled_sync" class="form-check-input">
+					<label for="enabled_sync" lang-set="detail-enabled_sync">Enable synchronous settings for multiple browser with a account.</label>
+				</li>
+				<li>
+					<input type="checkbox" id="google_words" checked class="form-check-input">
+					<label for="google_words" lang-set="detail-google_words">Enable getting Google Search words</label>
+				</li>
+				<li>
+					<input type="checkbox" id="auto_update" class="form-check-input">
+					<label for="auto_update" lang-set="detail-auto_update">Enable automatically update highlight.(testing)</label>
+				</li>
+				<li>
+					<input type="checkbox" id="command_mode" class="form-check-input">
+					<label for="command_mode" lang-set="detail-command_mode">Enable command mode. [Alt+M] </label><a href="https://isear.intelfike.net/_usage/CommandMode/" lang-set="detail-link">detail</a>
+				</li>
+				<li>
+					<input type="checkbox" id="regbool" class="form-check-input">
+					<label for="regbool" lang-set="detail-regbool">Enable RegExp. "@RE:" </label><a href="https://isear.intelfike.net/_usage/SWord/" lang-set="detail-link">detail</a>
+				</li>
+				<li>
+					<input type="checkbox" id="enabled_bar" checked class="form-check-input">
+					<label for="enabled_bar" lang-set="detail-enabled_bar">Enable displaying HighLight Bar.</label>
+				</li>
+			</ul>
+		</div>
+		<h2 class="lead" lang-set="template-title">Template</h2>
+		<div class="block m-4">
+			<p lang-set="template-detail">Google searching word prefix. For example regist NG word.</p>
+			<input type="text" id="prefix">
+		</div>
+		<h2 class="lead" lang-set="blacklist-title">Black List</h2>
+		<div class="block m-4">
+			<p lang-set="blacklist-detail">If settings Black List then some site are not highlight.</p>
+			<a href="blacklist.html" lang-set="blacklist-link">Settings</a>
+		</div>
+		<h2 class="lead" lang-set="support-title">Please support development money</h2>
+		<div class="block m-4">
+			<p lang-set="support-detail">Please give me support for better provide service.</p><br>
+			<a href="https://paypal.me/intelfike" lang-set="support-link">Here</a>
+		</div>
 	</article>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap.native@2.0.15/dist/bootstrap-native-v4.min.js"></script>
 </body>

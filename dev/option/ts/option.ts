@@ -29,8 +29,26 @@ const lang_data = {
 			ja : 'カスタム',
 		},
 		button : {
-			en : 'exchanging checked color.',
+			en : 'exchanging checked color',
 			ja : 'チェックを入れた２つを入れ替える',
+		},
+	},
+	'logs' : {
+		title : {
+			en : 'Logs Settings',
+			ja : '履歴の設定',
+		},
+		detail : {			
+			en : 'You press [↑][↓] key with searching box when it display Search Word history.',
+			ja : '検索ワード履歴を表示するときは、検索ボックスで[↑] [↓]キーを押します。',
+		},
+		enable : {			
+			en : 'Enable logging Search Words.',
+			ja : '検索ワードの記録を有効にする',
+		},
+		clear : {
+			en : 'clear logs',
+			ja : '履歴をすべて削除する',
 		},
 	},
 	'detail' : {
@@ -69,7 +87,7 @@ const lang_data = {
 		link : {
 			en : 'detail',
 			ja : '詳細',
-		}
+		},
 	},
 	'template' : {
 		title : {
@@ -123,6 +141,16 @@ for (let key1 in lang_data) {
 }
 
 // 設定の管理
+const logs_clear = <HTMLInputElement> document.getElementById('logs_clear')
+logs_clear.onclick = () => {
+	clearLogs()
+}
+
+const enabled_log = <HTMLInputElement> document.getElementById('enabled_log')
+enabled_log.onchange = () => {
+	var enable = enabled_log.checked
+	storageSet('words_logs_enabled', enable, true)
+}
 
 const enabled_sync = <HTMLInputElement> document.getElementById('enabled_sync')
 enabled_sync.onchange = async () => {
@@ -197,6 +225,9 @@ document.body.onload = async () => {
 
 	var sb = await storageGet('enabled_bar', true, true)
 	enabled_bar.checked = sb
+
+	var sb = await storageGet('words_logs_enabled', false, true)
+	enabled_log.checked = sb
 
 	var pf = await storageGet('prefix', '', true)
 	prefix.value = pf

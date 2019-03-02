@@ -188,18 +188,15 @@ function storageGetWords():Promise<string> {
 // ログを保存する
 function setLog(words:string) {
 	return new Promise(async ok => {
-		var logs_enable = await storageGet('words_logs_enable', false)
-		if (logs_enable) {
-			var logs = await storageGet('words_logs', [])
-			var logs_current = await storageGet('words_logs_current', -1)
-			var logs_max = await storageGet('words_logs_max', 100)
-			logs_current++
-			logs_current %= logs_max
-			logs[logs_current] = words
-			console.log(logs, logs_current)
-			await storageSet('words_logs', logs)
-			await storageSet('words_logs_current', logs_current)
-		}
+		var logs = await storageGet('words_logs', [])
+		var logs_current = await storageGet('words_logs_current', -1)
+		var logs_max = await storageGet('words_logs_max', 100)
+		logs_current++
+		logs_current %= logs_max
+		logs[logs_current] = words
+		console.log(logs, logs_current)
+		await storageSet('words_logs', logs)
+		await storageSet('words_logs_current', logs_current)
 		ok()
 	})
 }
@@ -218,6 +215,12 @@ function clearLogs() {
 		await storageRemove('words_logs_current')
 		ok()
 	})	
+}
+function getLogsEnabled():Promise<boolean>{
+	return new Promise(async ok => {
+		var logs_enable = await storageGet('words_logs_enabled', false, true)
+		ok(logs_enable)
+	})
 }
 
 function storageSetNum(words_nums:{[key:string]:number;}){
