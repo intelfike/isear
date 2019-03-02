@@ -29,8 +29,6 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 	chrome.contextMenus.update('hlbar_blacklist', {
 		title: hlbar_title,
 	})
-
-	// TODO: ハイライトバーの制御を追加する
 })
 
 // ページが更新された時の処理

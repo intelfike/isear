@@ -35,12 +35,10 @@
 		#search_words{
 			width: 100%;
 		}
-		button{
-		}
 		button#on{
-			width: 45px;
+			width: 60px;
 		}
-		button:disabled{
+		button:disabled {
 			background-color: #DDD !important;
 		}
 	</style>
@@ -51,9 +49,9 @@
 		<div id="checks">
 		</div>
 		<div id="search">
-			<input class="form-control" type="text" id="search_words" tabIndex="1">
+			<input class="form-control" type="text" id="search_words" tabIndex="1" lang-set="textbox-placeholder">
 			<button id="retry" style="display: none;">⭮</button>
-			<button id="on">ON</button>
+			<button id="on" class="btn">ON</button>
 		</div>
 		<div id="btn_list">
 

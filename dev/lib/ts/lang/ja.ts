@@ -1,7 +1,4 @@
 lang['ja'] = {
-	'popup' : {
-		'SEARCH_BOX' : 'Enterでページ内検索',
-	},
 	'background' : {
 		'TOGGLE_HIGHLIGHT' : {
 			true:'ハイライトをOFFにする',

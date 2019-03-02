@@ -1,10 +1,14 @@
 var changeInput = false
+
 // === on/offボタンクリック時の処理
 const on_obj = <HTMLInputElement> document.getElementById('on')
 on_obj.onclick = async ()=>{
+	on_obj.disabled = true
 	var enabled:boolean = on_obj.innerText == 'ON'
 	await extensionEnable(enabled)
 	inputsEnable(enabled)
+	on_obj.disabled = false
+	search_words_obj.focus()
 }
 
 // ⭮ボタンクリック時の処理
@@ -19,24 +23,13 @@ retry.onclick = async ()=>{
 async function inputsEnable(bool:boolean){
 	if(bool){
 		on_obj.innerText = "OFF"
-		on_obj.style.backgroundColor = "#DDD"
 		document.body.className = 'onbg'
 	}else{
 		on_obj.innerText = "ON"
-		on_obj.style.backgroundColor = "yellow"
 		document.body.className = 'offbg'
 	}
-	// search_words_obj.disabled = !bool
-	// retry.disabled = !bool
-	// if(!bool){
-	// 	var btns = btn_list_obj.children
-	// 	for(let n = btns.length-1; n >= 0; n--){
-	// 		btns[n].remove()
-	// 	}
-	// 	return
-	// }else{
-		updateButtons()
-	// }
+
+	updateButtons()
 }
 
 // === 検索ワードのテキストボックス
@@ -46,7 +39,9 @@ search_words_obj.onkeyup = () => {
 		storageSetWords(search_words_obj.value)
 	}, 200)
 }
-var prev = null;
+var log_num = 0
+var not_log = ''
+var prev = null
 search_words_obj.onkeydown = async (e) => {
 	// 入力内容にさいが出ていないかチェック
 	if (prev == null){
@@ -95,6 +90,25 @@ search_words_obj.onkeydown = async (e) => {
 			inject('scrollFocusNext("itel-highlight","itel-selected")')
 		}
 		break
+	case 'ArrowUp':
+		var logs = await getLogs()
+		if (log_num < logs.length) {
+			if (log_num == 0) {
+				not_log = current
+			}
+			log_num++
+		}
+		logs.splice(0, 0, '')
+		search_words_obj.value = logs[log_num]
+		break
+	case 'ArrowDown':
+		var logs = await getLogs()
+		if (log_num > 0) {
+			log_num--
+		}
+		logs.splice(0, 0, not_log)
+		search_words_obj.value = logs[log_num]
+		break
 	default:
 		break
 	}
@@ -108,7 +122,6 @@ browser.runtime.onMessage.addListener(async function(request, sender, sendRespon
 	}
 	var enabled = await storageGet('enabled', true)
 	if(enabled){
-		// whereTimeout('updateButton', updateButton, 200)
 		updateButtons()
 	}
 })
@@ -147,12 +160,12 @@ function getWords():Promise<Words>{
 function updateAll(){
 	return new Promise(async ok => {
 		var swords:string = getSwords()
+		storageSetWords(swords, true)
 		var words:Words = await getWords()
 
 		await executeHighlight(swords)
 
 		updateButtons()
-		storageSetWords(swords, true)
 		ok()
 	})
 }
@@ -193,6 +206,7 @@ async function updateButtons(){
 			}else{
 				inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
 			}
+			search_words_obj.focus()
 		}
 		btn.addEventListener('wheel', e => {
 			let y = e.deltaY
@@ -216,7 +230,10 @@ async function updateButtons(){
 // 最初に実行される
 document.body.onload = async ()=>{
 	var STRING = getSTRING()
-	search_words_obj.placeholder = STRING['popup']['SEARCH_BOX']
+	lang_set_attr('textbox-placeholder', 'placeholder', {
+		ja: 'Enterでページ内検索',
+		en: 'Enter: Search on Page',
+	})
 
 	var enabled:boolean = await storageGet('enabled', true)
 	bodyKeyDownEvent(enabled)
@@ -226,8 +243,8 @@ document.body.onload = async ()=>{
 	await remind(swords)
 
 	inputsEnable(enabled)
+	search_words_obj.focus()
 	if(enabled){
-		search_words_obj.focus()
 		search_words_obj.selectionStart = 0
 		search_words_obj.selectionEnd = swords.length + 1
 	}
@@ -255,6 +272,9 @@ function bodyKeyDownEvent(enabled:boolean){
 			break
 		case 'h':
 			on_obj.onclick(null)
+			break
+		case 't':
+			chrome.tabs.create(null)
 			break
 		default:
 			return

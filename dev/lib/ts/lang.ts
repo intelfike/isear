@@ -7,13 +7,16 @@ function getSTRING() {
 }
 
 function lang_set(key, lang_data) {
+	return lang_set_attr(key, 'innerText', lang_data)
+}
+function lang_set_attr(key, attr, lang_data) {
 	let objs = document.querySelectorAll('[lang-set="' + key + '"]')
 	if (objs == null || objs.length == 0) {
 		return false
 	}
 	for (let n in objs) {
 		let obj = <HTMLElement>objs[n]
-		obj.innerText = lang_data[language]
+		obj[attr] = lang_data[language]
 	}
 	return true
 }

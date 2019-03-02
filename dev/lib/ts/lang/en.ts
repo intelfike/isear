@@ -1,7 +1,4 @@
 lang['en'] = {
-	'popup' : {
-		'SEARCH_BOX' : 'Enter: Search on Page',
-	},
 	'background' : {
 		'TOGGLE_HIGHLIGHT' : {
 			true:'[OFF] Highlight',

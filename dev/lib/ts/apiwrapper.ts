@@ -150,6 +150,7 @@ function storageRemove(key:string){
 	})
 }
 // wordsには文字列を渡してね
+// saveLatestにすると、新規タブを開いたときにそのワードが表示されるようになるよ
 function storageSetWords(words:string, saveLatest:boolean=false, tabId:number=undefined){
 	return new Promise(async ok => {
 		if (typeof tabId == 'undefined') {
@@ -158,6 +159,8 @@ function storageSetWords(words:string, saveLatest:boolean=false, tabId:number=un
 		await storageSet(saveWordsPrefix+tabId, words)
 		if (saveLatest) {
 			await storageSet(latest_words, words)
+			// ログをつける
+			await setLog(words)
 		}
 		ok()
 	})
@@ -182,6 +185,41 @@ function storageGetWords():Promise<string> {
 		ok(swords)
 	})
 }
+// ログを保存する
+function setLog(words:string) {
+	return new Promise(async ok => {
+		var logs_enable = await storageGet('words_logs_enable', false)
+		if (logs_enable) {
+			var logs = await storageGet('words_logs', [])
+			var logs_current = await storageGet('words_logs_current', -1)
+			var logs_max = await storageGet('words_logs_max', 100)
+			logs_current++
+			logs_current %= logs_max
+			logs[logs_current] = words
+			console.log(logs, logs_current)
+			await storageSet('words_logs', logs)
+			await storageSet('words_logs_current', logs_current)
+		}
+		ok()
+	})
+}
+function getLogs():Promise<string[]> {
+	return new Promise(async ok => {
+		var logs = await storageGet('words_logs', [])
+		var logs_current = await storageGet('words_logs_current', 0)
+		logs = logs.slice(logs_current+1).concat(logs.slice(0, logs_current+1))
+		logs = logs.reverse()
+		ok(logs)
+	})
+}
+function clearLogs() {
+	return new Promise(async ok => {
+		await storageRemove('words_logs')
+		await storageRemove('words_logs_current')
+		ok()
+	})	
+}
+
 function storageSetNum(words_nums:{[key:string]:number;}){
 	return new Promise(async ok => {
 		var tabId = await getTabId()
