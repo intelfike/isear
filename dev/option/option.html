@@ -105,9 +105,24 @@
 		</div>
 		<h2 class="lead" lang-set="template-title">Template</h2>
 		<div class="block m-4">
-			<p lang-set="template-detail">Google searching word prefix. For example regist NG word.</p>
-			<input type="text" id="prefix">
+			<p lang-set="template-detail">You can register frequently used words.</p>
+			<input type="text" id="prefix" class="form-control form-control-sm w-25">
+			<ul>
+				<li class="radio">
+					<input type="radio" name="template-type" value="add" class="template-type" id="addtemplate-type-add">
+					<label for="addtemplate-type-add" lang-set="template_type-add">If click [+] button on popup then it add template to search word.</label>
+				</li>
+				<li class="radio">
+					<input type="radio" name="template-type" value="always" class="template-type" id="template-type-always">
+					<label for="template-type-always" lang-set="template_type-always">Google searching word prefix. For example regist NG word.</label>
+				</li>
+			</ul>
 		</div>
+<!-- 		<h2 class="lead" lang-set="addtemplate-title">Template for addition</h2>
+		<div class="block m-4">
+			<p lang-set="addtemplate-detail">If click [+] button on popup then it add "Template for addition" to search word.</p>
+			<input type="text" id="addtemplate">
+		</div> -->
 		<h2 class="lead" lang-set="blacklist-title">Black List</h2>
 		<div class="block m-4">
 			<p lang-set="blacklist-detail">If settings Black List then some site are not highlight.</p>

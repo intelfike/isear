@@ -16,7 +16,7 @@ function executeHighlightAuto(swords:string, tabId:number=null){
 		ok()
 	})
 }
-// boolはfalseならハイライトをオフ
+// boolはfalseならハイライトをオフ	
 function executeHighlight(swords:string, enabled=true, tabId:number=null){
 	return new Promise(async ok=>{
 		// ページに値を渡す処理
@@ -176,9 +176,12 @@ function storageGetWords():Promise<string> {
 		if(swords != undefined){
 			swords = swords.trim()
 			// 接頭文字をつける
-			var pf = await storageGet('prefix', '', true)
-			if(swords.indexOf(pf) != 0){
-				swords = pf + ' ' + swords
+			var tt = await storageGet('template-type', 'add', true)
+			if (tt == 'always') {
+				var pf = await storageGet('prefix', '', true)
+				if(swords.indexOf(pf) != 0){
+					swords = pf + ' ' + swords
+				}
 			}
 		}
 

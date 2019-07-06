@@ -95,8 +95,18 @@ const lang_data = {
 			ja : '定型文',
 		},
 		detail : {
+			en : 'You can register frequently used words.',
+			ja : 'よく使う単語を登録できます。',
+		}
+	},
+	'template_type' : {
+		always : {
 			en : 'Google searching word prefix. For example regist NG word.',
 			ja : '常に検索ワードの先頭にくっつきます。NGワードの登録などにご利用ください。',
+		},
+		add : {
+			en : 'If click [+] button on popup then it add "Template for addition" to search word.',
+			ja : 'ポップアップ上の[+]ボタンをクリックすると、検索ワードボックスに追可用定型文が追加されます。',
 		},
 	},
 	'blacklist' : {
@@ -189,12 +199,23 @@ enabled_bar.onchange = () => {
 	storageSet('enabled_bar', enable, true)
 }
 
+// prefix は、あとにつける場合もある
+// あとからaddを追加するため
 const prefix = <HTMLInputElement> document.getElementById('prefix')
 prefix.onchange = () => {
 	var pf = prefix.value
 	storageSet('prefix', pf, true)
 }
 prefix.onkeydown = prefix.onchange
+
+var template_type = document.getElementsByName('template-type')
+for (let key in template_type) {
+	let ttobj = <HTMLInputElement> template_type[key]
+	ttobj.onchange = () => {
+		var tt = ttobj.value
+		storageSet('template-type', tt, true)
+	}	
+}
 
 const exchange = <HTMLInputElement> document.getElementById('exchange')
 exchange.onclick = () => {
@@ -231,6 +252,14 @@ document.body.onload = async () => {
 
 	var pf = await storageGet('prefix', '', true)
 	prefix.value = pf
+
+	var tt = await storageGet('template-type', 'add', true)
+	for (let key in template_type) {
+		let ttobj = <HTMLInputElement> template_type[key]
+		if (ttobj.value == tt) {
+			ttobj.checked = true
+		}
+	}
 
 	// 色の設定
 	bgColors = await storageGet('bgColors', bgColors, true)

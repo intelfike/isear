@@ -11,6 +11,19 @@ on_obj.onclick = async ()=>{
 	search_words_obj.focus()
 }
 
+// +ボタンクリック時の処理
+const addtemplate = <HTMLInputElement> document.getElementById('addtemplate')
+addtemplate.onclick = async ()=>{
+	var at = await storageGet('prefix', '', true)
+	var swords = search_words_obj.value.trim()
+	if (new RegExp(at + '$').test(swords)) {
+		return
+	}
+	search_words_obj.value = swords + ' ' + at
+	search_words_obj.focus()
+	await updateAll()
+}
+
 // ⭮ボタンクリック時の処理
 const retry = <HTMLInputElement> document.getElementById('retry')
 retry.onclick = async ()=>{
@@ -198,6 +211,8 @@ async function updateButtons(){
 		btn.innerText = word.origin
 		btn.tabIndex = n + 2
 		btn.style.backgroundColor = word.bgColor
+		// btn.title = '(' +  + '/' +  + ')'
+		btn.title = word.count.num + '件ヒット'
 		btn.onclick = (e)=>{
 			// クリック時のハイライト選択移動
 			var key_event = <KeyboardEvent>(e||window.event)
@@ -256,6 +271,16 @@ document.body.onload = async ()=>{
 		search_words_obj.selectionStart = 0
 		search_words_obj.selectionEnd = swords.length + 1
 	}
+
+	// 追加用定型文があれば+ボタンを表示する
+	var tt = await storageGet('template-type', 'add', true)
+	if (tt == 'add') {
+		var at = await storageGet('prefix', '', true)
+		if (at != '') {
+			addtemplate.style.display = 'block'
+		}
+	}
+
 
 	if (changeInput) {
 		updateAll()

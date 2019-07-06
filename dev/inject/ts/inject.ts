@@ -65,11 +65,10 @@ function replace_auto(dest:any, word:Word, className:string){
 		var middle_tn = document.createTextNode(middle)
 		var suffix_tn = document.createTextNode(suffix)
 
-		var newObj = document.createElement('esspan')
+		var newObj = document.createElement('span')
 		newObj.id = 'isear-'+icnt
 		newObj.className = className + ' ' + icnt
 		newObj.style.backgroundColor = word.bgColor
-		newObj.style.color = 'black'
 		newObj.appendChild(middle_tn)
 
 		var parent = obj.parentNode
@@ -95,32 +94,42 @@ function textNode_req(obj:any, className:string, callback:(obj:Text)=>void){
 		callback(obj)
 		return
 	}
-	if(obj.nodeType != 1 ||
-		new RegExp(className,'g').test(obj.className)){
+	if(obj.nodeType != 1){
 		return
 	}
+	if(obj.nodeType == 1){
+		if (new RegExp(className,'g').test(obj.className)){
+			// isearオブジェクトは除外
+			return
+		}
+		if(isEditable(obj) || isHidden(obj)){
+			// 表示されないタグ、編集可能なタグは除外
+			return
+		}
+		if(obj.tagName == 'IFRAME'){
+			if('contentDocument' in obj){
+				try {
+					textNode_req(obj.contentDocument.body, className, callback)
+				} catch (e) {}
+			}
+			return
+		}
+	}
+
 	for(let n = 0; n < obj.childNodes.length; n++){
 		let child = obj.childNodes[n]
-		if(child.nodeType == 1){
-			if(child.style.display == 'none' ||
-				child.style.visibility == 'hidden' ||
-				child.tagName == 'STYLE' ||
-				child.tagName == 'SCRIPT' ||
-				child.tagName == 'TEXTAREA'
-				){
-				continue
-			}
-			if(child.tagName == 'IFRAME'){
-				if('contentDocument' in child){
-					try {
-						textNode_req(child.contentDocument.body, className, callback)
-					} catch (e) {}
-				}
-				continue
-			}
-		}
 		textNode_req(child, className, callback)
 	}
+}
+function isEditable(obj) {
+	return obj.tagName == 'TEXTAREA' ||
+	obj.contentEditable == 'true'
+}
+function isHidden(obj) {
+	return obj.style.display == 'none' ||
+	obj.style.visibility == 'hidden' ||
+	obj.tagName == 'STYLE' ||
+	obj.tagName == 'SCRIPT'
 }
 function wordMatch(str:string, word:string, regbool:boolean):boolean{
 	if(regbool){
@@ -408,8 +417,6 @@ function parsed_main(words:Words, enabled:boolean){
 
 var already_event = false
 var gstatus = {words:null, enabled:null}
-// var global_words:Words
-// var global_enabled:boolean
 function defineEvents(words:Words, enabled:boolean){
 	// イベントは一度しか登録しなくていいけど、値は共有すべき
 	gstatus.words = words
@@ -449,44 +456,64 @@ function defineEvents(words:Words, enabled:boolean){
 		}, 100)
 	}
 
-	if(auto_update){
-		observer = new MutationObserver(function (MutationRecords, MutationObserver) {
-			var mutation = MutationRecords[0]
-
-			if (mutation.type=="childList" && mutation.addedNodes.length != 0) {
-				mutation.addedNodes.forEach(function(node:HTMLElement) {
-					whereTimeout('ハイライト更新', ()=>{
-						if (node.nodeType == 1){
-							if(node.className.indexOf('itel') != -1 ||
-								node.className.indexOf('isear') != -1 ||
-								node.id.indexOf('itel') != -1 ||
-								node.id.indexOf('isear') != -1){
-								return
-							}
-						}
-						silentRun(function(){
-							highlight_all(node, gstatus.words)
-							window.onresize(null)
-						})
-					}, 1000)
-				});
-			};
-		});
+	observer.disconnect()
+	if(auto_update && gstatus.enabled){
 		observer.observe(document.body, def_option);
 	}
 }
 // オブザーバーに検知されないDOM操作
-var observer = null
+var observer = new MutationObserver(function (MutationRecords, MutationObserver) {
+	var mutation = MutationRecords[0]
+
+	if (mutation.type=="characterData" && mutation.addedNodes.length != 0) {
+		let f = function(node:HTMLElement) {
+			whereTimeout('ハイライト更新', ()=>{
+				if (node.nodeType == 1){
+					if(node.className.indexOf('itel') != -1 ||
+						node.className.indexOf('isear') != -1 ||
+						node.id.indexOf('itel') != -1 ||
+						node.id.indexOf('isear') != -1){
+						return
+					}
+				}
+				let parent_tmp = node
+				for (;true;) {
+					if (parent_tmp.nodeType == 1) {
+						if(isEditable(parent_tmp) || isHidden(parent_tmp)){
+							// 表示されないタグ、編集可能なタグは除外
+							return
+						}
+					}
+					parent_tmp = parent_tmp.parentElement
+					if (parent_tmp == null) {
+						break
+					}
+				}
+				silentRun(function(){
+					highlight_all(node, gstatus.words)
+					window.onresize(null)
+				})
+			}, 1000)
+		}
+		f(<HTMLElement>mutation.target)
+		mutation.addedNodes.forEach(function(node:HTMLElement) {f(node)}, 1000) // 最後の更新から１秒以上経過したら
+	};
+});
+
+// DOMの変更を監視せず関数を実行する
 function silentRun(f){
-	if(observer != null){
+	if(auto_update && gstatus.enabled && observer != null){
+		// 監視が有効であれば、一旦監視を中止してから実行する
 		observer.disconnect()
-	}
-	f()
-	if(observer != null){
+		f()
 		observer.observe(document.body, def_option)
+	} else {
+		// 監視が無効であれば、そのまま実行する
+		f()
 	}
 }
 
+// すべての isear の DOM を削除する
 function reset_all(){
 	// 全消し
 	offElementsByClassName('itel-highlight')

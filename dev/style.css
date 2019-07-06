@@ -3,6 +3,11 @@
 	color:white !important;
 }
 
+.itel-highlight{
+	display: inline;
+	color: black;
+}
+
 #isear-top-selected{
 	border-color:white !important;
 	z-index:9999999998 !important;
