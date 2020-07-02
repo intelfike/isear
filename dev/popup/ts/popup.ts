@@ -259,10 +259,22 @@ document.body.onload = async ()=>{
 	})
 
 	var enabled:boolean = await storageGet('enabled', true)
-	bodyKeyDownEvent(enabled)
 
+	var ph:boolean = await storageGet('popup_highlight', false, true)
+	var pc:boolean = await storageGet('popup_highlight_close', false)
+	if (ph && pc) {
+		// ポップアップ時のみハイライト 復帰
+		await storageSet('popup_highlight_close', false)
+		await extensionEnable(true)
+		enabled = true
+	}
+
+	bodyKeyDownEvent(enabled)
 	// 以前の状態を思い出す
 	var swords:string = await storageGetWords()
+	if (swords == undefined) {
+		swords = ''
+	}
 	await remind(swords)
 
 	inputsEnable(enabled)
@@ -286,6 +298,12 @@ document.body.onload = async ()=>{
 		updateAll()
 	}
 }
+
+var background = chrome.extension.getBackgroundPage();
+addEventListener("unload", function (event) {
+	// ポップアップを閉じたときの処理
+    background.popup_unload()
+}, true);
 
 function bodyKeyDownEvent(enabled:boolean){
 	document.body.onkeydown = async (e)=>{

@@ -84,6 +84,10 @@ const lang_data = {
 			en : 'Enable displaying HighLight Bar.',
 			ja : 'ハイライトバーを有効にする',
 		},
+		popup_highlight : {
+			en : 'Only enable high light when it`s opening popup.',
+			ja : 'ポップアップが開いているときのみハイライトを有効にする',
+		},
 		link : {
 			en : 'detail',
 			ja : '詳細',
@@ -199,6 +203,12 @@ enabled_bar.onchange = () => {
 	storageSet('enabled_bar', enable, true)
 }
 
+const popup_highlight = <HTMLInputElement> document.getElementById('popup_highlight')
+popup_highlight.onchange = () => {
+	var enable = popup_highlight.checked
+	storageSet('popup_highlight', enable, true)
+}
+
 // prefix は、あとにつける場合もある
 // あとからaddを追加するため
 const prefix = <HTMLInputElement> document.getElementById('prefix')
@@ -246,6 +256,9 @@ document.body.onload = async () => {
 
 	var sb = await storageGet('enabled_bar', true, true)
 	enabled_bar.checked = sb
+
+	var sb = await storageGet('popup_highlight', false, true)
+	popup_highlight.checked = sb
 
 	var sb = await storageGet('words_logs_enabled', false, true)
 	enabled_log.checked = sb

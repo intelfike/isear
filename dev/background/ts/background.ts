@@ -1,9 +1,22 @@
+async function popup_unload() {
+	// ポップアップが閉じたときのイベント
+	var enabled:boolean = await storageGet('enabled', true)
+	var ph:boolean = await storageGet('popup_highlight', false, true)
+	if (enabled && ph) {
+		// ポップアップ時のみハイライト
+		await storageSet('popup_highlight_close', true)
+		await storageSet('enabled', false)
+		await highlighting(tabId)
+	}		
+}
+
+var tabId;
 browser.tabs.onActivated.addListener(async function(activeInfo){
 	// ==============================
 	//  ハイライトを再度実行する
 	// ==============================
 	// 毎度実行するから重いかも？
-	let tabId = activeInfo.tabId
+	tabId = activeInfo.tabId
 	executeAllSequence(tabId, await getURL())
 
 	// ==============================
