@@ -13,7 +13,7 @@ function executeHighlightAuto(swords:string, tabId:number=null){
 			}
 		}
 		await executeHighlight(swords, enb, tabId)
-		ok()
+		ok(null)
 	})
 }
 // boolはfalseならハイライトをオフ	
@@ -58,7 +58,7 @@ function executeHighlight(swords:string, enabled=true, tabId:number=null){
 		chrome.contextMenus.update('clear', {
 			title: clear_text,
 		})
-		ok()
+		ok(null)
 	})
 }
 
@@ -162,7 +162,7 @@ function storageSetWords(words:string, saveLatest:boolean=false, tabId:number=un
 			// ログをつける
 			await setLog(words)
 		}
-		ok()
+		ok(null)
 	})
 }
 // 保存された検索ワードをテキストボックスに自動入力
@@ -200,7 +200,7 @@ function setLog(words:string) {
 		console.log(logs, logs_current)
 		await storageSet('words_logs', logs)
 		await storageSet('words_logs_current', logs_current)
-		ok()
+		ok(null)
 	})
 }
 function getLogs():Promise<string[]> {
@@ -216,7 +216,7 @@ function clearLogs() {
 	return new Promise(async ok => {
 		await storageRemove('words_logs')
 		await storageRemove('words_logs_current')
-		ok()
+		ok(null)
 	})	
 }
 function getLogsEnabled():Promise<boolean>{
@@ -230,7 +230,7 @@ function storageSetNum(words_nums:{[key:string]:number;}){
 	return new Promise(async ok => {
 		var tabId = await getTabId()
 		await storageSet(saveNumPrefix+tabId, words_nums)
-		ok()
+		ok(null)
 	})
 }
 function storageGetNum():Promise<{[key:string]:number;}>{
@@ -255,7 +255,7 @@ function getBgColor():Promise<string[]> {
 function executeFile(file:string, tabId:number=null):any{
 	return new Promise(ok => {
 		if (typeof browser.tabs == 'undefined') {
-			ok()
+			ok(null)
 		}
 		browser.tabs.executeScript(tabId,
 			{file:file},
@@ -268,7 +268,7 @@ function executeFile(file:string, tabId:number=null):any{
 function executeCode(code:string, tabId:number=null):any{
 	return new Promise(ok => {
 		if (typeof browser.tabs == 'undefined') {
-			ok()
+			ok(null)
 		}
 		browser.tabs.executeScript(tabId,
 			{code:code},
@@ -296,7 +296,7 @@ async function extensionEnable(bool:boolean){
 		var swords:string = await storageGetWords()
 		await executeHighlight(swords, bool)
 		autoSetIcon()
-		ok()
+		ok(null)
 	})
 }
 

@@ -106,7 +106,7 @@ function barClick(e:MouseEvent, word:Word){
 		scrollFocusNextWord(word.origin, hlClass, selected, word.regbool)
 	}
 }
-function barWheel(e:MouseWheelEvent, word:Word){
+function barWheel(e:WheelEvent, word:Word){
 	if (e.deltaY != 0) {
 		if (e.deltaY <= 1) {
 			// 上スクロール

@@ -1,7 +1,7 @@
 #!/bin/bash
 cd `dirname $0`
-sudo apt install -y nodejs
-sudo apt install -y nodejs-dev node-gyp libssl1.0-dev npm
+# 最新のnodejsをinstallしてください
+# https://nodejs.org/ja
 sudo npm install -g typescript
 sudo npm isntall -g npx
 sudo apt install closure-compiler

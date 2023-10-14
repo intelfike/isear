@@ -187,7 +187,7 @@ function updateAll(){
 		await executeHighlight(swords)
 
 		updateButtons()
-		ok()
+		ok(null)
 	})
 }
 // 頻繁な更新対策
@@ -339,17 +339,17 @@ function remind(swords:string){
 		bgColors = await getBgColor()
 
 		if(swords == undefined){
-			ok()
+			ok(null)
 			return
 		}
 		if(swords.length == 0){
-			ok()
+			ok(null)
 			return
 		}
 
 		search_words_obj.value = swords + ' '
 		
-		ok()
+		ok(null)
 	})
 }
 

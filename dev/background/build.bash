@@ -1,3 +1,3 @@
 cd `dirname $0`
-tsc --out ../../build/background.js collect.ts
+tsc --lib dom,es2015 --outFile ../../build/background.js collect.ts
 cp ../../build/background.js ../../firefox/build/

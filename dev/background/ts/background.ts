@@ -84,15 +84,15 @@ function saveGoogleSearchWords(tabId, url){
 	return new Promise(async ok => {
 		var gw = await storageGet('google_words', true, true)
 		if(!gw){
-			ok()
+			ok(null)
 			return
 		}
 		if(url.indexOf('www.google') == -1){
-			ok()
+			ok(null)
 			return
 		}
 		if(!/[?&]q=/g.test(url)){
-			ok()
+			ok(null)
 			return
 		}
 		var q:string = url.match(/q=[^&]+/g)[0]
@@ -101,6 +101,6 @@ function saveGoogleSearchWords(tabId, url){
 
 		var swords = q.split('+').join(' ')
 		await storageSetWords(swords, true, tabId)
-		ok()
+		ok(null)
 	})
 }

@@ -5,5 +5,5 @@ cp option_en.html ../../build
 cp option.html ../../firefox/build/
 cp option_en.html ../../firefox/build/
 echo '@compile option'
-tsc --out ../../build/option.js collect.ts
+tsc --lib dom,es2015 --outFile ../../build/option.js collect.ts
 cp ../../build/option.js ../../firefox/build/

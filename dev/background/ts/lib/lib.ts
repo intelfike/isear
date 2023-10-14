@@ -2,7 +2,7 @@ function clear_words(){
 	return new Promise(async (ok)=>{
 		await storageSetWords('')
 		await executeHighlightAuto('')
-		ok()
+		ok(null)
 	})
 }
 function toggle_bars():Promise<boolean>{
@@ -19,7 +19,7 @@ function toggle_bars():Promise<boolean>{
 }
 function retry(){
 	return new Promise(async (ok)=>{
-		ok()
+		ok(null)
 	})
 }
 

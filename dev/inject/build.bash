@@ -1,3 +1,3 @@
 cd `dirname $0`
-tsc --out ../../build/inject.js collect.ts
+tsc --lib dom,es2015 --outFile ../../build/inject.js collect.ts
 cp ../../build/inject.js ../../firefox/build
