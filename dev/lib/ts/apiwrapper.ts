@@ -22,12 +22,12 @@ function executeHighlight(swords:string, enabled=true, tabId:number=null){
 		// ページに値を渡す処理
 		bgColors = await getBgColor()
 
-		await executeCode('bgColors = ' + JSON.stringify(bgColors), tabId)
-		await executeCode('browser_type = ' + JSON.stringify(browser_type), tabId)
+		await executeFunc((_bgColors) => {bgColors = _bgColors}, [bgColors], tabId)
+		await executeFunc((_browser_type) => {browser_type = _browser_type}, [browser_type], tabId)
 		var au = await storageGet('auto_update', false, true)
-		await executeCode('auto_update = ' + JSON.stringify(au), tabId)
+		await executeFunc((_auto_update) => {auto_update = _auto_update}, [au], tabId)
 		var regbool = await storageGet('regbool', false, true)
-		await executeCode('regbool = ' + JSON.stringify(regbool), tabId)
+		await executeFunc((_regbool) => {regbool = _regbool}, [regbool], tabId)
 
 		var enbar = await storageGet('enabled_bar', true, true)
 		var curURL = await getURL()
@@ -38,19 +38,26 @@ function executeHighlight(swords:string, enabled=true, tabId:number=null){
 				enbar = blist[reg] // 基本falseを代入
 			}
 		}
-		await executeCode('enabled_bar = ' + JSON.stringify(enbar), tabId)
+		await executeFunc((_enabled_bar) => {enabled_bar = _enabled_bar}, [enbar], tabId)
 
 		// ハイライトバーの初期状態を設定
-		var showBars = await globalStorage.getItem('bar-visible')
-		await executeCode('showBars = ' + JSON.stringify(showBars), tabId)
+		var showBars = await storageGet('bar-visible', true, true)
+		// var showBars = await globalStorage.getItem('bar-visible')
+		await executeFunc((_showBars) => {showBars = _showBars}, [showBars], tabId)
 
 		// ハイライトを実行
-		var result = await executeCode('itel_main('+JSON.stringify(swords)+', '+enabled+')', tabId)
+		var result = await executeFunc((swords,enabled) => {
+			if (typeof itel_main !== "undefined") {
+				return itel_main(swords,enabled)
+			} else {
+				console.log('Browser extention "isear" is disabled.')
+			}
+		}, [swords,enabled], tabId)
 		if (typeof result == 'undefined') {
 			return
 		}
 		// 検索件数を保存
-		await storageSetNum(<{[key:string]:number;}>result[0])
+		await storageSetNum(<{[key:string]:number;}>result)
 
 		// コンテキスト クリアテキストを変更
 		var STRING = getSTRING()
@@ -62,14 +69,6 @@ function executeHighlight(swords:string, enabled=true, tabId:number=null){
 	})
 }
 
-function inject(code: string){
-	browser.tabs.executeScript(null,
-		{code:code}
-	)
-}
-function log(mess:any){
-	inject("console.log("+JSON.stringify(mess)+")")
-}
 function changeURL(url:string){
 	browser.tabs.update(null, {
 		url:url
@@ -100,7 +99,11 @@ function getSite():Promise<string>{
 function getTabId(): Promise<number>{
 	return new Promise((ok, reject) => {
 		browser.tabs.query({currentWindow: true, active: true}, (tab)=>{
-			ok(tab[0].id)
+			if (tab && tab[0]) {
+				ok(tab[0].id)
+			} else {
+				reject(null)
+			}
 		})
 	})
 }
@@ -197,7 +200,7 @@ function setLog(words:string) {
 		logs_current++
 		logs_current %= logs_max
 		logs[logs_current] = words
-		console.log(logs, logs_current)
+		// console.log(logs, logs_current)
 		await storageSet('words_logs', logs)
 		await storageSet('words_logs_current', logs_current)
 		ok(null)
@@ -253,29 +256,40 @@ function getBgColor():Promise<string[]> {
 }
 
 function executeFile(file:string, tabId:number=null):any{
-	return new Promise(ok => {
-		if (typeof browser.tabs == 'undefined') {
+	return new Promise(async ok => {
+		if (typeof browser.scripting == 'undefined') {
 			ok(null)
 		}
-		browser.tabs.executeScript(tabId,
-			{file:file},
-			(result)=>{
-				ok(result)
-			}
-		)
+		let result = await browser.scripting.executeScript({
+			// target: {tabId: tabId, allFrames: true},
+			target: {tabId: tabId},
+			files: [file],
+		})
+		ok(result)
 	})
 }
-function executeCode(code:string, tabId:number=null):any{
-	return new Promise(ok => {
-		if (typeof browser.tabs == 'undefined') {
+function executeFunc(func:(...any) => any, args:any[] = [], tabId:number=null):any{
+	return new Promise(async ok => {
+		if (typeof browser.scripting == 'undefined') {
 			ok(null)
 		}
-		browser.tabs.executeScript(tabId,
-			{code:code},
-			(result)=>{
-				ok(result)
-			}
-		)
+		// console.log(func, args, tabId)
+		if (args && args.length) {
+			let result = await browser.scripting.executeScript({
+				// target: {tabId: tabId, allFrames: true},
+				target: {tabId: tabId},
+				func: func,
+				args: args,
+			})
+			ok(result[0].result)
+		} else {
+			let result = await browser.scripting.executeScript({
+				// target: {tabId: tabId, allFrames: true},
+				target: {tabId: tabId},
+				func: func,
+			})
+			ok(result[0].result)
+		}
 	})
 }
 
@@ -294,7 +308,8 @@ async function extensionEnable(bool:boolean){
 	return new Promise(async ok => {
 		await storageSet('enabled', bool)
 		var swords:string = await storageGetWords()
-		await executeHighlight(swords, bool)
+		let tabId = await getTabId()
+		await executeHighlight(swords, bool, tabId)
 		autoSetIcon()
 		ok(null)
 	})
@@ -303,7 +318,12 @@ async function extensionEnable(bool:boolean){
 
 
 function setIcon(icon:string){
-	chrome.browserAction.setIcon({path:icon})
+	if (typeof chrome.browserAction == 'undefined') {
+		return
+	}
+	if (chrome.browserAction.hasOwnProperty('setIcon')) {
+		chrome.browserAction.setIcon({path:icon})
+	}
 }
 
 async function autoSetIcon(){

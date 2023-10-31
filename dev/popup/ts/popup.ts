@@ -4,7 +4,7 @@ var changeInput = false
 const on_obj = <HTMLInputElement> document.getElementById('on')
 on_obj.onclick = async ()=>{
 	on_obj.disabled = true
-	var enabled:boolean = on_obj.innerText == 'ON'
+	var enabled:boolean = on_obj.innerHTML == '<i class="fa-solid fa-toggle-off"></i>'
 	await extensionEnable(enabled)
 	inputsEnable(enabled)
 	on_obj.disabled = false
@@ -35,10 +35,10 @@ retry.onclick = async ()=>{
 // 入力をtrue有効・false無効、デザイン変更
 async function inputsEnable(bool:boolean){
 	if(bool){
-		on_obj.innerText = "OFF"
+		on_obj.innerHTML = '<i class="fa-solid fa-toggle-on"></i>'
 		document.body.className = 'onbg'
 	}else{
-		on_obj.innerText = "ON"
+		on_obj.innerHTML = '<i class="fa-solid fa-toggle-off"></i>'
 		document.body.className = 'offbg'
 	}
 
@@ -66,6 +66,8 @@ search_words_obj.onkeydown = async (e) => {
 		changeInput = true
 	}
 
+	let tabId = await getTabId();
+
 	switch(e.key){
 	case 'Enter':
 		if(e.ctrlKey){
@@ -85,7 +87,7 @@ search_words_obj.onkeydown = async (e) => {
 			var url = getGoogleSearchURL(search_swords)
 			if(e.shiftKey){
 				// 新しいタブでgoogle検索
-				inject('window.open("'+url+'")')
+				executeFunc((url) => {window.open(url)}, [url], tabId)
 			}else{
 				changeURL(url)
 			}
@@ -98,9 +100,9 @@ search_words_obj.onkeydown = async (e) => {
 		}
 
 		if(e.shiftKey){
-			inject('scrollFocusPrev("itel-highlight","itel-selected")')
+			executeFunc(() => {scrollFocusPrev("itel-highlight","itel-selected")}, [], tabId)
 		} else {
-			inject('scrollFocusNext("itel-highlight","itel-selected")')
+			executeFunc(() => {scrollFocusNext("itel-highlight","itel-selected")}, [], tabId)
 		}
 		break
 	case 'ArrowUp':
@@ -184,7 +186,8 @@ function updateAll(){
 		storageSetWords(swords, true)
 		var words:Words = await getWords()
 
-		await executeHighlight(swords)
+		let tabId = await getTabId();
+		await executeHighlightAuto(swords, tabId)
 
 		updateButtons()
 		ok(null)
@@ -199,11 +202,11 @@ function updateAllTimeout(time:number){
 var btn_list_obj = document.getElementById('btn_list')
 async function updateButtons(){
 	var words:Words = await getWords()
+	let tabId = await getTabId();
 
 	btn_list_obj.innerText = ''
 	for(let n = 0; n < words.array.length; n++){
 		let word = words.array[n]
-
 		// ハイライト用の移動ボタン定義
 		let btn = <HTMLInputElement> document.createElement('button')
 		btn.className = 'btn'
@@ -219,15 +222,15 @@ async function updateButtons(){
 			if(key_event.ctrlKey){
 				var url = getGoogleSearchURL([word.origin])
 				if(key_event.shiftKey){
-					inject('window.open("'+url+'")')
+					executeFunc((url) => {window.open(url)}, [url], tabId)
 				}else{
 					changeURL(url)
 				}
 			}
 			if(key_event.shiftKey){
-				inject('scrollFocusPrevWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
+				executeFunc((word_origin,word_regbool) => {scrollFocusPrevWord(word_origin, "itel-highlight", "itel-selected", word_regbool)}, [word.origin, word.regbool], tabId)
 			}else{
-				inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
+				executeFunc((word_origin,word_regbool) => {scrollFocusNextWord(word_origin, "itel-highlight", "itel-selected", word_regbool)}, [word.origin, word.regbool], tabId)
 			}
 			search_words_obj.focus()
 		}
@@ -236,10 +239,10 @@ async function updateButtons(){
 			if (y != 0) {
 				if (y <= 1) {
 					// 上スクロール
-					inject('scrollFocusPrevWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
+					executeFunc((word_origin,word_regbool) => {scrollFocusPrevWord(word_origin, "itel-highlight", "itel-selected", word_regbool)}, [word.origin, word.regbool], tabId)
 				} else {
 					// 下スクロール
-					inject('scrollFocusNextWord('+JSON.stringify(word.origin)+', "itel-highlight", "itel-selected", '+word.regbool+')')
+					executeFunc((word_origin,word_regbool) => {scrollFocusNextWord(word_origin, "itel-highlight", "itel-selected", word_regbool)}, [word.origin, word.regbool], tabId)
 				}
 			}
 		})

@@ -362,11 +362,13 @@ var initedGSflag = false;
 
 // 検索結果をハイライトする処理
 function itel_main(search_words:string, enabled:boolean){
-	var span = document.createElement('span')
-	span.id = 'isear-executed'
-	span.innerText = 'true'
-	span.style.display = 'none'
-	document.body.appendChild(span)
+	if (!document.getElementById('isear-executed')) {
+		var span = document.createElement('span')
+		span.id = 'isear-executed'
+		span.innerText = 'true'
+		span.style.display = 'none'
+		document.body.appendChild(span)
+	}
 
 	if (!initedGSflag) {
 		initGlobalStorage()

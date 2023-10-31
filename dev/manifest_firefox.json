@@ -1,9 +1,9 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
 
   "name": "isear",
   "description": "複数ワードに対応したページ内検索ツール",
-  "version": "1.104",
+  "version": "2.1",
 
   "commands": {
     "_execute_browser_action": {
@@ -33,12 +33,12 @@
   },
 
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   },
   "options_ui": {
     "page": "option.html"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "data/icons/icon32.png",
     "default_popup": "popup.html"
   },
@@ -48,8 +48,10 @@
     "48": "data/icons/icon32.png"
   },
   "permissions": [
-    "tabs", "storage", "contextMenus",
+    "tabs", "storage", "contextMenus", "scripting", "activeTab"
+  ],
+  "host_permissions" : [
     "http://*/*", "https://*/*", "file:///*/*"
   ],
-  "homepage_url": "http://isear.intelfike.net/"
+  "homepage_url": "https://isear.intelfike.net/"
 }

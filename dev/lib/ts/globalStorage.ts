@@ -4,7 +4,7 @@ class GlobalStorage{
 	}
 	getItem(key){
 		return new Promise(async ok => {
-			let val = storageGet(key)
+			let val = await storageGet(key)
 			ok(val)
 		})
 	}

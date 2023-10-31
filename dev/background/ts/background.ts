@@ -27,8 +27,8 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 
 	// 設定を反映
 	// コマンドモード
-	var command_mode = await storageGet('command_mode')
-	await executeCode('command_mode = ' + command_mode, tabId)
+	var command_mode = await storageGet('command_mode', false)
+	await executeFunc((_command_mode) => {command_mode = _command_mode}, [command_mode], tabId)
 	// ブラックリスト用のテキストを更新
 	var hl_mode = await hlGetSiteMode()
 	var STRING = getSTRING()
@@ -49,30 +49,55 @@ browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab)
 	if(changeInfo.status == 'complete'){
 		executeAllSequence(tabId, tab.url)
 		// 設定を反映
-		var command_mode = await storageGet('command_mode')
-		await executeCode('command_mode = ' + command_mode, tabId)
+		var command_mode = await storageGet('command_mode', false)
+		await executeFunc((_command_mode) => {command_mode = _command_mode}, [command_mode], tabId)
 		return
 	}
 })
 // ハイライトのためのすべての手順を実行する
 async function executeAllSequence(tabId, url) {
-	var injected = await executeCode('document.getElementById("isear-executed")', tabId)
-	if (typeof injected == 'undefined' || !injected[0]) {
+	var enb:boolean = true
+
+	// ハイライトのブラックリストを適用
+	var curURL = await getURL()
+	var list = await storageGet('hl_blacklist', {}, true)
+	for (const reg in list) {
+		if (new RegExp(reg).test(curURL)) {
+			enb = list[reg] && enb // 基本falseを代入
+		}
+	}
+	if (!enb) {
+		return
+	}
+
+	var injected = await executeFunc(() => {
+		if (document.getElementById("isear-executed")) {
+			return true
+		}
+		return false
+	}, [], tabId)
+	if (!injected) {
 		await executeFile('inject.js', tabId)
-		browser.tabs.insertCSS(null, {
-			file: 'style.css',
+		browser.scripting.insertCSS({
+		   target: { tabId: tabId },
+		   files: ["style.css"],
 		})
 	}
 
 	await saveGoogleSearchWords(tabId, url)
 	await highlighting(tabId)
-	browser.runtime.sendMessage({name: 'done highlight'})
+	browser.runtime.sendMessage({name: 'done highlight'}).catch((error)=> {
+		// エラー処理
+	})
 }
 async function highlighting(tabId:number){
 	var swords:string = await storageGetWords()
 	var words_nums = await executeHighlightAuto(swords, tabId)
 }
-
+async function kill_highlighting(tabId:number){
+	var swords:string = await storageGetWords()
+	var words_nums = await executeHighlight(swords, true, tabId)
+}
 
 browser.tabs.onRemoved.addListener(async function(tabId:number){
 	storageRemove(saveWordsPrefix+tabId)

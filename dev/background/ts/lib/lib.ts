@@ -7,12 +7,12 @@ function clear_words(){
 }
 function toggle_bars():Promise<boolean>{
 	return new Promise(async (ok)=>{
-		var sb = await executeCode('showBars')
+		var sb = await executeFunc(() => {return showBars})
 		sb = !sb[0]
-		await executeCode('showBars = ' + sb)
+		await executeFunc((sb) => {showBars = sb}, [sb])
 		var swords:string = await storageGetWords()
 		var words:Words = new Words(swords)
-		await executeCode('barsVisible('+words.array.length+', '+sb+')')
+		await executeFunc((wards_length, sb) => {barsVisible(wards_length, sb)}, [words.array.length, sb])
 		await storageSet('show_bar', sb, true)
 		ok(sb)
 	})

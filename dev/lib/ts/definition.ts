@@ -93,6 +93,7 @@ class Word{
 				return
 			}
 		}else{
+			this.regbool = false
 			if(!/^"[^"]+"$|^'[^']+'$/g.test(sword)){
 				sword = sword.replace(/[()]/g,'')
 			}

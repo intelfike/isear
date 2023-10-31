@@ -36,28 +36,30 @@
 			width: 100%;
 		}
 		button#on{
-			width: 60px;
+/*			width: 60px;*/
 		}
 		button:disabled {
 			background-color: #DDD !important;
 		}
 	</style>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link rel="stylesheet" href="data/bootstrap-5.3.0-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="data/fontawesome-free-6.4.2-web/css/fontawesome.min.css">
+	<link rel="stylesheet" href="data/fontawesome-free-6.4.2-web/css/solid.min.css">
 </head>
 <body>
 	<div>
 		<div id="checks">
 		</div>
 		<div id="search">
-			<input class="form-control" type="text" id="search_words" tabIndex="1" lang-set="textbox-placeholder">
+			<input class="form-control" type="text" id="search_words" title="Ctrl+EnterでGoogle検索" tabIndex="1" lang-set="textbox-placeholder">
 			<button id="addtemplate" style="display:none;">+</button>
-			<button id="retry">⭮</button>
-			<button id="on" class="btn">ON</button>
+			<button id="retry" class="btn btn-light" title="再検索"><i class="fa-solid fa-rotate-right"></i></button>
+			<button id="on" class="btn btn-light" title="ON/OFF切り替え"><i class="fa-solid fa-toggle-on"></i></button>
 		</div>
 		<div id="btn_list">
 
 		</div>
 	</div>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap.native@2.0.15/dist/bootstrap-native-v4.min.js"></script>
+	<script type="text/javascript" src="data/bootstrap-5.3.0-dist/js/bootstrap.min.js"></script>
 </body>
 </html>
