@@ -11,31 +11,31 @@ async function setContext() {
 		title: STRINGBG['TOGGLE_HIGHLIGHT']['true'],
 		type: "normal",
 		id: 'toggle_hl',
-		contexts: ['browser_action']
+		contexts: ['action']
 	})
 	browser.contextMenus.create({
 		title: STRINGBG['TOGGLE_HIGHLIGHT_HERE']['true'],
 		type: "normal",
 		id: 'hl_blacklist',
-		contexts: ['browser_action']
+		contexts: ['action']
 	})
 	browser.contextMenus.create({
 		title: STRINGBG['CLEAR_WORDS']['true'],
 		type: "normal",
 		id: 'clear',
-		contexts: ['browser_action']
+		contexts: ['action']
 	})
 	// browser.contextMenus.create({
 	// 	title: STRINGBG['TOGGLE_HIGHLIGHT_BAR']['true'],
 	// 	type: "normal",
 	// 	id: 'toggle_bars',
-	// 	contexts: ['browser_action']
+	// 	contexts: ['action']
 	// })
 	// browser.contextMenus.create({
 	// 	title: STRINGBG['TOGGLE_HIGHLIGHT_BAR_HERE']['true'],
 	// 	type: "normal",
 	// 	id: 'hlbar_blacklist',
-	// 	contexts: ['browser_action']
+	// 	contexts: ['action']
 	// })
 }
 

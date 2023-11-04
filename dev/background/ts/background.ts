@@ -7,7 +7,7 @@ async function popup_unload() {
 		await storageSet('popup_highlight_close', true)
 		await storageSet('enabled', false)
 		await highlighting(tabId)
-	}		
+	}
 }
 
 var tabId;
@@ -33,13 +33,13 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 	var hl_mode = await hlGetSiteMode()
 	var STRING = getSTRING()
 	var hl_title = STRING['background']['TOGGLE_HIGHLIGHT_HERE'][''+hl_mode]
-	chrome.contextMenus.update('hl_blacklist', {
+	browser.contextMenus.update('hl_blacklist', {
 		title: hl_title,
 	})
 
 	var hlbar_mode = await hlbarGetSiteMode()
 	var hlbar_title = STRING['background']['TOGGLE_HIGHLIGHT_BAR_HERE'][''+hlbar_mode]
-	chrome.contextMenus.update('hlbar_blacklist', {
+	browser.contextMenus.update('hlbar_blacklist', {
 		title: hlbar_title,
 	})
 })

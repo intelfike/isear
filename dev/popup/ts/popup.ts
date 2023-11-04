@@ -32,6 +32,12 @@ retry.onclick = async ()=>{
 	retry.disabled = false
 }
 
+const empty = <HTMLInputElement> document.getElementById('empty')
+empty.onclick = ()=>{
+	search_words_obj.focus()
+	search_words_obj.value = ""
+}
+
 // 入力をtrue有効・false無効、デザイン変更
 async function inputsEnable(bool:boolean){
 	if(bool){

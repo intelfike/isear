@@ -90,9 +90,13 @@ function getURL():Promise<string>{
 
 function getSite():Promise<string>{
 	return new Promise(async ok => {
-		var url = await getURL()
-		var site = url.match(/https?:\/\/[^/]+\//g)[0]
-		ok(site)
+		try {
+			var url = await getURL()
+			var site = url.match(/https?:\/\/[^/]+\//g)[0]
+			ok(site)
+		} catch (e) {
+			ok(null)
+		}
 	})
 }
 
@@ -260,12 +264,18 @@ function executeFile(file:string, tabId:number=null):any{
 		if (typeof browser.scripting == 'undefined') {
 			ok(null)
 		}
-		let result = await browser.scripting.executeScript({
-			// target: {tabId: tabId, allFrames: true},
-			target: {tabId: tabId},
-			files: [file],
-		})
-		ok(result)
+		try {
+			let result = await browser.scripting.executeScript({
+				// target: {tabId: tabId, allFrames: true},
+				target: {tabId: tabId},
+				files: [file],
+			})
+			ok(result)
+		} catch (e) {
+			console.log('disabled')
+			ok(null)
+		}
+		ok(null)
 	})
 }
 function executeFunc(func:(...any) => any, args:any[] = [], tabId:number=null):any{
@@ -274,22 +284,32 @@ function executeFunc(func:(...any) => any, args:any[] = [], tabId:number=null):a
 			ok(null)
 		}
 		// console.log(func, args, tabId)
-		if (args && args.length) {
-			let result = await browser.scripting.executeScript({
-				// target: {tabId: tabId, allFrames: true},
-				target: {tabId: tabId},
-				func: func,
-				args: args,
-			})
-			ok(result[0].result)
-		} else {
-			let result = await browser.scripting.executeScript({
-				// target: {tabId: tabId, allFrames: true},
-				target: {tabId: tabId},
-				func: func,
-			})
-			ok(result[0].result)
+		try {
+			if (args && args.length) {
+				let result = await browser.scripting.executeScript({
+					// target: {tabId: tabId, allFrames: true},
+					target: {tabId: tabId},
+					func: func,
+					args: args,
+				})
+				if (typeof result[0].result !== 'undefined') {
+					ok(result[0].result)
+				}
+			} else {
+				let result = await browser.scripting.executeScript({
+					// target: {tabId: tabId, allFrames: true},
+					target: {tabId: tabId},
+					func: func,
+				})
+				if (typeof result[0].result !== 'undefined') {
+					ok(result[0].result)
+				}
+			}
+		} catch (e) {
+			console.log('disabled')
+			ok(null)
 		}
+		ok(null)
 	})
 }
 
@@ -309,8 +329,11 @@ async function extensionEnable(bool:boolean){
 		await storageSet('enabled', bool)
 		var swords:string = await storageGetWords()
 		let tabId = await getTabId()
+		console.log(bool)
 		await executeHighlight(swords, bool, tabId)
+		console.log('test')
 		autoSetIcon()
+		console.log('test2')
 		ok(null)
 	})
 }
@@ -318,11 +341,11 @@ async function extensionEnable(bool:boolean){
 
 
 function setIcon(icon:string){
-	if (typeof chrome.browserAction == 'undefined') {
+	if (typeof chrome.action == 'undefined') {
 		return
 	}
-	if (chrome.browserAction.hasOwnProperty('setIcon')) {
-		chrome.browserAction.setIcon({path:icon})
+	if (chrome.action.hasOwnProperty('setIcon')) {
+		chrome.action.setIcon({path:icon})
 	}
 }
 
