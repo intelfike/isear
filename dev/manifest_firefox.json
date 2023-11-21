@@ -57,7 +57,7 @@
     "tabs", "storage", "contextMenus", "scripting", "activeTab"
   ],
   "host_permissions" : [
-    "http://*/*", "https://*/*", "file:///*/*"
+    "*://*/*", "<all_urls>"
   ],
   "homepage_url": "https://isear.intelfike.net/"
 }

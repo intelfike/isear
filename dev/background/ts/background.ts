@@ -107,25 +107,30 @@ browser.tabs.onRemoved.addListener(async function(tabId:number){
 // google検索ワードをストレージに保存する
 function saveGoogleSearchWords(tabId, url){
 	return new Promise(async ok => {
-		var gw = await storageGet('google_words', true, true)
-		if(!gw){
-			ok(null)
-			return
-		}
-		if(url.indexOf('www.google') == -1){
-			ok(null)
-			return
-		}
-		if(!/[?&]q=/g.test(url)){
-			ok(null)
-			return
-		}
-		var q:string = url.match(/q=[^&]+/g)[0]
-		q = q.substr(2)
-		q = decodeURIComponent(q)
+		try {
+			var gw = await storageGet('google_words', true, true)
+			if(!gw){
+				ok(null)
+				return
+			}
+			if(url.indexOf('www.google') == -1){
+				ok(null)
+				return
+			}
+			if(!/[?&]q=/g.test(url)){
+				ok(null)
+				return
+			}
+			var q:string = url.match(/q=[^&#]+/g)[0]
+			q = q.substr(2)
+			q = decodeURIComponent(q)
 
-		var swords = q.split('+').join(' ')
-		await storageSetWords(swords, true, tabId)
-		ok(null)
+			var swords = q.split('+').join(' ')
+			await storageSetWords(swords, true, tabId)
+			ok(null)
+		} catch (e) {
+			console.log(e)
+			ok(null)
+		}
 	})
 }

@@ -3,6 +3,9 @@ var changeInput = false
 // === on/offボタンクリック時の処理
 const on_obj = <HTMLInputElement> document.getElementById('on')
 on_obj.onclick = async ()=>{
+	// 権限を要求
+	browser.permissions.request({permissions:['tabs','scripting']})
+
 	on_obj.disabled = true
 	var enabled:boolean = on_obj.innerHTML == '<i class="fa-solid fa-toggle-off"></i>'
 	await extensionEnable(enabled)
@@ -169,34 +172,44 @@ function getSwords():string{
 }
 function getWords():Promise<Words>{
 	return new Promise(async ok => {
-		var swords:string = getSwords()
-		var words:Words = new Words(swords)
-		// ボタンの個数を取得
-		var words_nums:{[key:string]:number;} = await storageGetNum()
-		for(let sword in words_nums){
-			let num = words_nums[sword]
-			let word = words.map[sword]
-			if(word == undefined){
-				continue
+		try {
+			var swords:string = getSwords()
+			var words:Words = new Words(swords)
+			// ボタンの個数を取得
+			var words_nums:{[key:string]:number;} = await storageGetNum()
+			for(let sword in words_nums){
+				let num = words_nums[sword]
+				let word = words.map[sword]
+				if(word == undefined){
+					continue
+				}
+				word.count.num = num
 			}
-			word.count.num = num
+			ok(words)
+		} catch (e) {
+			console.log(e)
+			ok(null)
 		}
-		ok(words)
 	})
 }
 
 // 画面を全てアップデートする
 function updateAll(){
 	return new Promise(async ok => {
-		var swords:string = getSwords()
-		storageSetWords(swords, true)
-		var words:Words = await getWords()
+		try {
+			var swords:string = getSwords()
+			storageSetWords(swords, true)
+			var words:Words = await getWords()
 
-		let tabId = await getTabId();
-		await executeHighlightAuto(swords, tabId)
+			let tabId = await getTabId();
+			await executeHighlightAuto(swords, tabId)
 
-		updateButtons()
-		ok(null)
+			updateButtons()
+			ok(null)
+		} catch (e) {
+			console.log(e)
+			ok(null)
+		}
 	})
 }
 // 頻繁な更新対策
@@ -345,20 +358,25 @@ function bodyKeyDownEvent(enabled:boolean){
 
 function remind(swords:string){
 	return new Promise(async ok=>{
-		bgColors = await getBgColor()
+		try {
+			bgColors = await getBgColor()
 
-		if(swords == undefined){
-			ok(null)
-			return
-		}
-		if(swords.length == 0){
-			ok(null)
-			return
-		}
+			if(swords == undefined){
+				ok(null)
+				return
+			}
+			if(swords.length == 0){
+				ok(null)
+				return
+			}
 
-		search_words_obj.value = swords + ' '
-		
-		ok(null)
+			search_words_obj.value = swords + ' '
+			
+			ok(null)
+		} catch (e) {
+			console.log(e)
+			ok(null)
+		}
 	})
 }
 
