@@ -1,6 +1,5 @@
 *.js
 *.zip
-/build/
-/deploy/
+/chrome/
 /firefox/
 node_modules/*

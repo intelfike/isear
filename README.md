@@ -64,20 +64,24 @@ Exceeded "Google Toolbar" in the page search.<br>
 git clone https://github.com/intelfike/isear
 cd isear
 # 開発環境をセットアップ
-./setup.bash
+bash ./setup.bash
 cd dev
-# プロジェクト直下に実行可能なbuildディレクトリを作成
-./build.bash
-# アップロード可能な状態に最適化 zip、xpi作成
-./deploy.bash
+# プロジェクト直下に実行可能なbuildディレクトリを作成 zip、xpi作成
+bash ./build.bash
 ```
+
+## 出力
+
+chrome/build/*
+chrome/isear.zip
+firefox/build/*
+firefox/isear.xpi
 
 # LICENSE
 ## GPLv2
 コードの書き換えは自由です。ただ、書き換えたツールを公開する場合、そのコードをツールのユーザーが見れる形にしてください。<br>
 また、強制はしませんが intelfike@gmail.com まで通知していただけるとありがたいです。<br>
 <b>&copy;2017.10- intelfike(domain:intelf.link, intelfike.*)</b>
-
 ## Thanks
 これらのソースコード等はリポジトリ、公開するツールには含まれておりません。
 コンパイル、トランスパイル、エラーチェック等にのみ利用しております。

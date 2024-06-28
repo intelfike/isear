@@ -1,5 +1,3 @@
-var changeInput = false
-
 // === on/offボタンクリック時の処理
 const on_obj = <HTMLInputElement> document.getElementById('on')
 on_obj.onclick = async ()=>{
@@ -31,7 +29,7 @@ addtemplate.onclick = async ()=>{
 const retry = <HTMLInputElement> document.getElementById('retry')
 retry.onclick = async ()=>{
 	retry.disabled = true
-	await updateAll()
+	await updateAll(true)
 	retry.disabled = false
 }
 
@@ -64,6 +62,8 @@ search_words_obj.onkeyup = () => {
 var log_num = 0
 var not_log = ''
 var prev = null
+var changeInput = false
+var isFirstEnter = true
 search_words_obj.onkeydown = async (e) => {
 	// 入力内容にさいが出ていないかチェック
 	if (prev == null){
@@ -102,10 +102,12 @@ search_words_obj.onkeydown = async (e) => {
 			}
 			break
 		}
-		if(changeInput){
+
+		if(changeInput || isFirstEnter){
 			changeInput = false
-			updateAll() // ハイライトを更新するときはハイライトを辿らない
-			return
+			isFirstEnter = false
+			updateAll(true)
+			return // ハイライトを更新するときはハイライトを辿らない
 		}
 
 		if(e.shiftKey){
@@ -194,7 +196,7 @@ function getWords():Promise<Words>{
 }
 
 // 画面を全てアップデートする
-function updateAll(){
+function updateAll(enabled = null){
 	return new Promise(async ok => {
 		try {
 			var swords:string = getSwords()
@@ -202,7 +204,11 @@ function updateAll(){
 			var words:Words = await getWords()
 
 			let tabId = await getTabId();
-			await executeHighlightAuto(swords, tabId)
+			if (enabled === null) {
+				await executeHighlightAuto(swords, tabId)
+			} else {
+				await executeHighlight(swords, enabled, tabId)
+			}
 
 			updateButtons()
 			ok(null)

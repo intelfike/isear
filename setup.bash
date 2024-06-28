@@ -4,8 +4,8 @@ cd `dirname $0`
 # https://nodejs.org/ja
 sudo npm install -g typescript
 sudo npm isntall -g npx
-sudo apt install closure-compiler
-npm install --save google-closure-compiler
+#sudo apt install closure-compiler
+#npm install --save google-closure-compiler
 
 npm install --save-dev @types/chrome
 npm install --save-dev @types/es6-promise

@@ -1,8 +1,8 @@
 echo '@copy manifest.json'
-cp manifest.json ../build/manifest.json
-cp style.css ../build/
+cp manifest.json ../chrome/build/manifest.json
+cp style.css ../chrome/build/
 echo '@copy data'
-cp -r ../data ../build
+cp -r ../data ../chrome/build
 
 echo '@copy manifest.json for firefox'
 cp manifest_firefox.json ../firefox/build/manifest.json

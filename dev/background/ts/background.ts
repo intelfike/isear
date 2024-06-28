@@ -39,9 +39,9 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 
 	var hlbar_mode = await hlbarGetSiteMode()
 	var hlbar_title = STRING['background']['TOGGLE_HIGHLIGHT_BAR_HERE'][''+hlbar_mode]
-	browser.contextMenus.update('hlbar_blacklist', {
-		title: hlbar_title,
-	})
+	// browser.contextMenus.update('hlbar_blacklist', {
+	// 	title: hlbar_title,
+	// })
 })
 
 // ページが更新された時の処理
