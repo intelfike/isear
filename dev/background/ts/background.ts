@@ -1,27 +1,36 @@
 async function popup_unload() {
 	// ポップアップが閉じたときのイベント
-	var enabled:boolean = await storageGet('enabled', true)
+	var enabled:boolean = await getEnabled()
 	var ph:boolean = await storageGet('popup_highlight', false, true)
 	if (enabled && ph) {
 		// ポップアップ時のみハイライト
 		await storageSet('popup_highlight_close', true)
-		await storageSet('enabled', false)
+		await extensionEnable(false)
 		await highlighting(tabId)
 	}
 }
 
 var tabId;
 browser.tabs.onActivated.addListener(async function(activeInfo){
+	let url = await getURL()
+	if (/^chrome:\/\//.test(url)) {
+		return
+	}
+	// アイコン反映
+	autoSetIcon()
 	// ==============================
 	//  ハイライトを再度実行する
 	// ==============================
 	// 毎度実行するから重いかも？
 	tabId = activeInfo.tabId
-	executeAllSequence(tabId, await getURL())
+	executeAllSequence(tabId, url)
 
 	// ==============================
 	//  タブごとの設定を反映し直す
 	// ==============================
+	var enb:boolean = await getEnabled() // 直前の拡張機能の状態を取得
+	await storageSet('enabled', enb) // 最後のハイライト状態を維持するよう、現在の状態を記録
+
 	var swords = await storageGetWords()
 	await storageSetWords(swords)
 
@@ -44,6 +53,12 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 	// })
 })
 
+browser.tabs.onCreated.addListener(async function(tabId:number){
+	// もとのタブの設定をコピーする
+	var enb:boolean = await storageGet('enabled', true) // 直前の拡張機能の状態を取得
+	console.log(enb)
+	extensionEnable(enb) // 最後のハイライト状態を維持するよう、現在の状態を記録
+})
 // ページが更新された時の処理
 browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab){
 	if(changeInfo.status == 'complete'){
@@ -54,6 +69,11 @@ browser.tabs.onUpdated.addListener(async function(tabId:number, changeInfo, tab)
 		return
 	}
 })
+browser.tabs.onRemoved.addListener(async function(tabId:number){
+	storageRemove(saveWordsPrefix+tabId)
+	storageRemove(saveNumPrefix+tabId)
+})
+
 // ハイライトのためのすべての手順を実行する
 async function executeAllSequence(tabId, url) {
 	var enb:boolean = true
@@ -98,11 +118,6 @@ async function kill_highlighting(tabId:number){
 	var swords:string = await storageGetWords()
 	var words_nums = await executeHighlight(swords, true, tabId)
 }
-
-browser.tabs.onRemoved.addListener(async function(tabId:number){
-	storageRemove(saveWordsPrefix+tabId)
-	storageRemove(saveNumPrefix+tabId)
-})
 
 // google検索ワードをストレージに保存する
 function saveGoogleSearchWords(tabId, url){

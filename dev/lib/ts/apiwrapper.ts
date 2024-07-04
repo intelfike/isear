@@ -1,9 +1,86 @@
+// trueで拡張機能を有効にする
+async function extensionEnable(bool:boolean){
+	return new Promise(async ok => {
+		try {
+			await storageSet('enabled', bool)
+
+			// タブごとに有効記録
+			let enabled_tab_list = await storageGet('enabled_tab_list', {})
+			let tabId = await getTabId();
+			enabled_tab_list[tabId] = bool
+			await storageSet('enabled_tab_list', enabled_tab_list)
+			// ホストごとに有効記録
+			let enabled_host_list = await storageGet('enabled_host_list', {}, true)
+			let host = ''
+			try {
+				let url = await getURL()
+				if (url) {
+					host = new URL(url).host
+				}
+			} catch (e) {}
+			enabled_host_list[host] = bool
+			await storageSet('enabled_host_list', enabled_host_list, true)
+
+			var swords:string = await storageGetWords()
+			// console.log(bool)
+			await executeHighlight(swords, bool, tabId)
+			// console.log('test')
+			autoSetIcon()
+			// console.log('test2')
+			ok(null)
+		} catch (e) {
+			console.log(e)
+			ok(null)
+		}
+	})
+}
+// 有効かどうか取得する
+function getEnabled():Promise<boolean>{
+	return new Promise(async ok=>{
+		try {
+			let host = ''
+			try {
+				let url = await getURL()
+				if (url) {
+					host = new URL(url).host
+				}
+			} catch (e) {}
+
+			// youtubeは無効
+			if (/youtube\.com/.test(host)) {
+				ok(false)
+				return
+			}
+			// var enb:boolean = await storageGet('enabled', true)
+			var enabled:boolean = true
+			let enabled_tab_list = await storageGet('enabled_tab_list', {})
+			let tabId = await getTabId();
+			if (tabId in enabled_tab_list) {
+				enabled = enabled_tab_list[tabId]
+			} else {
+				// ホストごとに有効判定
+				let enabled_host_list = await storageGet('enabled_host_list', {}, true)
+				if (host in enabled_host_list) {
+					enabled = enabled_host_list[host]
+				}
+			}
+
+			ok(enabled)
+		} catch (e) {
+			console.log(e)
+			ok(true)
+		}
+	})
+}
 
 // swordは原文を渡す
 function executeHighlightAuto(swords:string, tabId:number=null){
 	return new Promise(async ok=>{
 		try {
-			var enb:boolean = await storageGet('enabled', true)
+			// var enb:boolean = await storageGet('enabled', true)
+
+			// ホストごとに有効判定
+			var enb:boolean = await getEnabled()
 
 			// ハイライトのブラックリストを適用
 			var curURL = await getURL()
@@ -25,6 +102,8 @@ function executeHighlightAuto(swords:string, tabId:number=null){
 function executeHighlight(swords:string, enabled=true, tabId:number=null){
 	return new Promise(async ok=>{
 		try {
+			autoSetIcon()
+
 			// ページに値を渡す処理
 			bgColors = await getBgColor()
 
@@ -351,7 +430,7 @@ function executeFile(file:string, tabId:number=null):any{
 				target: {tabId: tabId},
 				files: [file],
 			})
-			if (result && result.length && typeof result[0].result !== 'undefined') {
+			if (result && result.length && 0 in result && typeof result[0].result !== 'undefined') {
 				ok(result[0].result)
 			}
 			ok(null)
@@ -376,7 +455,7 @@ function executeFunc(func:(...any) => any, args:any[] = [], tabId:number=null):a
 					func: func,
 					args: args,
 				})
-				if (result && result.length && typeof result[0].result !== 'undefined') {
+				if (result && result.length && 0 in result && typeof result[0].result !== 'undefined') {
 					ok(result[0].result)
 				}
 			} else {
@@ -385,7 +464,7 @@ function executeFunc(func:(...any) => any, args:any[] = [], tabId:number=null):a
 					target: {tabId: tabId},
 					func: func,
 				})
-				if (result && result.length && typeof result[0].result !== 'undefined') {
+				if (result && result.length && 0 in result && typeof result[0].result !== 'undefined') {
 					ok(result[0].result)
 				}
 			}
@@ -401,30 +480,10 @@ function executeFunc(func:(...any) => any, args:any[] = [], tabId:number=null):a
 async function toggleEnable():Promise<boolean>{
 	return new Promise(async ok => {
 		try {
-			var bool:boolean = await storageGet('enabled', true)
+			var bool:boolean = await getEnabled()
 			bool = !bool
 			extensionEnable(bool)
 			ok(bool)
-		} catch (e) {
-			console.log(e)
-			ok(null)
-		}
-	})
-}
-
-// trueで拡張機能を有効にする
-async function extensionEnable(bool:boolean){
-	return new Promise(async ok => {
-		try {
-			await storageSet('enabled', bool)
-			var swords:string = await storageGetWords()
-			let tabId = await getTabId()
-			console.log(bool)
-			await executeHighlight(swords, bool, tabId)
-			console.log('test')
-			autoSetIcon()
-			console.log('test2')
-			ok(null)
 		} catch (e) {
 			console.log(e)
 			ok(null)
@@ -450,8 +509,11 @@ async function autoSetIcon(){
 	if(command_mode){
 		icon = 'data/icons/icon32command.png'
 	}
-	var enabled = await storageGet('enabled', false)
-	if(!enabled){
+	// var enabled = await storageGet('enabled', false)
+	// ホストごとに有効判定
+	var enb:boolean = await getEnabled()
+
+	if(!enb){
 		icon = 'data/icons/icon32grey.png'
 	}
 	setIcon(icon)

@@ -21,7 +21,8 @@ rm -f isear.zip
 zip -rq isear.zip build
 
 echo '=== firefox ==='
-echo '#create isear.xpi'
+echo '#create isear.zip'
 cd ../firefox
-rm -f isear.xpi
-zip -rq isear.xpi build
+rm -f isear.zip
+cd build
+zip -rq ../isear.zip *

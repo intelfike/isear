@@ -154,7 +154,7 @@ browser.runtime.onMessage.addListener(async function(request, sender, sendRespon
 	if(request.name != 'done highlight'){
 		return
 	}
-	var enabled = await storageGet('enabled', true)
+	var enabled = await getEnabled()
 	if(enabled){
 		updateButtons()
 	}
@@ -286,7 +286,7 @@ document.body.onload = async ()=>{
 		en: 'Enter: Search on Page',
 	})
 
-	var enabled:boolean = await storageGet('enabled', true)
+	var enabled:boolean = await getEnabled()
 
 	var ph:boolean = await storageGet('popup_highlight', false, true)
 	var pc:boolean = await storageGet('popup_highlight_close', false)

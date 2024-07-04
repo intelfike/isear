@@ -3,11 +3,11 @@
 
   "name": "isear",
   "description": "複数ワードに対応したページ内検索ツール",
-  "version": "2.2",
+  "version": "2.4",
 
   "browser_specific_settings" : {
     "gecko" : {
-      "id" : "{12da8ae9-9ce8-593e-35a0-339e213bbb80}"
+      "id" : "{89f9c1e3-ca33-424e-81db-6dfcec3337b8}"
     }
   },
 
