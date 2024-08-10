@@ -178,6 +178,7 @@ function removeMbox(){
 function createTops(word:Word, location:number, range:number){
 	var topsContainer = document.createElement('isearcont')
 	topsContainer.id = 'isear-tops-container'
+	var df = document.createDocumentFragment();
 	for (let n = word.elems.length - 1; n >= 0; n--) {
 		let obj = word.elems[n]
 		
@@ -200,8 +201,9 @@ function createTops(word:Word, location:number, range:number){
 			visibility = 'hidden'
 		}
 		d.style.visibility = visibility
-		topsContainer.appendChild(d)
+		df.appendChild(d)
 	}
+	topsContainer.appendChild(df)
 	document.body.appendChild(topsContainer)
 }
 function removeTops(){

@@ -71,16 +71,23 @@ function replace_auto(dest:any, word:Word, className:string){
 		newObj.style.backgroundColor = word.bgColor
 		newObj.appendChild(middle_tn)
 
-		var parent = obj.parentNode
-		parent.replaceChild(suffix_tn, obj)
-		parent.insertBefore(prefix_tn, suffix_tn)
-		parent.insertBefore(newObj, suffix_tn)
+		// DocumentFragmentによる軽量化
+		var df = document.createDocumentFragment();
+		df.appendChild(prefix_tn)
+		df.appendChild(newObj)
+		df.appendChild(suffix_tn)
+		obj.parentNode.replaceChild(df, obj)
+
+		// var parent = obj.parentNode
+		// parent.replaceChild(suffix_tn, obj)
+		// parent.insertBefore(prefix_tn, suffix_tn)
+		// parent.insertBefore(newObj, suffix_tn)
 
 		// ハイライト位置くん
-		newObj = document.getElementById('isear-'+icnt)
-		if(newObj == null){
-			return
-		}
+		// newObj = document.getElementById('isear-'+icnt)
+		// if(newObj == null){
+		// 	return
+		// }
 		word.elems.push(newObj)
 		word.count.num++
 
@@ -458,61 +465,62 @@ function defineEvents(words:Words, enabled:boolean){
 		}, 100)
 	}
 
-	observer.disconnect()
-	if(auto_update && gstatus.enabled){
-		observer.observe(document.body, def_option);
-	}
+	// observer.disconnect()
+	// if(auto_update && gstatus.enabled){
+	// 	observer.observe(document.body, def_option);
+	// }
 }
 // オブザーバーに検知されないDOM操作
-var observer = new MutationObserver(function (MutationRecords, MutationObserver) {
-	var mutation = MutationRecords[0]
+// var observer = new MutationObserver(function (MutationRecords, MutationObserver) {
+// 	var mutation = MutationRecords[0]
 
-	if (mutation.type=="characterData" && mutation.addedNodes.length != 0) {
-		let f = function(node:HTMLElement) {
-			whereTimeout('ハイライト更新', ()=>{
-				if (node.nodeType == 1){
-					if(node.className.indexOf('itel') != -1 ||
-						node.className.indexOf('isear') != -1 ||
-						node.id.indexOf('itel') != -1 ||
-						node.id.indexOf('isear') != -1){
-						return
-					}
-				}
-				let parent_tmp = node
-				for (;true;) {
-					if (parent_tmp.nodeType == 1) {
-						if(isEditable(parent_tmp) || isHidden(parent_tmp)){
-							// 表示されないタグ、編集可能なタグは除外
-							return
-						}
-					}
-					parent_tmp = parent_tmp.parentElement
-					if (parent_tmp == null) {
-						break
-					}
-				}
-				silentRun(function(){
-					highlight_all(node, gstatus.words)
-					window.onresize(null)
-				})
-			}, 1000)
-		}
-		f(<HTMLElement>mutation.target)
-		mutation.addedNodes.forEach(function(node:HTMLElement) {f(node)}, 1000) // 最後の更新から１秒以上経過したら
-	};
-});
+// 	if (mutation.type=="characterData" && mutation.addedNodes.length != 0) {
+// 		let f = function(node:HTMLElement) {
+// 			whereTimeout('ハイライト更新', ()=>{
+// 				if (node.nodeType == 1){
+// 					if(node.className.indexOf('itel') != -1 ||
+// 						node.className.indexOf('isear') != -1 ||
+// 						node.id.indexOf('itel') != -1 ||
+// 						node.id.indexOf('isear') != -1){
+// 						return
+// 					}
+// 				}
+// 				let parent_tmp = node
+// 				for (;true;) {
+// 					if (parent_tmp.nodeType == 1) {
+// 						if(isEditable(parent_tmp) || isHidden(parent_tmp)){
+// 							// 表示されないタグ、編集可能なタグは除外
+// 							return
+// 						}
+// 					}
+// 					parent_tmp = parent_tmp.parentElement
+// 					if (parent_tmp == null) {
+// 						break
+// 					}
+// 				}
+// 				silentRun(function(){
+// 					highlight_all(node, gstatus.words)
+// 					window.onresize(null)
+// 				})
+// 			}, 1000)
+// 		}
+// 		f(<HTMLElement>mutation.target)
+// 		mutation.addedNodes.forEach(function(node:HTMLElement) {f(node)}, 1000) // 最後の更新から１秒以上経過したら
+// 	};
+// });
 
 // DOMの変更を監視せず関数を実行する
+// やっぱりなし
 function silentRun(f){
-	if(auto_update && gstatus.enabled && observer != null){
-		// 監視が有効であれば、一旦監視を中止してから実行する
-		observer.disconnect()
-		f()
-		observer.observe(document.body, def_option)
-	} else {
+	// if(auto_update && gstatus.enabled && observer != null){
+	// 	// 監視が有効であれば、一旦監視を中止してから実行する
+	// 	observer.disconnect()
+	// 	f()
+	// 	observer.observe(document.body, def_option)
+	// } else {
 		// 監視が無効であれば、そのまま実行する
 		f()
-	}
+	// }
 }
 
 // すべての isear の DOM を削除する

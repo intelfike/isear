@@ -289,11 +289,12 @@ document.body.onload = async ()=>{
 	var enabled:boolean = await getEnabled()
 
 	var ph:boolean = await storageGet('popup_highlight', false, true)
-	var pc:boolean = await storageGet('popup_highlight_close', false)
-	if (ph && pc) {
+	// var pc:boolean = await storageGet('popup_highlight_close', false)
+	// if (ph && pc) {
+	if (ph) {
 		// ポップアップ時のみハイライト 復帰
-		await storageSet('popup_highlight_close', false)
-		await extensionEnable(true)
+		// await storageSet('popup_highlight_close', false)
+		// await extensionEnable(true)
 		enabled = true
 	}
 
@@ -322,16 +323,17 @@ document.body.onload = async ()=>{
 	}
 
 
-	if (changeInput) {
-		updateAll()
+	if (ph || changeInput) {
+		updateAll(enabled)
 	}
+
 }
 
-var background = chrome.extension.getBackgroundPage();
-addEventListener("unload", function (event) {
-	// ポップアップを閉じたときの処理
-    background.popup_unload()
-}, true);
+// window.addEventListener('unload', function(ev){
+// 	// ポップアップを閉じたときの処理
+// 	// browser.runtime.sendMessage({ name: 'popup_unload', message: '' })
+// 	sendMessage('popup_unload')
+// }, false);
 
 function bodyKeyDownEvent(enabled:boolean){
 	document.body.onkeydown = async (e)=>{

@@ -1,15 +1,3 @@
-async function popup_unload() {
-	// ポップアップが閉じたときのイベント
-	var enabled:boolean = await getEnabled()
-	var ph:boolean = await storageGet('popup_highlight', false, true)
-	if (enabled && ph) {
-		// ポップアップ時のみハイライト
-		await storageSet('popup_highlight_close', true)
-		await extensionEnable(false)
-		await highlighting(tabId)
-	}
-}
-
 var tabId;
 browser.tabs.onActivated.addListener(async function(activeInfo){
 	let url = await getURL()
@@ -78,6 +66,7 @@ browser.tabs.onRemoved.addListener(async function(tabId:number){
 async function executeAllSequence(tabId, url) {
 	var enb:boolean = true
 
+
 	// ハイライトのブラックリストを適用
 	var curURL = await getURL()
 	var list = await storageGet('hl_blacklist', {}, true)
@@ -105,6 +94,13 @@ async function executeAllSequence(tabId, url) {
 	}
 
 	await saveGoogleSearchWords(tabId, url)
+
+	// popup時にハイライトする場合、実行しない
+	var ph:boolean = await storageGet('popup_highlight', false, true)
+	if (ph) {
+		return
+	}
+
 	await highlighting(tabId)
 	browser.runtime.sendMessage({name: 'done highlight'}).catch((error)=> {
 		// エラー処理
@@ -116,7 +112,7 @@ async function highlighting(tabId:number){
 }
 async function kill_highlighting(tabId:number){
 	var swords:string = await storageGetWords()
-	var words_nums = await executeHighlight(swords, true, tabId)
+	var words_nums = await executeHighlight(swords, false, tabId)
 }
 
 // google検索ワードをストレージに保存する

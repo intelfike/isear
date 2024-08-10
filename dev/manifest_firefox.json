@@ -3,7 +3,7 @@
 
   "name": "isear",
   "description": "複数ワードに対応したページ内検索ツール",
-  "version": "2.4",
+  "version": "2.5",
 
   "browser_specific_settings" : {
     "gecko" : {

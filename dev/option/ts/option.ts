@@ -10,7 +10,7 @@ const lang_data = {
 		},
 		detail : {
 			en : 'Color seggings for HighLights. Useful Drag & Drop(chrome)',
-			ja : 'ハイライトで利用される色を設定します。',
+			ja : 'ハイライトで利用される色を設定します。(ドラッグ＆ドロップで入れ替え)',
 		},
 		normal : {
 			en : 'normal',

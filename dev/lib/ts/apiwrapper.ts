@@ -1,29 +1,29 @@
 // trueで拡張機能を有効にする
-async function extensionEnable(bool:boolean){
+async function extensionEnable(enb:boolean){
 	return new Promise(async ok => {
 		try {
-			await storageSet('enabled', bool)
-
-			// タブごとに有効記録
-			let enabled_tab_list = await storageGet('enabled_tab_list', {})
+			await storageSet('enabled', enb)
 			let tabId = await getTabId();
-			enabled_tab_list[tabId] = bool
-			await storageSet('enabled_tab_list', enabled_tab_list)
-			// ホストごとに有効記録
-			let enabled_host_list = await storageGet('enabled_host_list', {}, true)
-			let host = ''
-			try {
-				let url = await getURL()
-				if (url) {
-					host = new URL(url).host
-				}
-			} catch (e) {}
-			enabled_host_list[host] = bool
-			await storageSet('enabled_host_list', enabled_host_list, true)
+
+			// // タブごとに有効記録
+			// let enabled_tab_list = await storageGet('enabled_tab_list', {})
+			// enabled_tab_list[tabId] = enb
+			// await storageSet('enabled_tab_list', enabled_tab_list)
+			// // ホストごとに有効記録
+			// let enabled_host_list = await storageGet('enabled_host_list', {}, true)
+			// let host = ''
+			// try {
+			// 	let url = await getURL()
+			// 	if (url) {
+			// 		host = new URL(url).host
+			// 	}
+			// } catch (e) {}
+			// enabled_host_list[host] = enb
+			// await storageSet('enabled_host_list', enabled_host_list, true)
 
 			var swords:string = await storageGetWords()
-			// console.log(bool)
-			await executeHighlight(swords, bool, tabId)
+			// console.log(enb)
+			await executeHighlight(swords, enb, tabId)
 			// console.log('test')
 			autoSetIcon()
 			// console.log('test2')
@@ -51,21 +51,21 @@ function getEnabled():Promise<boolean>{
 				ok(false)
 				return
 			}
-			// var enb:boolean = await storageGet('enabled', true)
-			var enabled:boolean = true
-			let enabled_tab_list = await storageGet('enabled_tab_list', {})
-			let tabId = await getTabId();
-			if (tabId in enabled_tab_list) {
-				enabled = enabled_tab_list[tabId]
-			} else {
-				// ホストごとに有効判定
-				let enabled_host_list = await storageGet('enabled_host_list', {}, true)
-				if (host in enabled_host_list) {
-					enabled = enabled_host_list[host]
-				}
-			}
+			var enb:boolean = await storageGet('enabled', true)
+			// var enabled:boolean = true
+			// let enabled_tab_list = await storageGet('enabled_tab_list', {})
+			// let tabId = await getTabId();
+			// if (tabId in enabled_tab_list) {
+			// 	enabled = enabled_tab_list[tabId]
+			// } else {
+			// 	// ホストごとに有効判定
+			// 	let enabled_host_list = await storageGet('enabled_host_list', {}, true)
+			// 	if (host in enabled_host_list) {
+			// 		enabled = enabled_host_list[host]
+			// 	}
+			// }
 
-			ok(enabled)
+			ok(enb)
 		} catch (e) {
 			console.log(e)
 			ok(true)
@@ -147,7 +147,7 @@ function executeHighlight(swords:string, enabled=true, tabId:number=null){
 			// コンテキスト クリアテキストを変更
 			var STRING = getSTRING()
 			var clear_text = STRING['background']['CLEAR_WORDS'][''+(swords!='')]
-			chrome.contextMenus.update('clear', {
+			browser.contextMenus.update('clear', {
 				title: clear_text,
 			})
 			ok(null)
@@ -494,11 +494,11 @@ async function toggleEnable():Promise<boolean>{
 
 
 function setIcon(icon:string){
-	if (typeof chrome.action == 'undefined') {
+	if (typeof browser.action == 'undefined') {
 		return
 	}
-	if (chrome.action.hasOwnProperty('setIcon')) {
-		chrome.action.setIcon({path:icon})
+	if (browser.action.hasOwnProperty('setIcon')) {
+		browser.action.setIcon({path:icon})
 	}
 }
 
@@ -517,4 +517,16 @@ async function autoSetIcon(){
 		icon = 'data/icons/icon32grey.png'
 	}
 	setIcon(icon)
+}
+
+function sendMessage(name:string, message:string='') {
+	browser.runtime.sendMessage({ name: name, message: message })
+}
+
+function onMessage(name:string, callback:(message: string) => void) {
+	browser.runtime.onMessage.addListener(function(request, sender, sendResponse){
+		if(request.name == name){
+			callback(request.message)
+		}
+	})
 }
