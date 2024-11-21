@@ -68,10 +68,10 @@ const lang_data = {
 			en : 'Enable getting Google Search words',
 			ja : 'Googleの検索ワードを自動取得する',
 		},
-		auto_update : {
-			en : 'Enable automatically update highlight.(testing)',
-			ja : 'ページコンテンツの更新時にハイライトを自動更新する(試験的)',
-		},
+		// auto_update : {
+		// 	en : 'Enable automatically update highlight.(testing)',
+		// 	ja : 'ページコンテンツの更新時にハイライトを自動更新する(試験的)',
+		// },
 		command_mode : {
 			en : 'Enable command mode. [Alt+M] ',
 			ja : 'コマンドモードを利用する [Alt+M]',
@@ -174,16 +174,16 @@ enabled_sync.onchange = async () => {
 }
 
 const google_words = <HTMLInputElement> document.getElementById('google_words')
-google_words.onchange = () => {
+google_words.onchange = async () => {
 	var enable = google_words.checked
 	storageSet('google_words', enable, true)
 }
 
-const auto_update = <HTMLInputElement> document.getElementById('auto_update')
-auto_update.onchange = () => {
-	var enable = auto_update.checked
-	storageSet('auto_update', enable, true)
-}
+// const auto_update = <HTMLInputElement> document.getElementById('auto_update')
+// auto_update.onchange = () => {
+// 	var enable = auto_update.checked
+// 	storageSet('auto_update', enable, true)
+// }
 
 const command_mode = <HTMLInputElement> document.getElementById('command_mode')
 command_mode.onchange = () => {
@@ -243,10 +243,11 @@ document.body.onload = async () => {
 	enabled_sync.checked = sync
 
 	var gw = await storageGet('google_words', true, true)
+	console.log(gw)
 	google_words.checked = gw
 
-	var au = await storageGet('auto_update', false, true)
-	auto_update.checked = au
+	// var au = await storageGet('auto_update', false, true)
+	// auto_update.checked = au
 
 	var rb = await storageGet('command_mode', false, true)
 	command_mode.checked = rb
