@@ -14,3 +14,11 @@ function leftfill(str, c, len){
 	return str
 }
 
+// スリープ
+function sleep (ms) {
+	return new Promise(async ok => {
+		setTimeout(function(){
+			ok()
+		}, ms)
+	})
+}

@@ -3,6 +3,7 @@ var auto_update = false
 var enabled_bar = true
 var regbool = false
 var enabled = true
+var reseted = true
 
 var def_option = {
 	childList: true,
@@ -365,8 +366,6 @@ function ESC_rightSpace(i:number):void{
 	document.body.style.width = (window.innerWidth-(i*rate)) + 'px'
 }
 
-var initedGSflag = false;
-
 // 検索結果をハイライトする処理
 function itel_main(search_words:string, enabled:boolean){
 	if (!document.getElementById('isear-executed')) {
@@ -377,10 +376,6 @@ function itel_main(search_words:string, enabled:boolean){
 		document.body.appendChild(span)
 	}
 
-	if (!initedGSflag) {
-		initGlobalStorage()
-		initedGSflag = true;
-	}
 	gstatus.enabled = enabled
 	var words:Words = new Words(search_words)
 	if(words.array.length == 0){
@@ -411,6 +406,7 @@ function parsed_main(words:Words, enabled:boolean){
 					}
 					showBars = (data == true)
 					barsVisible(hitted.length, showBars)
+					reseted = false
 				})
 			}
 		}
@@ -525,13 +521,34 @@ function silentRun(f){
 
 // すべての isear の DOM を削除する
 function reset_all(){
-	// 全消し
-	offElementsByClassName('itel-highlight')
+	if (!reseted) {
+		// 全消し
+		offElementsByClassName('itel-highlight')
 
-	removeTops()
-	removeBar()
-	removeMbox()
-	removeBarToggler()
+		removeTops()
+		removeBar()
+		removeMbox()
+		removeBarToggler()
 
-	rightSpace(0)
+		rightSpace(0)
+	}
+	reseted = true
 }
+
+initGlobalStorage()
+
+// ========== 個別ループ ==========
+globalStorage.getItem('popup_highlight', popup_highlight => {
+	if (popup_highlight == true) {
+		setInterval(function(){
+			globalStorage.getItem('popupOpen', popupOpen => {
+				if (popupOpen == true) {
+					globalStorage.setItem('popupOpen', false)
+				} else {
+					itel_main('', false)
+				}
+			})
+		}, 500)
+	}
+})
+

@@ -280,6 +280,8 @@ async function updateButtons(){
 
 // 最初に実行される
 document.body.onload = async ()=>{
+	setLoopPopupOpen()
+
 	var STRING = getSTRING()
 	lang_set_attr('textbox-placeholder', 'placeholder', {
 		ja: 'Enterでページ内検索',
@@ -326,14 +328,23 @@ document.body.onload = async ()=>{
 	if (ph || changeInput) {
 		updateAll(enabled)
 	}
-
 }
 
 // window.addEventListener('unload', function(ev){
 // 	// ポップアップを閉じたときの処理
 // 	// browser.runtime.sendMessage({ name: 'popup_unload', message: '' })
-// 	sendMessage('popup_unload')
+// 	// sendMessage('popup_unload')
+// 	let bgp = browser.extension.getBackgroundPage()
+// 	bgp.console.log('close')
+// 	bgp.popup_unload()
 // }, false);
+// ポップアップ開かれてることを判定する処理
+async function setLoopPopupOpen() {
+	while (true) {
+		storageSet('popupOpen', true)
+		await sleep(200)
+	}
+}
 
 function bodyKeyDownEvent(enabled:boolean){
 	document.body.onkeydown = async (e)=>{

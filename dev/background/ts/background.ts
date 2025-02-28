@@ -1,3 +1,37 @@
+async function popup_unload() {
+	// ポップアップが閉じたときのイベント
+	var enabled:boolean = await getEnabled()
+	var ph:boolean = await storageGet('popup_highlight', false, true)
+	console.log('popup_unload', enabled, ph)
+	if (enabled && ph) {
+		// ポップアップ時のみハイライト
+		await storageSet('popup_highlight_close', true)
+		await extensionEnable(false)
+		await highlighting(tabId)
+	}
+}
+// async function popup_kanshi() {
+// 	while (true) {.
+// 		let popupOpen = await storageGet('popupOpen', false)
+// 		if (popupOpen) {
+// 			storageSet('popupOpen', false)
+// 		} else {
+// 			await popup_unload()
+// 		}
+// 		await sleep(500)
+// 	}
+// }
+// popup_kanshi()
+
+// // ポップアップからのメッセージを受信する
+// browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+//   if (request.action === "popupClosed") {
+//     // ポップアップが閉じられた際の処理
+//     console.log("ポップアップが閉じられました。");
+//     // ここで実行したい処理を記述
+//   }
+// });
+
 var tabId;
 browser.tabs.onActivated.addListener(async function(activeInfo){
 	let url = await getURL()
