@@ -3,7 +3,6 @@ var auto_update = false
 var enabled_bar = true
 var regbool = false
 var enabled = true
-var reseted = true
 
 var def_option = {
 	childList: true,
@@ -12,6 +11,8 @@ var def_option = {
 }
 
 function highlight_all(dest:any, words:Words){
+	let icnt = 0
+	let words_nums = {}
 	for(let n = 0; n < words.array.length; n++){
 		let word = words.array[n]
 		if(!regbool){
@@ -20,80 +21,75 @@ function highlight_all(dest:any, words:Words){
 		}
 		word.bgColor = bgColors[n%bgColors.length]
 		word.barColor = word.bgColor
+
 		words_nums[word.origin] = 0
-		replace_auto(dest, word, hlClass)
+		//word.id, document.body, word.origin, className, word.bgColor, word.regbool, word.barColor
+		textNode_req(dest, hlClass, (obj:Text)=>{
+			var tmpword = word.origin
+			// 置換処理
+			var text = obj.data
+			if(text.trim() == ''){
+				return
+			}
+
+			if(word.regbool){
+				var m = regMatch(obj.data, word.origin)
+				if(m == null){
+					return
+				}
+				tmpword = m[0]
+			}
+			if(tmpword == ''){
+				return
+			}
+			var start = unifyWord(obj.data).indexOf(unifyWord(tmpword))
+			if(start == -1){
+				return
+			}
+			words_nums[word.origin]++
+
+			var prefix = text.substr(0, start)
+			var middle = text.substr(start, tmpword.length)
+			var suffix = text.substr(start+tmpword.length)
+
+			var prefix_tn = document.createTextNode(prefix)
+			var middle_tn = document.createTextNode(middle)
+			var suffix_tn = document.createTextNode(suffix)
+
+			var newObj = document.createElement('span')
+			newObj.id = 'isear-'+icnt
+			newObj.className = hlClass + ' ' + icnt
+			newObj.style.backgroundColor = word.bgColor
+			newObj.appendChild(middle_tn)
+
+			// DocumentFragmentによる軽量化
+			var df = document.createDocumentFragment();
+			df.appendChild(prefix_tn)
+			df.appendChild(newObj)
+			df.appendChild(suffix_tn)
+			obj.parentNode.replaceChild(df, obj)
+
+			// var parent = obj.parentNode
+			// parent.replaceChild(suffix_tn, obj)
+			// parent.insertBefore(prefix_tn, suffix_tn)
+			// parent.insertBefore(newObj, suffix_tn)
+
+			// ハイライト位置くん
+			// newObj = document.getElementById('isear-'+icnt)
+			// if(newObj == null){
+			// 	return
+			// }
+			word.elems.push(newObj)
+			word.count.num++
+
+			icnt++
+		})
 		// let clone_node = dest.cloneNode(true) // 遅延描画のため
 		// replace_auto(clone_node, word, hlClass)
 		// dest.parentNode.replaceChild(clone_node, dest) // 描画実行
 	}
-}
 
-// 呼び出し元に返す値(callback)
-var words_nums = {}
-// 再帰的にテキストノードを書き換えるため
-var icnt = 0
-function replace_auto(dest:any, word:Word, className:string){
-	//word.id, document.body, word.origin, className, word.bgColor, word.regbool, word.barColor
-	textNode_req(dest, className, (obj:Text)=>{
-		var tmpword = word.origin
-		// 置換処理
-		var text = obj.data
-		if(text.trim() == ''){
-			return
-		}
-
-		if(word.regbool){
-			var m = regMatch(obj.data, word.origin)
-			if(m == null){
-				return
-			}
-			tmpword = m[0]
-		}
-		if(tmpword == ''){
-			return
-		}
-		var start = unifyWord(obj.data).indexOf(unifyWord(tmpword))
-		if(start == -1){
-			return
-		}
-		words_nums[word.origin]++
-
-		var prefix = text.substr(0, start)
-		var middle = text.substr(start, tmpword.length)
-		var suffix = text.substr(start+tmpword.length)
-
-		var prefix_tn = document.createTextNode(prefix)
-		var middle_tn = document.createTextNode(middle)
-		var suffix_tn = document.createTextNode(suffix)
-
-		var newObj = document.createElement('span')
-		newObj.id = 'isear-'+icnt
-		newObj.className = className + ' ' + icnt
-		newObj.style.backgroundColor = word.bgColor
-		newObj.appendChild(middle_tn)
-
-		// DocumentFragmentによる軽量化
-		var df = document.createDocumentFragment();
-		df.appendChild(prefix_tn)
-		df.appendChild(newObj)
-		df.appendChild(suffix_tn)
-		obj.parentNode.replaceChild(df, obj)
-
-		// var parent = obj.parentNode
-		// parent.replaceChild(suffix_tn, obj)
-		// parent.insertBefore(prefix_tn, suffix_tn)
-		// parent.insertBefore(newObj, suffix_tn)
-
-		// ハイライト位置くん
-		// newObj = document.getElementById('isear-'+icnt)
-		// if(newObj == null){
-		// 	return
-		// }
-		word.elems.push(newObj)
-		word.count.num++
-
-		icnt++
-	})
+	return words_nums
 }
 
 // id:number, obj:any, word:string, className:string, bgcolor:string, regbool:boolean, barcolor:string
@@ -386,31 +382,30 @@ function itel_main(search_words:string, enabled:boolean){
 
 function parsed_main(words:Words, enabled:boolean){
 	// 全部リセット
-	reset_all()
+	clear_all()
 
 	if(!enabled){
 		return
 	}
 
-	silentRun(function(){
-		highlight_all(document.body, words)
+	// silentRun(function(){
+	let words_nums = highlight_all(document.body, words)
 
-		if(enabled_bar){
-			let hitted:Word[] = words.getHittedList()
-			if (hitted.length != 0) {	
-				createBarToggler(hitted.length)
+	if(enabled_bar){
+		let hitted:Word[] = words.getHittedList()
+		if (hitted.length != 0) {	
+			createBarToggler(hitted.length)
 
-				globalStorage.getItem('bar-visible', data => {
-					if (data == null) {
-						return
-					}
-					showBars = (data == true)
-					barsVisible(hitted.length, showBars)
-					reseted = false
-				})
-			}
+			globalStorage.getItem('bar-visible', data => {
+				if (data == null) {
+					return
+				}
+				showBars = (data == true)
+				barsVisible(hitted.length, showBars)
+			})
 		}
-	})
+	}
+	// })
 
 
 	defineEvents(words, enabled)
@@ -520,19 +515,16 @@ function silentRun(f){
 }
 
 // すべての isear の DOM を削除する
-function reset_all(){
-	if (!reseted) {
-		// 全消し
-		offElementsByClassName('itel-highlight')
+function clear_all(){
+	// 全消し
+	offElementsByClassName('itel-highlight')
 
-		removeTops()
-		removeBar()
-		removeMbox()
-		removeBarToggler()
+	removeTops()
+	removeBar()
+	removeMbox()
+	removeBarToggler()
 
-		rightSpace(0)
-	}
-	reseted = true
+	rightSpace(0)
 }
 
 initGlobalStorage()
@@ -541,6 +533,7 @@ initGlobalStorage()
 globalStorage.getItem('popup_highlight', popup_highlight => {
 	if (popup_highlight == true) {
 		setInterval(function(){
+			console.log('isear notice')
 			globalStorage.getItem('popupOpen', popupOpen => {
 				if (popupOpen == true) {
 					globalStorage.setItem('popupOpen', false)

@@ -22,7 +22,7 @@ async function extensionEnable(enb:boolean){
 			// await storageSet('enabled_host_list', enabled_host_list, true)
 
 			var swords:string = await storageGetWords()
-			// console.log(enb)
+			// console.log(enb, tabId)
 			await executeHighlight(swords, enb, tabId)
 			// console.log('test')
 			autoSetIcon()
@@ -138,6 +138,7 @@ function executeHighlight(swords:string, enabled=true, tabId:number=null){
 					console.log('Browser extention "isear" is disabled.')
 				}
 			}, [swords,enabled], tabId)
+			console.log(swords,enabled,result)
 			if (typeof result == 'undefined') {
 				return
 			}

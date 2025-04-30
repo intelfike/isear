@@ -270,7 +270,7 @@ async function updateButtons(){
 					executeFunc((word_origin,word_regbool) => {scrollFocusNextWord(word_origin, "itel-highlight", "itel-selected", word_regbool)}, [word.origin, word.regbool], tabId)
 				}
 			}
-		})
+		}, {passive: true})
 		if(word.count.num == 0){
 			btn.disabled = true
 		}
