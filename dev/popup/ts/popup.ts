@@ -149,13 +149,21 @@ search_words_obj.onkeydown = async (e) => {
 }
 
 
-// アップデートイベント
-browser.runtime.onMessage.addListener(async function(request, sender, sendResponse){
-	if(request.name != 'done highlight'){
-		return
-	}
+// // アップデートイベント
+// browser.runtime.onMessage.addListener(async function(request, sender, sendResponse){
+// 	if(request.name != 'done highlight'){
+// 		return
+// 	}
+// 	var enabled = await getEnabled()
+// 	if(enabled){
+// 		updateButtons()
+// 	}
+// })
+onMessageFromActive('isear_main_end', async function(message){
 	var enabled = await getEnabled()
-	if(enabled){
+	if(enabled && message){
+		await storageSetNum(<{[key:string]:number;}>message.words_nums)
+		search_words_obj.value = message.search_words
 		updateButtons()
 	}
 })
@@ -210,7 +218,7 @@ function updateAll(enabled = null){
 				await executeHighlight(swords, enabled, tabId)
 			}
 
-			updateButtons()
+			// updateButtons()
 			ok(null)
 		} catch (e) {
 			console.log(e)

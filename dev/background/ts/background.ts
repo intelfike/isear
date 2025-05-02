@@ -1,37 +1,3 @@
-async function popup_unload() {
-	// ポップアップが閉じたときのイベント
-	var enabled:boolean = await getEnabled()
-	var ph:boolean = await storageGet('popup_highlight', false, true)
-	console.log('popup_unload', enabled, ph)
-	if (enabled && ph) {
-		// ポップアップ時のみハイライト
-		await storageSet('popup_highlight_close', true)
-		await extensionEnable(false)
-		await highlighting(tabId)
-	}
-}
-// async function popup_kanshi() {
-// 	while (true) {.
-// 		let popupOpen = await storageGet('popupOpen', false)
-// 		if (popupOpen) {
-// 			storageSet('popupOpen', false)
-// 		} else {
-// 			await popup_unload()
-// 		}
-// 		await sleep(500)
-// 	}
-// }
-// popup_kanshi()
-
-// // ポップアップからのメッセージを受信する
-// browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-//   if (request.action === "popupClosed") {
-//     // ポップアップが閉じられた際の処理
-//     console.log("ポップアップが閉じられました。");
-//     // ここで実行したい処理を記述
-//   }
-// });
-
 var tabId;
 browser.tabs.onActivated.addListener(async function(activeInfo){
 	let url = await getURL()
@@ -78,7 +44,7 @@ browser.tabs.onActivated.addListener(async function(activeInfo){
 browser.tabs.onCreated.addListener(async function(tabId:number){
 	// もとのタブの設定をコピーする
 	var enb:boolean = await storageGet('enabled', true) // 直前の拡張機能の状態を取得
-	console.log(enb)
+	// console.log(enb)
 	extensionEnable(enb) // 最後のハイライト状態を維持するよう、現在の状態を記録
 })
 // ページが更新された時の処理
@@ -120,6 +86,13 @@ async function executeAllSequence(tabId, url) {
 		return false
 	}, [], tabId)
 	if (!injected) {
+		await executeFunc(() => {
+			var span = document.createElement('span')
+			span.id = 'isear-executed'
+			span.innerText = 'true'
+			span.style.display = 'none'
+			document.body.appendChild(span)
+		}, [], tabId)
 		await executeFile('inject.js', tabId)
 		browser.scripting.insertCSS({
 		   target: { tabId: tabId },
@@ -136,9 +109,7 @@ async function executeAllSequence(tabId, url) {
 	}
 
 	await highlighting(tabId)
-	browser.runtime.sendMessage({name: 'done highlight'}).catch((error)=> {
-		// エラー処理
-	})
+	// sendMessage('background_end_highlight', '')
 }
 async function highlighting(tabId:number){
 	var swords:string = await storageGetWords()

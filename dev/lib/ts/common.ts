@@ -18,7 +18,7 @@ function leftfill(str, c, len){
 function sleep (ms) {
 	return new Promise(async ok => {
 		setTimeout(function(){
-			ok()
+			ok(null)
 		}, ms)
 	})
 }

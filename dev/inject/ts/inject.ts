@@ -363,28 +363,20 @@ function ESC_rightSpace(i:number):void{
 }
 
 // 検索結果をハイライトする処理
-function itel_main(search_words:string, enabled:boolean){
-	if (!document.getElementById('isear-executed')) {
-		var span = document.createElement('span')
-		span.id = 'isear-executed'
-		span.innerText = 'true'
-		span.style.display = 'none'
-		document.body.appendChild(span)
+function isear_main(search_words:string, enabled:boolean){
+	// 全部リセット
+	clear_all()
+	gstatus.search_words = search_words
+
+	if(!enabled){
+		sendMessage('isear_main_end', null)
+		return
 	}
 
 	gstatus.enabled = enabled
 	var words:Words = new Words(search_words)
 	if(words.array.length == 0){
-		enabled = false
-	}
-	return parsed_main(words, enabled)
-}
-
-function parsed_main(words:Words, enabled:boolean){
-	// 全部リセット
-	clear_all()
-
-	if(!enabled){
+		sendMessage('isear_main_end', null)
 		return
 	}
 
@@ -393,16 +385,21 @@ function parsed_main(words:Words, enabled:boolean){
 
 	if(enabled_bar){
 		let hitted:Word[] = words.getHittedList()
-		if (hitted.length != 0) {	
+		if (hitted.length != 0) {
 			createBarToggler(hitted.length)
+			for(let n = 0; n < hitted.length; n++){
+				createBar(hitted[n], n+1, hitted.length)
+				createTops(hitted[n], n+1, hitted.length)
+			}
 
-			globalStorage.getItem('bar-visible', data => {
-				if (data == null) {
-					return
+			let f = async function() {
+				let data = await globalStorage.getItem('bar-visible', true)
+				if (data) {
+					showBars = (data == true)
+					barsVisible(hitted.length, showBars)
 				}
-				showBars = (data == true)
-				barsVisible(hitted.length, showBars)
-			})
+			}
+			f()
 		}
 	}
 	// })
@@ -412,11 +409,15 @@ function parsed_main(words:Words, enabled:boolean){
 
 	window.onresize(null)
 
+	sendMessage('isear_main_end', {
+		search_words : search_words,
+		words_nums   : words_nums,
+	})
 	return words_nums
 }
 
 var already_event = false
-var gstatus = {words:null, enabled:null}
+var gstatus = {words:null, enabled:null, search_words:''}
 function defineEvents(words:Words, enabled:boolean){
 	// イベントは一度しか登録しなくていいけど、値は共有すべき
 	gstatus.words = words
@@ -427,7 +428,12 @@ function defineEvents(words:Words, enabled:boolean){
 	already_event = true
 	document.body.onkeydown = (e)=>{bodyKeydownEvent(e, gstatus.words)}
 
+	let is_first = true
 	window.onresize = ()=>{
+		if (is_first) {
+			is_first = false
+			return
+		}
 		words = gstatus.words
 		if(!gstatus.enabled){
 			return
@@ -530,18 +536,23 @@ function clear_all(){
 initGlobalStorage()
 
 // ========== 個別ループ ==========
-globalStorage.getItem('popup_highlight', popup_highlight => {
+async function inf_loop() {
+	let popup_highlight = await globalStorage.getItem('popup_highlight', true)
 	if (popup_highlight == true) {
-		setInterval(function(){
-			console.log('isear notice')
-			globalStorage.getItem('popupOpen', popupOpen => {
-				if (popupOpen == true) {
-					globalStorage.setItem('popupOpen', false)
-				} else {
-					itel_main('', false)
+		let cleared = false
+		while (true) {
+			let popupOpen = await globalStorage.getItem('popupOpen')
+			if (popupOpen == true) {
+				cleared = false
+				globalStorage.setItem('popupOpen', false)
+			} else {
+				if (!cleared) {
+					cleared = true
+					clear_all()
 				}
-			})
-		}, 500)
+			}
+			await sleep(250)
+		}
 	}
-})
-
+}
+inf_loop()

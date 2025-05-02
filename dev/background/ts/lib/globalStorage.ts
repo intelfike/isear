@@ -5,13 +5,13 @@ browser.runtime.onMessage.addListener(function(data, sender, sendResponse){
 	let item = data.item
 	switch (data.method) {
 	case 'get':
-		getData(item.key).then(sendResponse)
+		getData(item.key, undefined, item.sync).then(sendResponse)
 		break
 	case 'set':
-		storageSet(item.key, item.value)
+		storageSet(item.key, item.value, item.sync)
 		break
 	case 'remove':
-		storageRemove(item.key)
+		storageRemove(item.key, item.sync)
 		break
 	default:
 		console.log("Error: undefined medtho '" + data.method + "'")
@@ -20,7 +20,7 @@ browser.runtime.onMessage.addListener(function(data, sender, sendResponse){
 	return true
 })
 
-async function getData(key){
-	 let data = await storageGet(key)
+async function getData(key:string, def:any=undefined, sync:boolean=false){
+	 let data = await storageGet(key, def, sync)
 	 return JSON.stringify({'type':'isear-globalStorage','data':data})
 }

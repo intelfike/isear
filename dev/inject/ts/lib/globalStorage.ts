@@ -1,35 +1,39 @@
 class GlobalStorage{
-	send(method, item, func=null) {
-		var data = {
-			'pass'   : 'isear-globalStorage-send',
-			'method' : method,
-			'item'   : item,
-		}
-		// var json = JSON.stringify(data)
-		browser.runtime.sendMessage(data, function(response){
-			if (func == null) {
-				return
+	send(method, item) {
+		return new Promise(ok => {
+			var data = {
+				'pass'   : 'isear-globalStorage-send',
+				'method' : method,
+				'item'   : item,
 			}
-			func(response)
+			// var json = JSON.stringify(data)
+			browser.runtime.sendMessage(data, function(response){
+				ok(response)
+			})
 		})
 	}
 
-	setItem(key:string ,value){
-		this.send('set', {'key':key, 'value':value})
+	setItem(key:string ,value, sync=false){
+		this.send('set', {'key':key, 'value':value, 'sync':sync})
 	}
 
-	getItem(key, callback){
-		this.send('get', {'key':key}, function(j){
-			var data = JSON.parse(j)
+	getItem(key, sync=false){
+		return new Promise(async ok => {
+			let response:any = await this.send('get', {'key':key, 'sync':sync})
+			if (!response) {
+				ok(null)
+				return
+			}
+			let data = JSON.parse(response)
 			if (typeof data.type == undefined || data.type != 'isear-globalStorage') {
+				ok(null)
 				return
 			}
-			callback(data.data)
+			ok(data.data)
 		})
 	}
-
-	removeItem(key){
-		this.send('remove', {'key':key})
+	removeItem(key, sync=false){
+		this.send('remove', {'key':key, 'sync':sync})
 	}
 }
 

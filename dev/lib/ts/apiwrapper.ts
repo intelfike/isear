@@ -126,19 +126,19 @@ function executeHighlight(swords:string, enabled=true, tabId:number=null){
 			await executeFunc((_enabled_bar) => {enabled_bar = _enabled_bar}, [enbar], tabId)
 
 			// ハイライトバーの初期状態を設定
-			var showBars = await storageGet('bar-visible', true, true)
+			var showBars = await storageGet('bar-visible', true)
 			// var showBars = await globalStorage.getItem('bar-visible')
 			await executeFunc((_showBars) => {showBars = _showBars}, [showBars], tabId)
 
 			// ハイライトを実行
 			var result = await executeFunc((swords,enabled) => {
-				if (typeof itel_main !== "undefined") {
-					return itel_main(swords,enabled)
+				if (typeof isear_main !== "undefined") {
+					return isear_main(swords,enabled)
 				} else {
 					console.log('Browser extention "isear" is disabled.')
 				}
 			}, [swords,enabled], tabId)
-			console.log(swords,enabled,result)
+			// console.log(swords,enabled,result)
 			if (typeof result == 'undefined') {
 				return
 			}
@@ -262,10 +262,22 @@ function storageGet(key:string, def:any=undefined, sync:boolean=false):Promise<a
 		}
 	})
 }
-function storageRemove(key:string){
-	return new Promise(ok =>{
+function storageRemove(key:string, sync:boolean=false){
+	return new Promise(async ok =>{
 		try {
-			browser.storage.local.remove(key, ok)
+			var st = browser.storage.local
+			if(sync){
+				var sync_enabled = await storageGet('sync', false) // 再帰呼び出し
+				if(sync_enabled){
+					st = browser.storage.sync
+				}
+			}
+
+			try{
+				await st.remove(key, ok)
+			}catch(e){
+				await browser.storage.local.remove(key, ok)
+			}
 		} catch (e) {
 			console.log(e)
 			ok(null)
@@ -520,12 +532,23 @@ async function autoSetIcon(){
 	setIcon(icon)
 }
 
-function sendMessage(name:string, message:string='') {
+function sendMessage(name:string, message:any='') {
 	browser.runtime.sendMessage({ name: name, message: message })
 }
 
-function onMessage(name:string, callback:(message: string) => void) {
+function onMessage(name:string, callback:(message: any) => void) {
 	browser.runtime.onMessage.addListener(function(request, sender, sendResponse){
+		if(request.name == name){
+			callback(request.message)
+		}
+	})
+}
+
+function onMessageFromActive(name:string, callback:(message: any) => void) {
+	browser.runtime.onMessage.addListener(function(request, sender, sendResponse){
+		if (!sender['tab']['active']) {
+			return
+		}
 		if(request.name == name){
 			callback(request.message)
 		}
