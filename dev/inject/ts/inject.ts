@@ -541,10 +541,13 @@ async function inf_loop() {
 	if (popup_highlight == true) {
 		let cleared = false
 		while (true) {
+			// popupが書き続ける時刻の新しさで開閉を判定する
+			// （trueを読んだタブがfalseへ戻す方式は、複数タブでトークンの取り合いになり
+			//   閉じてもハイライトが消えないタブが出るため廃止）
 			let popupOpen = await globalStorage.getItem('popupOpen')
-			if (popupOpen == true) {
+			let opened = (typeof popupOpen == 'number') && (Date.now() - popupOpen < 1000)
+			if (opened) {
 				cleared = false
-				globalStorage.setItem('popupOpen', false)
 			} else {
 				if (!cleared) {
 					cleared = true

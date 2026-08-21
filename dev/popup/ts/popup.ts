@@ -347,9 +347,10 @@ document.body.onload = async ()=>{
 // 	bgp.popup_unload()
 // }, false);
 // ポップアップ開かれてることを判定する処理
+// 時刻を書き続け、inject側は時刻の新しさだけで開閉を判定する（inject側は書き込まない）
 async function setLoopPopupOpen() {
 	while (true) {
-		storageSet('popupOpen', true)
+		storageSet('popupOpen', Date.now())
 		await sleep(200)
 	}
 }
